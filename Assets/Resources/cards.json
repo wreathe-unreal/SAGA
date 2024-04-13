@@ -1,0 +1,158 @@
+[
+    {
+        "Actions": [
+            {
+                "ActionKey": {
+                    "ActionName": "Talk",
+                    "Attribute": "Prowess",
+                    "AttributeMinimum": 3,
+                    "ID": "ironmanpepes_broom",
+                    "ReqLocation": "Deepmine",
+                    "SecondaryCardSpecifiers": [
+                        [
+                            "korean_book",
+                            "",
+                            ""
+                        ]
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "Fame",
+                    "AttributeModifier": 1.43,
+                    "Duration": 5,
+                    "FlavorText": "It seems to speak.",
+                    "OutcomeText": "It speaks Korean.",
+                    "ReturnedCardIDs": [
+                        "ironmanpepes_broom",
+                        "korean_book"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1
+                    ]
+                }
+            },
+            {
+                "ActionKey": {
+                    "ActionName": "Talk",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "ironmanpepes_broom",
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 120,
+                    "FlavorText": "asdf",
+                    "OutcomeText": "asdfas",
+                    "ReturnedCardIDs": [
+                    ],
+                    "ReturnedQuantities": [
+                    ]
+                }
+            }
+        ],
+        "FlavorText": "A long shaft.",
+        "Habitat": "The Feast",
+        "ID": "ironmanpepes_broom",
+        "ImagePath": "ironmanpepes_broom.png",
+        "Lifespan": 120,
+        "Name": "Ironmanpepe's Broom",
+        "Price": 500,
+        "Property": "Legendary",
+        "System": "Nocturne",
+        "Type": "Object"
+    },
+    {
+        "Actions": [
+            {
+                "ActionKey": {
+                    "ActionName": "Talk",
+                    "Attribute": "Prowess",
+                    "AttributeMinimum": 3,
+                    "ID": "ironmanpepes_broom",
+                    "ReqLocation": "Deepmine",
+                    "SecondaryCardSpecifiers": [
+                        [
+                            "korean_book",
+                            "",
+                            ""
+                        ]
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "Fame",
+                    "AttributeModifier": 1.43,
+                    "Duration": 5,
+                    "FlavorText": "It seems to speak.",
+                    "OutcomeText": "It speaks Korean.",
+                    "ReturnedCardIDs": [
+                        "ironmanpepes_broom",
+                        "korean_book"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1
+                    ]
+                }
+            },
+            {
+                "ActionKey": {
+                    "ActionName": "Talk",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "ironmanpepes_broom",
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 120,
+                    "FlavorText": "asdf",
+                    "OutcomeText": "asdfas",
+                    "ReturnedCardIDs": [
+                    ],
+                    "ReturnedQuantities": [
+                    ]
+                }
+            },
+            {
+                "ActionKey": {
+                    "ActionName": "Research",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "korean_book",
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "Health",
+                    "AttributeModifier": 5,
+                    "Duration": 5,
+                    "FlavorText": "Flavor text...",
+                    "OutcomeText": "Outcome text...",
+                    "ReturnedCardIDs": [
+                    ],
+                    "ReturnedQuantities": [
+                    ]
+                }
+            }
+        ],
+        "FlavorText": "",
+        "Habitat": "",
+        "ID": "korean_book",
+        "ImagePath": "korean_book.png",
+        "Lifespan": 0,
+        "Name": "Korean Book",
+        "Price": 1000,
+        "Property": "Dangerous",
+        "System": "",
+        "Type": "Object"
+    }
+]
