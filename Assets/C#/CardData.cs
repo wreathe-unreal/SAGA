@@ -55,6 +55,45 @@ public class CardData
             this.ActionMap[a.ActionKey] = a.ActionResult; //add the processed action key and action result to the cardData map
         }
     }
+    
+    public string GetDeckType()
+    {
+        switch (this.Type)
+        {
+            case "Engine":
+                return "Spaceship";
+            case "Power Supply":
+                return "Spaceship";
+            case "Portal Drive":
+                return "Spaceship";
+            case "Cargo Hold":
+                return "Spaceship";
+            case "Thermal Weapon":
+                return "Spaceship";
+            case "Laser Weapon":
+                return "Spaceship";
+            case "Psychic Weapon":
+                return "Spaceship";
+            case "Arcane Weapon":
+                return "Spaceship";
+            case "Ramming Weapon":
+                return "Spaceship";
+            case "Kinetic Weapon":
+                return "Spaceship";
+            case "Shield Generator":
+                return "Spaceship";
+            case "Engine Coolant":
+                return "Spaceship";
+            case "Armor Plating":
+                return "Spaceship";
+            case "Magical Ward":
+                return "Spaceship";
+            case "Hull":
+                return "Spaceship";
+            default:
+                return this.Type;
+        }
+    }
 }
 
 

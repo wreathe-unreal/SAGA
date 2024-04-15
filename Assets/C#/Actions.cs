@@ -83,16 +83,12 @@ public class ActionKey
         {
             return false;
         }
-        
-        switch (this.Attribute)
+
+        if (player.AttributeMap[Attribute] <= this.AttributeMinimum)
         {
-            case "Valor":
-                return player.Attribute.Valor <= this.AttributeMinimum;
-            case "Intrepidity":
-                return player.Attribute.Intrepidity <= this.AttributeMinimum;
-            case "Infamy":
-                return player.Attribute.Infamy <= this.AttributeMinimum;
+            return false;
         }
+
 
         if (cardData[0].ID != ID)
         {
@@ -128,5 +124,17 @@ public class ActionResult
     public ActionResult()
     {
         
+    }
+
+    Dictionary<string, int> Execute()
+    {
+        PlayerState.Instance.AttributeMap[AttributeModified] += AttributeModifier;
+        Dictionary<string, int> ReturnedCards = new Dictionary<string, int>();
+        for(int i =0; i < ReturnedCardIDs.Count; i++)
+        {
+            ReturnedCards[ReturnedCardIDs[i]] = ReturnedQuantities[i];
+        }
+
+        return ReturnedCards;
     }
 }

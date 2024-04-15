@@ -11,7 +11,7 @@ public class CardDB
 
     public CardDB()
     {
-        List <RawCardData> rawCardData = JsonDeserializer.DeserializeJson();
+        List <RawCardData> rawCardData = JsonDeserializer.DeserializeCardJson();
         Database = new List<CardData>();
         CardDataLookup = new Dictionary<string, CardData>();
 
@@ -31,7 +31,7 @@ public class CardDB
 
 public class JsonDeserializer
 {
-    public static List<RawCardData> DeserializeJson()
+    public static List<RawCardData> DeserializeCardJson()
     {
         
         // Load the JSON file from the Resources folder
@@ -50,4 +50,24 @@ public class JsonDeserializer
             return new List<RawCardData>();
         }
     }
+    public static Attribute DeserializeEnumJson()
+    {
+        
+        // Load the JSON file from the Resources folder
+        TextAsset jsonFile = Resources.Load<TextAsset>("enums");
+        if (jsonFile != null)
+        {
+            string jsonString = jsonFile.text;
+            // Now you can use jsonString to deserialize into your objects
+            Debug.Log("Loaded JSON: " + jsonString);
+            return JsonConvert.DeserializeObject<Attribute>(jsonString);
+
+        }
+        else
+        {
+            Debug.LogError("Unable to load the JSON file.");
+            return new Attribute();
+        }
+    }
+    
 }

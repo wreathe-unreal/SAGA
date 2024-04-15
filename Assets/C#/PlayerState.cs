@@ -2,20 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Attributes
+public class Attribute
 {
-    public int Valor;
-    public int Intrepidity;
-    public int Infamy;
-    public int Prestige;
-    public int Credit;
+    public List<string> EProperty { get; set; }
+    public List<string> EType { get; set; }
+    public List<string> ESystem { get; set; }
+    public List<string> EHabitat { get; set; }
+    public List<string> EAttribute { get; set; }
 }
-
 
 public class PlayerState : MonoBehaviour
 {
     public string Location;
-    public Attributes Attribute;
+    public Dictionary<string, float> AttributeMap = new Dictionary<string, float>();
     private static PlayerState _Instance;
 
     // Property to access the instance
@@ -25,12 +24,10 @@ public class PlayerState : MonoBehaviour
         {
             if (_Instance == null)
             {
-                // This will only happen the first time this reference is used.
                 _Instance = FindObjectOfType<PlayerState>();
                 if (_Instance == null)
                 {
-                    // Create a new GameObject with PlayerState if one does not exist.
-                    GameObject singleton = new GameObject(typeof(PlayerState).Name);
+                    GameObject singleton = new GameObject("PlayerState");
                     _Instance = singleton.AddComponent<PlayerState>();
                 }
             }
@@ -45,11 +42,20 @@ public class PlayerState : MonoBehaviour
         {
             _Instance = this;
             DontDestroyOnLoad(gameObject);
+            InitializeAttributeMap();
         }
         else if (_Instance != this)
         {
-            // Destroy any duplicate instances that might be created
             Destroy(gameObject);
+        }
+    }
+
+    private void InitializeAttributeMap()
+    {
+        foreach (string s in JsonDeserializer.DeserializeEnumJson().EAttribute)
+        {
+            print(s);
+            AttributeMap[s] = 0.0f;
         }
     }
 

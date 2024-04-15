@@ -154,5 +154,19 @@
         "Property": "Dangerous",
         "System": "",
         "Type": "Object"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Grip the broom...",
+        "Habitat": "",
+        "ID": "work",
+        "ImagePath": "work.png",
+        "Lifespan": 0,
+        "Name": "Work",
+        "Price": 0,
+        "Property": "",
+        "System": "",
+        "Type": "Action"
     }
 ]
