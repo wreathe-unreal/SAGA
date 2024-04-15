@@ -14,8 +14,10 @@ public class Board : MonoBehaviour
     {
         Database = new CardDB();
         InitializeDecks();
-        AddInitialCards();
-
+        AddCard("work");
+        AddCard("ironmanpepes_broom");
+        AddCard("korean_book");
+    
 
 
 
@@ -36,17 +38,28 @@ public class Board : MonoBehaviour
     {
         CardData cd = CardDB.CardDataLookup[cardID];
         string deckType = cd.GetDeckType();
-        Card newCard = Instantiate<Card>(CardToAdd);
-        newCard.Initialize(cardID);
-        Decks[deckType].Cards.Add(newCard);
-        Decks[deckType].SetCardPositions();
-    }
 
-    private void AddInitialCards()
-    {
-        AddCard("work");
-        AddCard("ironmanpepes_broom");
-        AddCard("korean_book");
+        bool bExistsInDeckAlready = false;
+        
+        foreach (Card c in Decks[deckType].Cards)
+        {
+            if (c.ID == cd.ID)
+            {
+                c.ModifyQuantity(1);
+                bExistsInDeckAlready = true;
+            }
+        }
+        
+        if (!bExistsInDeckAlready)
+        {
+            Card newCard = Instantiate<Card>(CardToAdd);
+            newCard.Initialize(cardID);
+            Decks[deckType].Cards.Add(newCard);
+
+        }
+        
+        Decks[deckType].SetCardPositions();
+
 
     }
 

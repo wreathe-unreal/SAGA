@@ -1,22 +1,25 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public class Deck : IEnumerable<Card>
 {
-    public string DeckTypeGroupName;
-    public List<Vector3> Positions;
+    public string Name;
+    public List<Vector3> Positions = new List<Vector3>();
     public List<Card> Cards = new List<Card>();
 
     
     
     // Start is called before the first frame update
-    public Deck(string DeckTypeGroupName)
+    public Deck(string deckName)
     {
+        this.Name = deckName;
         GameObject CardPositions = GameObject.Find("CardPositions");
         if (CardPositions != null)
         {
-            Positions = CollectPositions(CardPositions, DeckTypeGroupName);
+            Positions = CollectPositions(CardPositions, this.Name);
         }
         else
         {
@@ -41,7 +44,6 @@ public class Deck : IEnumerable<Card>
         {
             Debug.LogWarning($"Group not found: {groupName}");
         }
-
         return positions;
     }
 
@@ -52,7 +54,7 @@ public class Deck : IEnumerable<Card>
                 if (i < Cards.Count && Cards[i].Position != Positions[i])
                 {
                     // Assign position to card
-                    Cards[i].Position = Positions[i];
+                    Cards[i].SetPosition(Positions[i]);
                 }
             }
 

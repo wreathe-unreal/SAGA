@@ -21,11 +21,34 @@ public class CardDB
             Database.Add(new CardData(rcd));
             CardDataLookup[rcd.ID] = new CardData(rcd);
         }
+        
+        FindMissingCardArt();
+
     }
     
     CardData GetCardData(string CardID)
     {
         return CardDataLookup[CardID];
+    }
+    
+    private static void FindMissingCardArt()
+    {
+        foreach (CardData card in Database)
+        {
+            // Assuming ImagePath ends with ".png" and we need to remove it
+            string resourcePath = card.ImagePath;
+            
+            if (!string.IsNullOrEmpty(resourcePath) && resourcePath.EndsWith(".png"))
+            {
+                resourcePath = resourcePath.Substring(0, resourcePath.Length - 4); // Remove the ".png"
+            }
+
+            Sprite sprite = Resources.Load<Sprite>("Images/" + resourcePath);
+            if (sprite == null)
+            {
+                Debug.Log($"{card.ImagePath} has no image in the Resources/Images directory.");
+            }
+        }
     }
 }
 
@@ -40,7 +63,6 @@ public class JsonDeserializer
         {
             string jsonString = jsonFile.text;
             // Now you can use jsonString to deserialize into your objects
-            Debug.Log("Loaded JSON: " + jsonString);
             return JsonConvert.DeserializeObject<List<RawCardData>>(jsonString);
 
         }
@@ -59,7 +81,6 @@ public class JsonDeserializer
         {
             string jsonString = jsonFile.text;
             // Now you can use jsonString to deserialize into your objects
-            Debug.Log("Loaded JSON: " + jsonString);
             return JsonConvert.DeserializeObject<Attribute>(jsonString);
 
         }

@@ -54,7 +54,6 @@ public class PlayerState : MonoBehaviour
     {
         foreach (string s in JsonDeserializer.DeserializeEnumJson().EAttribute)
         {
-            print(s);
             AttributeMap[s] = 0.0f;
         }
     }
