@@ -1,55 +1,57 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
 public class Timer : MonoBehaviour
 {
-    public TMP_Text timerText; // Use public Text timerText; if you're not using TextMeshPro
-
     public event Action OnTimerComplete; // Event to subscribe to for when the timer finishes
+    public TMP_Text timerText; // Use public Text timerText; if you're not using TextMeshPro
+    public float timeRemaining; // Current timer value
+    private bool timerActive = false; // Tracks if the timer is currently running
 
-    private float timeRemaining;
-    private bool timerRunning;
 
-    void Awake()
+    public void StartTimer(int Duration)
     {
-        // Initialize to ensure there are no null reference issues
-        OnTimerComplete += () => { };
+        ResetTimer(Duration);
+        timeRemaining = Duration;
+        timerActive = true;
     }
 
-    public void StartTimer(float duration)
+    public void StopTimer()
     {
-        if (timerRunning)
-        {
-            // Optionally handle the case where the timer is already running
-            Debug.Log("Timer is already running. Resetting timer.");
-        }
-
-        timeRemaining = duration;
-        timerRunning = true;
-        StartCoroutine(UpdateTimer());
+        timerActive = false;
     }
 
-    private IEnumerator UpdateTimer()
+    public void ResetTimer(int Duration)
     {
-        while (timeRemaining > 0)
+        StopTimer();
+        timerText.text = FormatTime(Duration);
+    }
+
+    void Update()
+    {
+        if (timerActive && timeRemaining > 0)
         {
             timeRemaining -= Time.deltaTime;
-            UpdateTimeDisplay();
-            yield return null;
+            timerText.text = FormatTime(timeRemaining);
         }
-
-        timerRunning = false;
-        // Notify all subscribers that the timer has finished
-        timerText.text = "";
-        OnTimerComplete.Invoke();
+        else if (timerActive)
+        {
+            timerText.text = FormatTime(0);
+            timerActive = false; // Stop the timer
+            if (OnTimerComplete != null)
+            {
+                OnTimerComplete.Invoke(); // Invoke the complete event
+            }
+        }
     }
 
-    private void UpdateTimeDisplay()
+    private string FormatTime(float time)
     {
-        // Update the timer text
-        timerText.text = $"{(int)timeRemaining / 60:D2}:{(int)timeRemaining % 60:D2}";
+        int minutes = Mathf.FloorToInt(time / 60);
+        int seconds = Mathf.FloorToInt(time % 60);
+        minutes = Mathf.Clamp(minutes, 0, 9);
+
+        return string.Format("{0}:{1:00}", minutes, seconds);
     }
 }

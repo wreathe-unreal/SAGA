@@ -4,27 +4,22 @@
             {
                 "ActionKey": {
                     "ActionName": "Talk",
-                    "Attribute": "Prowess",
-                    "AttributeMinimum": 3,
-                    "ID": "ironmanpepes_broom",
-                    "ReqLocation": "Deepmine",
+                    "Attribute": "King Arthur Fame",
+                    "AttributeMinimum": 0,
+                    "ID": "king_arthur",
+                    "ReqLocation": "",
                     "SecondaryCardSpecifiers": [
-                        [
-                            "korean_book",
-                            "",
-                            ""
-                        ]
                     ]
                 },
                 "ActionResult": {
-                    "AttributeModified": "Fame",
-                    "AttributeModifier": 1.43,
+                    "AttributeModified": "King Arthur Fame",
+                    "AttributeModifier": 1,
                     "Duration": 5,
-                    "FlavorText": "It seems to speak.",
-                    "OutcomeText": "It speaks Korean.",
+                    "FlavorText": "A mist envelops the space before you, solidifying into the form of King Arthur. His eyes examine you for a moment, before he greets you.\n",
+                    "OutcomeText": "As a free captain, the King of Avalon invites you to join him as a peer of the Roundtable.",
                     "ReturnedCardIDs": [
-                        "ironmanpepes_broom",
-                        "korean_book"
+                        "king_arthur",
+                        "crest_of_knighthood"
                     ],
                     "ReturnedQuantities": [
                         1,
@@ -35,9 +30,99 @@
             {
                 "ActionKey": {
                     "ActionName": "Talk",
+                    "Attribute": "King Arthur Fame",
+                    "AttributeMinimum": 1,
+                    "ID": "king_arthur",
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "King Arthur Fame",
+                    "AttributeModifier": 0,
+                    "Duration": 5,
+                    "FlavorText": "The King of Avalon greets you once again, pleased that you've become a peer of the realm.",
+                    "OutcomeText": "He suggests that you undertake a quest, like the days of yore. To prepare yourself to destroy the Crimsontide. Promising a great reward, should you defeat Admiral Sascha.",
+                    "ReturnedCardIDs": [
+                        "king_arthur",
+                        "defeat_admiral_sascha"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1
+                    ]
+                }
+            },
+            {
+                "ActionKey": {
+                    "ActionName": "Talk",
+                    "Attribute": "King Arthur Fame",
+                    "AttributeMinimum": 2,
+                    "ID": "king_arthur",
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                        [
+                            "defeated_admiral_sascha",
+                            "",
+                            ""
+                        ]
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 5,
+                    "FlavorText": "You present the proof of your completing the Quest.",
+                    "OutcomeText": "The Crown of Avalon grins and nods in appreciation. He presents you with a reward, the Captain's signet of authority to the legendary worldship Excalibur.",
+                    "ReturnedCardIDs": [
+                        "king_arthur",
+                        "signet_of_authority",
+                        "gold"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1,
+                        10
+                    ]
+                }
+            },
+            {
+                "ActionKey": {
+                    "ActionName": "Trade",
                     "Attribute": "",
                     "AttributeMinimum": 0,
-                    "ID": "ironmanpepes_broom",
+                    "ID": "king_arthur",
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                        [
+                            "gold",
+                            "",
+                            ""
+                        ]
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 5,
+                    "FlavorText": "Flavor text...",
+                    "OutcomeText": "Outcome text...",
+                    "ReturnedCardIDs": [
+                        "king_arthur",
+                        "signet_of_authority"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1
+                    ]
+                }
+            },
+            {
+                "ActionKey": {
+                    "ActionName": "Battle",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "king_arthur",
                     "ReqLocation": "",
                     "SecondaryCardSpecifiers": [
                     ]
@@ -45,25 +130,43 @@
                 "ActionResult": {
                     "AttributeModified": "",
                     "AttributeModifier": 0,
-                    "Duration": 120,
-                    "FlavorText": "asdf",
-                    "OutcomeText": "asdfas",
+                    "Duration": 5,
+                    "FlavorText": "You demand a duel with the crown of humanity, who is obliged by honor to accept.",
+                    "OutcomeText": "King Arthur returns to Roundtable Station, commending you for your prowess.",
                     "ReturnedCardIDs": [
+                        "signet_of_authority",
+                        "pendragon_ward"
                     ],
                     "ReturnedQuantities": [
+                        1,
+                        1
                     ]
                 }
             }
         ],
-        "FlavorText": "A long shaft.",
-        "Habitat": "The Feast",
-        "ID": "ironmanpepes_broom",
-        "ImagePath": "ironmanpepes_broom.png",
-        "Lifespan": 120,
-        "Name": "Ironmanpepe's Broom",
-        "Price": 500,
-        "Property": "Legendary",
-        "System": "Nocturne",
+        "FlavorText": "The Crown and Scepter of Avalon.\n",
+        "Habitat": "Roundtable Nexus",
+        "ID": "king_arthur",
+        "ImagePath": "king_arthur.png",
+        "Lifespan": 0,
+        "Name": "King Arthur",
+        "Price": 0,
+        "Property": "Human",
+        "System": "Avalon",
+        "Type": "Character"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "A symbol of trust and responsibility, it's chain hangs heavy on your neck. This symbol represents your raising to the peerage.",
+        "Habitat": "",
+        "ID": "crest_of_knighthood",
+        "ImagePath": "crest_of_knighthood.png",
+        "Lifespan": 0,
+        "Name": "Crest Of Knighthood",
+        "Price": 0,
+        "Property": "Military",
+        "System": "",
         "Type": "Object"
     },
     {
@@ -71,27 +174,157 @@
             {
                 "ActionKey": {
                     "ActionName": "Talk",
-                    "Attribute": "Prowess",
-                    "AttributeMinimum": 3,
-                    "ID": "ironmanpepes_broom",
-                    "ReqLocation": "Deepmine",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "sir_lancelot",
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 5,
+                    "FlavorText": "Entering the Citadel's offices, the Sword of Avalon raises a hand warmly to you in greeting, as protocol dictates for a peer of the realm.",
+                    "OutcomeText": "If you're looking for work with good pay, you've been offered your own swordwork, to patrol the tradelanes and fight off the occasional pirate incursion.",
+                    "ReturnedCardIDs": [
+                        "sir_lancelot",
+                        "crest_of_knighthood",
+                        "patrol_avalon",
+                        "sir_lancelot",
+                        "crest_of_knighthood",
+                        "patrol_avalon"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            },
+            {
+                "ActionKey": {
+                    "ActionName": "Battle",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "sir_lancelot",
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 5,
+                    "FlavorText": "You demand to duel one of the most dangerous individuals in the galaxy.",
+                    "OutcomeText": "The Knight laughs as he makes his way back to The Citadel, thanking you for a wonderful distraction.",
+                    "ReturnedCardIDs": [
+                        "sir_lancelot",
+                        "rays_of_arondite",
+                        "gold"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1,
+                        10
+                    ]
+                }
+            }
+        ],
+        "FlavorText": "The Sword of the stars who has held the line for a millennium against the threats of Avalon.",
+        "Habitat": "The Citadel",
+        "ID": "sir_lancelot",
+        "ImagePath": "sir_lancelot.png",
+        "Lifespan": 0,
+        "Name": "Sir Lancelot",
+        "Price": 0,
+        "Property": "Military",
+        "System": "Avalon",
+        "Type": "Character"
+    },
+    {
+        "Actions": [
+            {
+                "ActionKey": {
+                    "ActionName": "Work",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "patrol_avalon",
+                    "ReqLocation": "Avalon",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 5,
+                    "FlavorText": "You search the emptiness between for vipers laying in wait.",
+                    "OutcomeText": "You have secured the tradelanes, along with a pittance for your efforts. Thankfully nobility is it's own reward.. right?",
+                    "ReturnedCardIDs": [
+                        "patrol_avalon",
+                        "gold"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        2
+                    ]
+                }
+            }
+        ],
+        "FlavorText": "The lone patrol is a noble effort, a necessity for the aspiring knight-errant.",
+        "Habitat": "",
+        "ID": "patrol_avalon",
+        "ImagePath": "patrol_avalon.png",
+        "Lifespan": 0,
+        "Name": "Patrol Avalon",
+        "Price": 0,
+        "Property": "Military",
+        "System": "Avalon",
+        "Type": "Action"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Harken to that melodious sound of the clink of coin.",
+        "Habitat": "",
+        "ID": "gold",
+        "ImagePath": "gold.png",
+        "Lifespan": 0,
+        "Name": "Gold",
+        "Price": 0,
+        "Property": "Trade",
+        "System": "",
+        "Type": "Currency"
+    },
+    {
+        "Actions": [
+            {
+                "ActionKey": {
+                    "ActionName": "Battle",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "admiral_sascha",
+                    "ReqLocation": "",
                     "SecondaryCardSpecifiers": [
                         [
-                            "korean_book",
+                            "defeat_admiral_sascha",
                             "",
                             ""
                         ]
                     ]
                 },
                 "ActionResult": {
-                    "AttributeModified": "Fame",
-                    "AttributeModifier": 1.43,
+                    "AttributeModified": "King Arthur Fame",
+                    "AttributeModifier": 1,
                     "Duration": 5,
-                    "FlavorText": "It seems to speak.",
-                    "OutcomeText": "It speaks Korean.",
+                    "FlavorText": "For the glory of Avalon, you move to engage with The Red Cutlass.",
+                    "OutcomeText": "The Vampiress voice connects with you once again, she vows to have vengeance against you one day.",
                     "ReturnedCardIDs": [
-                        "ironmanpepes_broom",
-                        "korean_book"
+                        "admiral_sascha",
+                        "defeated_admiral_sascha"
                     ],
                     "ReturnedQuantities": [
                         1,
@@ -104,7 +337,7 @@
                     "ActionName": "Talk",
                     "Attribute": "",
                     "AttributeMinimum": 0,
-                    "ID": "ironmanpepes_broom",
+                    "ID": "admiral_sascha",
                     "ReqLocation": "",
                     "SecondaryCardSpecifiers": [
                     ]
@@ -112,53 +345,454 @@
                 "ActionResult": {
                     "AttributeModified": "",
                     "AttributeModifier": 0,
-                    "Duration": 120,
-                    "FlavorText": "asdf",
-                    "OutcomeText": "asdfas",
-                    "ReturnedCardIDs": [
-                    ],
-                    "ReturnedQuantities": [
-                    ]
-                }
-            },
-            {
-                "ActionKey": {
-                    "ActionName": "Research",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "korean_book",
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "Health",
-                    "AttributeModifier": 5,
                     "Duration": 5,
-                    "FlavorText": "Flavor text...",
+                    "FlavorText": "Her voice communes with your mind with a refined purr of an accent. She questions your motives for approaching her.",
                     "OutcomeText": "Outcome text...",
                     "ReturnedCardIDs": [
                     ],
                     "ReturnedQuantities": [
                     ]
                 }
+            },
+            {
+                "ActionKey": {
+                    "ActionName": "Battle",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "admiral_sascha",
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 5,
+                    "FlavorText": "You plot an intercept course with the Red Cutlass, to face Admiral Sascha of the Crimson Fleet.",
+                    "OutcomeText": "Her escape pod launches as she retreats to another ship in the Flotilla of Crimsontide.",
+                    "ReturnedCardIDs": [
+                        "admiral_sascha",
+                        "dread_engines",
+                        "gold"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1,
+                        10
+                    ]
+                }
             }
         ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "korean_book",
-        "ImagePath": "korean_book.png",
+        "FlavorText": "The dreaded piratess, captain of the Red Cutlass, and Admiral of the Crimsontide.",
+        "Habitat": "Crimsontide",
+        "ID": "admiral_sascha",
+        "ImagePath": "admiral_sascha.png",
         "Lifespan": 0,
-        "Name": "Korean Book",
-        "Price": 1000,
-        "Property": "Dangerous",
+        "Name": "Admiral Sascha",
+        "Price": 0,
+        "Property": "Vampiric",
+        "System": "Nocturne",
+        "Type": "Character"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "A Commission given to you by King Arthur to bring Admiral Sascha of the Crimson Fleet to justice.",
+        "Habitat": "",
+        "ID": "defeat_admiral_sascha",
+        "ImagePath": "defeat_admiral_sascha.png",
+        "Lifespan": 0,
+        "Name": "Defeat Admiral Sascha",
+        "Price": 0,
+        "Property": "Quest",
+        "System": "",
+        "Type": "Ambition"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Proof that you have defeated Admiral Sascha and struck a blow against the Crimson Fleet.",
+        "Habitat": "",
+        "ID": "defeated_admiral_sascha",
+        "ImagePath": "defeated_admiral_sascha.png",
+        "Lifespan": 0,
+        "Name": "Defeated Admiral Sascha",
+        "Price": 0,
+        "Property": "Quest",
+        "System": "",
+        "Type": "Ambition"
+    },
+    {
+        "Actions": [
+            {
+                "ActionKey": {
+                    "ActionName": "Craft",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "signet_of_authority",
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                        [
+                            "excalibur_dormant",
+                            "",
+                            ""
+                        ]
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 5,
+                    "FlavorText": "You place your ringed hand onto Excalibur's command console.",
+                    "OutcomeText": "After but a moment you feel the seals inhibiting the mighty worldship unlace, power surges, and light errupts from every place before dimming for your eyes. You are now in command, Excalibur is yours, and she is unsheathed.",
+                    "ReturnedCardIDs": [
+                        "signet_of_authority",
+                        "excalibur"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1
+                    ]
+                }
+            }
+        ],
+        "FlavorText": "A simple golden ring with a sword emblazoned in it's face. The final key required to take command of the legendary worldship Excalibur.",
+        "Habitat": "",
+        "ID": "signet_of_authority",
+        "ImagePath": "signet_of_authority.png",
+        "Lifespan": 0,
+        "Name": "Signet Of Authority",
+        "Price": 0,
+        "Property": "",
+        "System": "",
+        "Type": ""
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Excalibur is remade, but one vital component remains to unlock her power.",
+        "Habitat": "",
+        "ID": "excalibur_dormant",
+        "ImagePath": "excalibur_dormant.png",
+        "Lifespan": 0,
+        "Name": "Excalibur Dormant",
+        "Price": 0,
+        "Property": "Legendary",
         "System": "",
         "Type": "Object"
     },
     {
         "Actions": [
         ],
-        "FlavorText": "Grip the broom...",
+        "FlavorText": "The weapon given to Arthur by the Lady of the Lake, remembered as the hope of mankind. Excalibur.",
+        "Habitat": "",
+        "ID": "excalibur",
+        "ImagePath": "excalibur.png",
+        "Lifespan": 0,
+        "Name": "Excalibur",
+        "Price": 0,
+        "Property": "Legendary",
+        "System": "",
+        "Type": "Fleet"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Governed by the Order of Roundtable, the knights of humanity sail forth. With honor and friendship Avalon, is indeed the jewel of the stars.",
+        "Habitat": "",
+        "ID": "avalon",
+        "ImagePath": "avalon.png",
+        "Lifespan": 0,
+        "Name": "Avalon",
+        "Price": 0,
+        "Property": "",
+        "System": "Avalon",
+        "Type": "System"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Seat of mystery and wonder, mystics and magi hail Merlin as the center of the arcane world. Long have the elves proudly used their knowlege to aid others in their development.",
+        "Habitat": "",
+        "ID": "merlin",
+        "ImagePath": "merlin.png",
+        "Lifespan": 0,
+        "Name": "Merlin",
+        "Price": 0,
+        "Property": "",
+        "System": "Merlin",
+        "Type": "System"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Aristocratic vampire pirates loosely govern this dusky system, for a dense interstellar cloud obscures makes this place their ideal environment.",
+        "Habitat": "",
+        "ID": "nocturne",
+        "ImagePath": "nocturne.png",
+        "Lifespan": 0,
+        "Name": "Nocturne",
+        "Price": 0,
+        "Property": "",
+        "System": "Nocturne",
+        "Type": "System"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Due to inhabiting a natrually hostile environment the Macht, an ancient sub-species of dwarf bent their magics towards the shedding of their bodily forms. Here their metallic inheritance goes on.",
+        "Habitat": "",
+        "ID": "bane",
+        "ImagePath": "bane.png",
+        "Lifespan": 0,
+        "Name": "Bane",
+        "Price": 0,
+        "Property": "",
+        "System": "Bane",
+        "Type": "System"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Perhaps the most mineral rich sector in known space. The dwarves wasted no time with attempts to exploit their whole of their home. Wealth is the rule here.",
+        "Habitat": "",
+        "ID": "glint",
+        "ImagePath": "glint.png",
+        "Lifespan": 0,
+        "Name": "Glint",
+        "Price": 0,
+        "Property": "",
+        "System": "Glint",
+        "Type": "System"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Once a part of elfspace, the dark elves rejected the helping of others and instead turned selfishly inward. While their dark delights worry most, they mostly keep to themselves. Though it must be said that none do debauchery better, and many a sailor on leave finds themself vacationioning here at least once, usually though, once is not enough.",
+        "Habitat": "",
+        "ID": "macbethiv",
+        "ImagePath": "macbethiv.png",
+        "Lifespan": 0,
+        "Name": "MacbethIV",
+        "Price": 0,
+        "Property": "",
+        "System": "MacbethIV",
+        "Type": "System"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "The symbol of humanity's militaristic and adminstrative power. This impressively circular station is the seat of the Order of Roundtable, as well as where King Arthur rules from. It is currently the largest office station in the galaxy.",
+        "Habitat": "Roundtable Nexus",
+        "ID": "roundtable_nexus",
+        "ImagePath": "roundtable_nexus.png",
+        "Lifespan": 0,
+        "Name": "Roundtable Nexus",
+        "Price": 0,
+        "Property": "Station",
+        "System": "Avalon",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "In this long expanse of the emptiness between a shuttle slowly sails, silent and unassuming.",
+        "Habitat": "Terminus Est",
+        "ID": "terminus_est",
+        "ImagePath": "terminus_est.png",
+        "Lifespan": 0,
+        "Name": "Terminus Est",
+        "Price": 0,
+        "Property": "Excalibur Fragment",
+        "System": "Avalon",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "A towering multi level defensive complex with an extended shipyard, built atop the earth's moon. It is bulwark that defends humanity.",
+        "Habitat": "The Citadel",
+        "ID": "the_citadel",
+        "ImagePath": "the_citadel.png",
+        "Lifespan": 0,
+        "Name": "The Citadel",
+        "Price": 0,
+        "Property": "Military",
+        "System": "Avalon",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Following the first Merlin's example, the A.M.S. White Lodge is a monastic carrier vessel, meant to cloister the monks and magi within from the bustle of the galaxy outside.",
+        "Habitat": "The White Lodge",
+        "ID": "the_white_lodge",
+        "ImagePath": "the_white_lodge.png",
+        "Lifespan": 0,
+        "Name": "The White Lodge",
+        "Price": 0,
+        "Property": "Monastery",
+        "System": "Avalon",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Avalon's primary source of materia based fuel and a rich fountain of quintessence, the only problem is that both resources are sourced from... dragons.",
+        "Habitat": "Dragonroost",
+        "ID": "dragonroost",
+        "ImagePath": "dragonroost.png",
+        "Lifespan": 0,
+        "Name": "Dragonroost",
+        "Price": 0,
+        "Property": "Dangerous",
+        "System": "Avalon",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "It's said that Merlin planted a great tree, but until the terraformation projects of the ice giants, nobody knew where it was. Yggdrasil the great tree stretches easily outside of it's planetary atmosphere, acting as a natural space elevator, and economic hub for the Avalon System.",
+        "Habitat": "Yggdrasil",
+        "ID": "yggdrasil",
+        "ImagePath": "yggdrasil.png",
+        "Lifespan": 0,
+        "Name": "Yggdrasil",
+        "Price": 0,
+        "Property": "",
+        "System": "Avalon",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "The cradle of humanity, Earth is renowned for the production of the majority of organically based products in the known galaxy.",
+        "Habitat": "Earth",
+        "ID": "earth",
+        "ImagePath": "earth.png",
+        "Lifespan": 0,
+        "Name": "Earth",
+        "Price": 0,
+        "Property": "Human",
+        "System": "Avalon",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "A powerful laser array developed by the best magi of The White Lodge, named after Lancelot's own sword.",
+        "Habitat": "",
+        "ID": "rays_of_arondite",
+        "ImagePath": "rays_of_arondite.png",
+        "Lifespan": 0,
+        "Name": "Rays Of Arondite",
+        "Price": 0,
+        "Property": "Epic",
+        "System": "",
+        "Type": "Laser Weapon"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "These engines which have helped snare many a victim for it's previous owner is the result of the most advanced methods of Quintessential Cleaving developed by the magi of Rakshasa.",
+        "Habitat": "",
+        "ID": "dread_engines",
+        "ImagePath": "dread_engines.png",
+        "Lifespan": 0,
+        "Name": "Dread engines",
+        "Price": 0,
+        "Property": "Epic",
+        "System": "",
+        "Type": "Engine"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "It's arcane matrix was designed after King Arthur's own legendary scabbard, able to protect against even some of the most powerful magical skullduggery.",
+        "Habitat": "",
+        "ID": "pendragon_ward",
+        "ImagePath": "pendragon_ward.png",
+        "Lifespan": 0,
+        "Name": "Pendragon Ward",
+        "Price": 0,
+        "Property": "Epic",
+        "System": "",
+        "Type": "Magical Ward"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Between Mars and Jupiter exists a metal rich ring of asteroids, at which a stationary mining colony has been built to extract those resources. The Leviathan Belt is responsible for nearly all resources used in the construction of ships both civilian and military in the Avalon System.",
+        "Habitat": "Leviathan Belt",
+        "ID": "leviathan_belt",
+        "ImagePath": "leviathan_belt.png",
+        "Lifespan": 0,
+        "Name": "Leviathan Belt",
+        "Price": 0,
+        "Property": "Mineable",
+        "System": "Avalon",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "",
+        "Habitat": "Terminus Est",
+        "ID": "mr_fisher",
+        "ImagePath": "mr_fisher.png",
+        "Lifespan": 0,
+        "Name": "Mr Fisher",
+        "Price": 0,
+        "Property": "Classified",
+        "System": "Avalon",
+        "Type": "Character"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "",
+        "Habitat": "Dragonroost",
+        "ID": "beithir_the_custodian",
+        "ImagePath": "beithir_the_custodian.png",
+        "Lifespan": 0,
+        "Name": "Beithir the Custodian",
+        "Price": 0,
+        "Property": "Classified",
+        "System": "Avalon",
+        "Type": "Character"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "",
+        "Habitat": "The White Lodge",
+        "ID": "lady_wreath",
+        "ImagePath": "lady_wreath.png",
+        "Lifespan": 0,
+        "Name": "Lady Wreath",
+        "Price": 0,
+        "Property": "Arcane",
+        "System": "Avalon",
+        "Type": "Character"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "",
+        "Habitat": "Yggdrasil",
+        "ID": "mr_mint",
+        "ImagePath": "mr_mint.png",
+        "Lifespan": 0,
+        "Name": "Mr Mint",
+        "Price": 0,
+        "Property": "Economic",
+        "System": "Avalon",
+        "Type": "Character"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "",
         "Habitat": "",
         "ID": "work",
         "ImagePath": "work.png",
@@ -168,5 +802,309 @@
         "Property": "",
         "System": "",
         "Type": "Action"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "",
+        "Habitat": "",
+        "ID": "dream",
+        "ImagePath": "dream.png",
+        "Lifespan": 0,
+        "Name": "Dream",
+        "Price": 0,
+        "Property": "",
+        "System": "",
+        "Type": "Action"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "",
+        "Habitat": "",
+        "ID": "research",
+        "ImagePath": "research.png",
+        "Lifespan": 0,
+        "Name": "Research",
+        "Price": 0,
+        "Property": "",
+        "System": "",
+        "Type": "Action"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "",
+        "Habitat": "",
+        "ID": "talk",
+        "ImagePath": "talk.png",
+        "Lifespan": 0,
+        "Name": "Talk",
+        "Price": 0,
+        "Property": "",
+        "System": "",
+        "Type": "Action"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "",
+        "Habitat": "",
+        "ID": "craft",
+        "ImagePath": "craft.png",
+        "Lifespan": 0,
+        "Name": "Craft",
+        "Price": 0,
+        "Property": "",
+        "System": "",
+        "Type": "Action"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "",
+        "Habitat": "",
+        "ID": "explore",
+        "ImagePath": "explore.png",
+        "Lifespan": 0,
+        "Name": "Explore",
+        "Price": 0,
+        "Property": "",
+        "System": "",
+        "Type": "Action"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "",
+        "Habitat": "",
+        "ID": "trade",
+        "ImagePath": "trade.png",
+        "Lifespan": 0,
+        "Name": "trade",
+        "Price": 0,
+        "Property": "",
+        "System": "",
+        "Type": "Action"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "",
+        "Habitat": "",
+        "ID": "battle",
+        "ImagePath": "battle.png",
+        "Lifespan": 0,
+        "Name": "battle",
+        "Price": 0,
+        "Property": "",
+        "System": "",
+        "Type": "Action"
+    },
+    {
+        "Actions": [
+            {
+                "ActionKey": {
+                    "ActionName": "Work",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "deep_miner_mining",
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "Deep Miner Progress",
+                    "AttributeModifier": 1,
+                    "Duration": 5,
+                    "FlavorText": "There is little else to do but bend my back and put the flame to the tunnel.",
+                    "OutcomeText": "Entombed in stone, fate smiles at you, the skeleton of a small craft, by the laws of salvage it's yours to  unearth and dream with.",
+                    "ReturnedCardIDs": [
+                        "deep_miner_mining",
+                        "gold",
+                        "broken_shuttle",
+                        "dream"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            },
+            {
+                "ActionKey": {
+                    "ActionName": "Work",
+                    "Attribute": "Deep Miner Progress",
+                    "AttributeMinimum": 1,
+                    "ID": "deep_miner_mining",
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 5,
+                    "FlavorText": "There is little else to do but bend my back and put the flame to the tunnel.",
+                    "OutcomeText": "You do the day's work, your hands and back are sore.",
+                    "ReturnedCardIDs": [
+                        "deep_miner_mining",
+                        "gold"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1
+                    ]
+                }
+            }
+        ],
+        "FlavorText": "As the contract binds, there is little else to do but bend my back and put the flame to the tunnel.",
+        "Habitat": "Deepmine",
+        "ID": "deep_miner_mining",
+        "ImagePath": "deep_miner_mining.png",
+        "Lifespan": 0,
+        "Name": "Deep Miner Mining",
+        "Price": 0,
+        "Property": "Mineable",
+        "System": "Glint",
+        "Type": "Ambition"
+    },
+    {
+        "Actions": [
+            {
+                "ActionKey": {
+                    "ActionName": "Dream",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "broken_shuttle",
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 5,
+                    "FlavorText": "To cease to dream is to die a slow and unremarkable death.",
+                    "OutcomeText": "Excavating the broken hull was hell, with your surface time before bed, you gaze into space. Bringing the broken ship back to life and getting out of these mines is all that matters to you now.",
+                    "ReturnedCardIDs": [
+                        "broken_shuttle",
+                        "talk",
+                        "helldiver_uma"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            }
+        ],
+        "FlavorText": "The remnants of someone else's dream, perhaps you can make it your own.",
+        "Habitat": "",
+        "ID": "broken_shuttle",
+        "ImagePath": "broken_shuttle.png",
+        "Lifespan": 0,
+        "Name": "Broken Shuttle",
+        "Price": 0,
+        "Property": "Junk",
+        "System": "",
+        "Type": "Object"
+    },
+    {
+        "Actions": [
+            {
+                "ActionKey": {
+                    "ActionName": "Talk",
+                    "Attribute": "Helldiver Uma Dialogue",
+                    "AttributeMinimum": 1,
+                    "ID": "helldiver_uma",
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 5,
+                    "FlavorText": "I approach supervisor Uma, but I've already asked her about my dream.",
+                    "OutcomeText": "She greets you like she would any of the other scabs, but she does inquire as to whether or not you've moved up in the world.",
+                    "ReturnedCardIDs": [
+                        "helldiver_uma"
+                    ],
+                    "ReturnedQuantities": [
+                        1
+                    ]
+                }
+            },
+            {
+                "ActionKey": {
+                    "ActionName": "Talk",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "helldiver_uma",
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "Helldiver Uma Dialogue",
+                    "AttributeModifier": 1,
+                    "Duration": 5,
+                    "FlavorText": "I approach the shift supervisor to see if there's anything that can be done about realizing my newfound dream.",
+                    "OutcomeText": "Uma suggests that you save enough to take the space taxi to Wreckage Bay. He can take you where you want to go. For a price, of course.",
+                    "ReturnedCardIDs": [
+                        "space_taxi",
+                        "helldiver_uma",
+                        "space_taxi"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            }
+        ],
+        "FlavorText": "The Shift Supervisor Uma, is as experienced a helldiver as they come. In the Deepmines, she's the person all the scabs look up to.",
+        "Habitat": "Deepmine",
+        "ID": "helldiver_uma",
+        "ImagePath": "helldiver_uma.png",
+        "Lifespan": 0,
+        "Name": "Helldiver Uma",
+        "Price": 0,
+        "Property": "Dwarven",
+        "System": "Glint",
+        "Type": "Character"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "The only rule be: don't ask what the creature beside you did to retreat here.",
+        "Habitat": "Deepmine",
+        "ID": "deepmine",
+        "ImagePath": "deepmine.png",
+        "Lifespan": 0,
+        "Name": "Deepmine",
+        "Price": 0,
+        "Property": "",
+        "System": "Glint",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "He can take you where you want to go, for a price, of course.",
+        "Habitat": "",
+        "ID": "space_taxi",
+        "ImagePath": "space_taxi.png",
+        "Lifespan": 0,
+        "Name": "Space Taxi",
+        "Price": 0,
+        "Property": "Civilian",
+        "System": "",
+        "Type": "Object"
     }
 ]

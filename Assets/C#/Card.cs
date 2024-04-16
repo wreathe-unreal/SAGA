@@ -2,12 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Card : MonoBehaviour
 {
-    private Color BorderColor;
+    public Timer Timer;
+    private Color CardColor;
     public Animator AnimController;
     public CardData Data;
     public string ID;
@@ -17,6 +19,8 @@ public class Card : MonoBehaviour
     public int Quantity;
     public TextMeshProUGUI DisplayName;
     public TextMeshProUGUI DisplayQuantity;
+    public ActionResult CurrentActionResult; //for verb cards only
+    
 
     void Start()
     {
@@ -76,7 +80,8 @@ public class Card : MonoBehaviour
         GetComponentInChildren<Image>().sprite = Resources.Load<Sprite>("Images/" + ImagePath);
         DisplayName.text = Name;
 
-        SetBorderColor();
+        SetCardColor();
+        DisplayName.color = CardColor;
         foreach (Transform child in transform)
         {
             // Check if the child's name is "Cube"
@@ -86,49 +91,51 @@ public class Card : MonoBehaviour
                 if (renderer != null)
                 {
                     // Set the color of the material
-                    renderer.material.color = BorderColor;
+                    renderer.material.color = CardColor;
                 }
             }
+
         }
+        
         
     }
 
-    public void SetBorderColor()
+    public void SetCardColor()
     {
         switch (GetDeckType())
         {
             case "Crafting":
-                BorderColor = new Color(51 / 255f, 204 / 255f, 255 / 255f);
+                CardColor = new Color(51 / 255f, 204 / 255f, 255 / 255f);
                 break;
             case "Object":
-                BorderColor = new Color(0 / 255f, 255 / 255f, 153 / 255f);
+                CardColor = new Color(0 / 255f, 255 / 255f, 153 / 255f);
                 break;
             case "Character":
-                BorderColor = new Color(0 / 255f, 0 / 255f, 204 / 255f);
+                CardColor = new Color(0 / 255f, 0 / 255f, 204 / 255f);
                 break;
             case "Fleet":
-                BorderColor = new Color(255 / 255f, 255 / 255f, 0 / 255f);
+                CardColor = new Color(255 / 255f, 255 / 255f, 0 / 255f);
                 break;
             case "Cargo":
-                BorderColor = new Color(153 / 255f, 102 / 255f, 51 / 255f);
+                CardColor = new Color(153 / 255f, 102 / 255f, 51 / 255f);
                 break;
             case "Habitat":
-                BorderColor = new Color(153 / 255f, 51 / 255f, 255 / 255f);
+                CardColor = new Color(153 / 255f, 51 / 255f, 255 / 255f);
                 break;
             case "System":
-                BorderColor = new Color(204 / 255f, 0 / 255f, 204 / 255f);
+                CardColor = new Color(204 / 255f, 0 / 255f, 204 / 255f);
                 break;
             case "Action":
-                BorderColor = new Color(255 / 255f, 128 / 255f, 0 / 255f);
+                CardColor = new Color(255 / 255f, 128 / 255f, 0 / 255f);
                 break;
             case "Ambition":
-                BorderColor = new Color(255 / 255f, 51 / 255f, 133 / 255f);
+                CardColor = new Color(255 / 255f, 51 / 255f, 133 / 255f);
                 break;
             case "Currency":
-                BorderColor = new Color(0 / 255f, 102 / 255f, 0 / 255f);
+                CardColor = new Color(0 / 255f, 102 / 255f, 0 / 255f);
                 break;
             default:
-                BorderColor = new Color(255 / 255f, 255 / 255f, 255 / 255f);
+                CardColor = new Color(255 / 255f, 255 / 255f, 255 / 255f);
                 break;
         }
     }
@@ -161,4 +168,87 @@ public class Card : MonoBehaviour
         AnimController.SetTrigger("CardFlipTrigger");
     }
 
+
+    public void ExecuteActionResult()
+    {
+        gameObject.transform.SetParent(null);
+        gameObject.transform.localScale = new Vector3(55, 55, 1);
+        Board.Decks["Action"].SetCardPositions();
+        Timer.StartTimer(CurrentActionResult.Duration);
+        Timer.OnTimerComplete += OnTimerExpired;
+
+
+    }
+
+    private void OnTimerExpired()
+    {
+        Timer.timerText.text = "Done";
+        
+    }
+
+    public void OpenAction()
+    {
+        if (IsTimerFinished() && CurrentActionResult != null)
+        {
+            Time.timeScale = 0.0f;
+            Terminal.SetPanelActive(true);
+            Terminal.Panel.transform.Find("FlavorText").GetComponent<TMP_Text>().text = CurrentActionResult.OutcomeText;
+            
+
+            foreach (string cardID in CurrentActionResult.ReturnedCardIDs)
+            {
+                Board.ReturnedCards.Add(Board.GetInstance().AddCard(cardID, false));
+            }
+            
+            switch (Board.ReturnedCards.Count)
+            {
+                case 1:
+                    Terminal.Panel.GetComponent<MeshRenderer>().material.mainTexture = Resources.Load<Texture>("Images/2Panel");
+                    Board.ReturnedCards[0].transform.SetParent(Terminal.CardPos1);
+                    break;
+                case 2:
+                    Terminal.Panel.GetComponent<MeshRenderer>().material.mainTexture = Resources.Load<Texture>("Images/2Panel");
+                    Board.ReturnedCards[0].transform.SetParent(Terminal.CardPos1);
+                    Board.ReturnedCards[1].transform.SetParent(Terminal.CardPos2);
+                    break;
+                case 3:
+                    Terminal.Panel.GetComponent<MeshRenderer>().material.mainTexture = Resources.Load<Texture>("Images/3Panel");
+                    Board.ReturnedCards[0].transform.SetParent(Terminal.CardPos1);
+                    Board.ReturnedCards[1].transform.SetParent(Terminal.CardPos2);
+                    Board.ReturnedCards[2].transform.SetParent(Terminal.CardPos4);
+                    break;
+                case 4:
+                    Terminal.Panel.transform.Find("FlavorText").localPosition = new Vector3(-0.181f, 0.679f, 0f);
+                    Terminal.Panel.GetComponent<MeshRenderer>().material.mainTexture = Resources.Load<Texture>("Images/4Panel");
+                    Board.ReturnedCards[0].transform.SetParent(Terminal.CardPos1);
+                    Board.ReturnedCards[1].transform.SetParent(Terminal.CardPos2);
+                    Board.ReturnedCards[2].transform.SetParent(Terminal.CardPos4);
+                    Board.ReturnedCards[3].transform.SetParent(Terminal.CardPos3);
+                    break;
+            }
+            
+            foreach (Card c in Board.ReturnedCards)
+            {
+             
+                c.transform.localScale = new Vector3(1f, 1f, 1f);
+                c.transform.localPosition = new Vector3(0f, 0f, 0f);
+            }
+            
+
+        }
+        
+        //handle quantity xd
+        
+        //flip them
+        
+        Timer.timerText.text = "";
+        CurrentActionResult = null;
+    }
+
+    
+
+    public bool IsTimerFinished()
+    {
+        return Timer.timeRemaining <= 0;
+    }
 }

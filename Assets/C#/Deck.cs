@@ -10,8 +10,8 @@ public class Deck : IEnumerable<Card>
     public List<Vector3> Positions = new List<Vector3>();
     public List<Card> Cards = new List<Card>();
 
-    
-    
+
+
     // Start is called before the first frame update
     public Deck(string deckName)
     {

@@ -22,7 +22,7 @@ public class CardData
     
     public Dictionary<ActionKey, ActionResult> ActionMap;
     
-    ActionResult GetActionResult(string actionName, List<CardData> cardData)
+    public ActionResult GetActionResult(string actionName, List<CardData> cardData)
     {
         foreach (ActionKey k in ActionMap.Keys)
         {
@@ -49,6 +49,7 @@ public class CardData
         Property = rcd.Property;
         Actions = rcd.Actions;
         this.ActionMap = new Dictionary<ActionKey, ActionResult>();
+        
         foreach (ActionData a in rcd.Actions)
         {
             a.ActionKey.ConvertSecondaryCardSpecifiers(); //converts all of the list of list of strings to a list of CardSpecifier objects

@@ -56,6 +56,8 @@ public class PlayerState : MonoBehaviour
         {
             AttributeMap[s] = 0.0f;
         }
+
+        AttributeMap[""] = 0.0f;
     }
 
     // Example function that can be called on this singleton

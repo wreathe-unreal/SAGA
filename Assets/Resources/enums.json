@@ -84,7 +84,8 @@
         "Cargo",
         "Fleet",
         "Habitat",
-        "System"
+        "System",
+        "Enemy"
     ],
     "ESystem": 
     [
@@ -153,6 +154,10 @@
 	      "Prowess",
 	      "Credit",
 	      "Intrepidity",
-        "Arcanum"
+        "Arcanum",
+        "King Arthur Fame",
+        "Deep Miner Progress",
+        "Helldiver Uma Dialogue"
+        
     ]
 }

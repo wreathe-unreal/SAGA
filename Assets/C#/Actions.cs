@@ -66,7 +66,7 @@ public class ActionKey
     public List<List<string>> SecondaryCardSpecifiers;
     public List<CardSpecifier> SecondaryCardSpecifiersReal;
 
-    
+
     //must be called on every actionkey after serialization
     public void ConvertSecondaryCardSpecifiers()
     {
@@ -75,8 +75,10 @@ public class ActionKey
         {
             SecondaryCardSpecifiersReal.Add(new CardSpecifier(sl[0], sl[1], sl[2]));
         }
+
+        SecondaryCardSpecifiers = new List<List<string>>(); //clear the string placeholders now that they are deserialized
     }
-    
+
     public bool Match(string actionName, List<CardData> cardData, PlayerState player)
     {
         if (actionName != ActionName && player.Location != this.ReqLocation)
@@ -84,7 +86,7 @@ public class ActionKey
             return false;
         }
 
-        if (player.AttributeMap[Attribute] <= this.AttributeMinimum)
+        if (this.AttributeMinimum != 0 && player.AttributeMap[Attribute] <= this.AttributeMinimum)
         {
             return false;
         }
@@ -106,7 +108,19 @@ public class ActionKey
         return true;
     }
 
-    public ActionKey()
+    //constructor for making actionkeys to check for matches
+    public ActionKey(string ActionName, string ID, string ReqLocation, List<CardSpecifier> SecondaryCardSpecifiers)
+    {
+        this.ActionName = ActionName;
+        this.ID = ID;
+        this.ReqLocation = ReqLocation;
+        this.SecondaryCardSpecifiersReal = SecondaryCardSpecifiers;
+        this.Attribute = "";
+        this.AttributeMinimum = 0;
+        this.SecondaryCardSpecifiers = new List<List<string>>();
+    }
+
+public ActionKey()
     {
         
     }
@@ -138,3 +152,63 @@ public class ActionResult
         return ReturnedCards;
     }
 }
+
+
+// public class ActionMap
+// {
+//     public List<ActionKey> ActionKeys;
+//     public List<ActionResult> ActionResults;
+//
+//     public int Match(string actionName, List<CardData> cardData, PlayerState player)
+//     {
+//         for (int i = 0; i < ActionKeys.Count; i++)
+//         {
+//             if (actionName != ActionKeys[i].ActionName && player.Location != ActionKeys[i].ReqLocation)
+//             {
+//                 continue;
+//             }
+//
+//             if (ActionKeys[i].AttributeMinimum != 0 && player.AttributeMap[ActionKeys[i].Attribute] <= ActionKeys[i].AttributeMinimum)
+//             {
+//                 continue;
+//             }
+//
+//
+//             if (cardData[0].ID != ActionKeys[i].ID)
+//             {
+//                 continue;
+//             }
+//
+//             bool bSecondariesMatch = true;
+//             for (int j = 1; j < ActionKeys[i].SecondaryCardSpecifiersReal.Count; j++)
+//             {
+//                 if (!ActionKeys[i].SecondaryCardSpecifiersReal[j].MatchCard(cardData[j]))
+//                 {
+//                     bSecondariesMatch = false;
+//                     break;
+//                 }
+//             }
+//
+//             if (!bSecondariesMatch)
+//             {
+//                 continue;
+//             }
+//
+//             return i;
+//         }
+//
+//         return -1;
+//     }
+//     public ActionResult Lookup(string actionName, List<CardData> cardData, PlayerState player)
+//     {
+//         int index = Match(actionName, cardData, player);
+//         if (index != -1)
+//         {
+//             return ActionResults[index];
+//         }
+//         else
+//         {
+//             return null;
+//         }
+//     }
+// }

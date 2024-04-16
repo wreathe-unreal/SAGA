@@ -35,7 +35,6 @@ public class KeyDetector
 public class CardSelector : MonoBehaviour
 {
     public KeyDetector InputController = new KeyDetector();
-    public Board BoardRef;
     public int Index = 0;
     private int DeckColumns;
     private int DeckRows;
@@ -45,17 +44,17 @@ public class CardSelector : MonoBehaviour
 
     void Start()
     {
-        if (BoardRef == null)
+        if (Board.GetInstance() == null)
         {
             Debug.LogError("BoardRef not set in the inspector");
             return; // Add return here
         }
-        if (BoardRef.Decks == null || BoardRef.Decks.Count == 0)
+        if (Board.Decks == null || Board.Decks.Count == 0)
         {
             Debug.LogError("BoardRef.Decks is not initialized or empty");
             return; // Add return here
         }
-        CurrentDeck = BoardRef.Decks["Object"];
+        CurrentDeck = Board.Decks["Object"];
     }
     void Awake()
     {
@@ -65,19 +64,19 @@ public class CardSelector : MonoBehaviour
     void Update()
     {
             
-        HandleInput(InputController.currentKey);
-        if (transform.childCount > 0)
-        {
-            Transform childTransform = transform.GetChild(0); // Get first child
-            childTransform.position = BoardRef.Decks[CurrentDeck.Name].Positions[Index];
-        }
+        // HandleInput(InputController.currentKey);
+        // if (transform.childCount > 0)
+        // {
+        //     Transform childTransform = transform.GetChild(0); // Get first child
+        //     childTransform.position = Board.Decks[CurrentDeck.Name].Positions[Index];
+        // }
 
 
     }
 
     public void HandleInput(KeyCode key)
     {
-        print(Index);
+        //print(Index);
         if (key == KeyCode.None)
         {
             return;
@@ -92,7 +91,7 @@ public class CardSelector : MonoBehaviour
                 }
                 else
                 {
-                    CurrentDeck = BoardRef.Decks[HandleDeckTransfer(key)];
+                    CurrentDeck = Board.Decks[HandleDeckTransfer(key)];
                     Index = 0;
                 }
 
@@ -104,7 +103,7 @@ public class CardSelector : MonoBehaviour
                 }
                 else
                 {
-                    CurrentDeck = BoardRef.Decks[HandleDeckTransfer(key)];
+                    CurrentDeck = Board.Decks[HandleDeckTransfer(key)];
                     Index = 0;
                 }
 
@@ -116,7 +115,7 @@ public class CardSelector : MonoBehaviour
                 }
                 else
                 {
-                    CurrentDeck = BoardRef.Decks[HandleDeckTransfer(key)];
+                    CurrentDeck = Board.Decks[HandleDeckTransfer(key)];
                     Index = 0;
                 }
 
@@ -128,7 +127,7 @@ public class CardSelector : MonoBehaviour
                 }
                 else
                 {
-                    CurrentDeck = BoardRef.Decks[HandleDeckTransfer(key)];
+                    CurrentDeck = Board.Decks[HandleDeckTransfer(key)];
                     Index = 0;
                 }
 
