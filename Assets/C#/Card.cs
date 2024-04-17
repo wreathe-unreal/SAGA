@@ -172,7 +172,7 @@ public class Card : MonoBehaviour
     {
         gameObject.transform.SetParent(null);
         gameObject.transform.localScale = new Vector3(55, 55, 1);
-        Board.Decks["Action"].SetCardPositions();
+        BoardState.Decks["Action"].SetCardPositions();
         Timer.StartTimer(CurrentActionResult.Duration);
         Timer.OnTimerComplete += OnTimerExpired;
 
@@ -189,7 +189,7 @@ public class Card : MonoBehaviour
         if (IsTimerFinished() && CurrentActionResult != null)
         {
             Time.timeScale = 0.0f;
-            PanelController.DisplayReturnPanel(this);
+            ActionManager.DisplayReturnPanel(this);
             Timer.timerText.text = "";
             CurrentActionResult = null;
             //handle quantity xd

@@ -44,17 +44,17 @@ public class CardSelector : MonoBehaviour
 
     void Start()
     {
-        if (Board.GetInstance() == null)
+        if (BoardState.GetInstance() == null)
         {
             Debug.LogError("BoardRef not set in the inspector");
             return; // Add return here
         }
-        if (Board.Decks == null || Board.Decks.Count == 0)
+        if (BoardState.Decks == null || BoardState.Decks.Count == 0)
         {
             Debug.LogError("BoardRef.Decks is not initialized or empty");
             return; // Add return here
         }
-        CurrentDeck = Board.Decks["Object"];
+        CurrentDeck = BoardState.Decks["Object"];
     }
     void Awake()
     {
@@ -91,7 +91,7 @@ public class CardSelector : MonoBehaviour
                 }
                 else
                 {
-                    CurrentDeck = Board.Decks[HandleDeckTransfer(key)];
+                    CurrentDeck = BoardState.Decks[HandleDeckTransfer(key)];
                     Index = 0;
                 }
 
@@ -103,7 +103,7 @@ public class CardSelector : MonoBehaviour
                 }
                 else
                 {
-                    CurrentDeck = Board.Decks[HandleDeckTransfer(key)];
+                    CurrentDeck = BoardState.Decks[HandleDeckTransfer(key)];
                     Index = 0;
                 }
 
@@ -115,7 +115,7 @@ public class CardSelector : MonoBehaviour
                 }
                 else
                 {
-                    CurrentDeck = Board.Decks[HandleDeckTransfer(key)];
+                    CurrentDeck = BoardState.Decks[HandleDeckTransfer(key)];
                     Index = 0;
                 }
 
@@ -127,7 +127,7 @@ public class CardSelector : MonoBehaviour
                 }
                 else
                 {
-                    CurrentDeck = Board.Decks[HandleDeckTransfer(key)];
+                    CurrentDeck = BoardState.Decks[HandleDeckTransfer(key)];
                     Index = 0;
                 }
 

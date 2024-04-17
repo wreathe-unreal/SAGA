@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 public class Terminal : MonoBehaviour
 {
-     public PanelController PanelController;
+     [FormerlySerializedAs("PanelController")] public ActionManager ActionManager;
      public TMP_Text PanelText;
      public TMP_InputField TextInput;
      private float LastActionTime;
@@ -48,15 +49,15 @@ public class Terminal : MonoBehaviour
         
          
          
-         if(PanelController.gameObject != null && PanelController.gameObject.activeSelf && PanelController.ReturnedCards.Count > 0 )
+         if(ActionManager.gameObject != null && ActionManager.gameObject.activeSelf && ActionManager.ReturnedCards.Count > 0 )
          {
              print("closing return panel");
-             PanelController.CloseReturnPanel();
+             ActionManager.CloseReturnPanel();
              yield return new WaitForSecondsRealtime(CooldownDuration);
          }
          
          // Handling no action card scenario
-         if (PanelController.ActionRef == null) 
+         if (ActionManager.ActionRef == null) 
          {
              
              if (TextInput.text != "> ACTION + CARD" && TextInput.text != "CARD(S) NOT FOUND."
@@ -69,7 +70,7 @@ public class Terminal : MonoBehaviour
          }
          else
          {
-             PanelController.CloseActionPanel();
+             ActionManager.CloseActionPanel();
          }
 
          TextInput.text = "> ACTION + CARD";
@@ -93,7 +94,7 @@ public class Terminal : MonoBehaviour
              words[i] = words[i].ToLower();
          }
 
-         PanelController.ExecuteInput(words);
+         ActionManager.ExecuteInput(words);
          
      }
      

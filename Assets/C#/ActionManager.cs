@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 
 
-public class PanelController : MonoBehaviour
+public class ActionManager : MonoBehaviour
 {
     public static TMP_InputField TextInput;
     
@@ -18,12 +18,12 @@ public class PanelController : MonoBehaviour
     public static Card ActionRef;
     
     //instance
-    public static PanelController Instance; // Singleton instance
+    public static ActionManager Instance; // Singleton instance
 
     public static MeshRenderer MeshRenderer;
     private static Transform PanelTextTransform;
     public static TMP_Text PanelText;
-    private static Board Board;
+    private static BoardState _boardState;
     public static Transform CardPos1;
     public static Transform CardPos2;
     public static Transform CardPos3;
@@ -50,7 +50,7 @@ public class PanelController : MonoBehaviour
         ReturnedCards = new List<Card>();
         ReturnedQuantities = new List<int>();
         TextInput = FindObjectOfType<TMP_InputField>();
-        Board = FindObjectOfType<Board>();
+        _boardState = FindObjectOfType<BoardState>();
         CardPos1 = gameObject.transform.Find("LeftCard");
         CardPos2 = gameObject.transform.Find("RightCard");
         CardPos3 = gameObject.transform.Find("TopCard");
@@ -79,7 +79,7 @@ public class PanelController : MonoBehaviour
 
                 }
 
-                foreach (Deck d in Board.Decks.Values)
+                foreach (Deck d in BoardState.Decks.Values)
                 {
                     d.SetCardPositions();
                 }
@@ -98,21 +98,21 @@ public class PanelController : MonoBehaviour
         switch (InputCards.Count)
         {
             case 1:
-                PanelController.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/2Panel");
+                ActionManager.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/2Panel");
                 ActionRef.transform.SetParent(CardPos1);
                 InputCards[0].transform.SetParent(CardPos2);
 
 
                 break;
             case 2:
-                PanelController.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/3Panel");
+                ActionManager.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/3Panel");
                 ActionRef.transform.SetParent(CardPos1);
                 InputCards[0].transform.SetParent(CardPos2);
                 InputCards[1].transform.SetParent(CardPos3);
 
                 break;
             case 3:
-                PanelController.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/4Panel");
+                ActionManager.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/4Panel");
                 ActionRef.transform.SetParent(CardPos1);
                 InputCards[0].transform.SetParent(CardPos2);
                 InputCards[1].transform.SetParent(CardPos3);
@@ -144,33 +144,33 @@ public class PanelController : MonoBehaviour
         {
             string id = OpenedActionCard.CurrentActionResult.ReturnedCardIDs[i];
             int qty = OpenedActionCard.CurrentActionResult.ReturnedQuantities[i];
-            ReturnedCards.Add(Board.GetInstance().AddCard(id, qty, false));
+            ReturnedCards.Add(BoardState.GetInstance().AddCard(id, qty, false));
         }
         
         switch (ReturnedCards.Count)
         {
             case 1:
-                PanelController.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/2Panel");
-                ReturnedCards[0].transform.SetParent(PanelController.CardPos1);
+                ActionManager.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/2Panel");
+                ReturnedCards[0].transform.SetParent(ActionManager.CardPos1);
                 break;
             case 2:
-                PanelController.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/2Panel");
-                ReturnedCards[0].transform.SetParent(PanelController.CardPos1);
-                ReturnedCards[1].transform.SetParent(PanelController.CardPos2);
+                ActionManager.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/2Panel");
+                ReturnedCards[0].transform.SetParent(ActionManager.CardPos1);
+                ReturnedCards[1].transform.SetParent(ActionManager.CardPos2);
                 break;
             case 3:
-                PanelController.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/3Panel");
-                ReturnedCards[0].transform.SetParent(PanelController.CardPos1);
-                ReturnedCards[1].transform.SetParent(PanelController.CardPos2);
-                ReturnedCards[2].transform.SetParent(PanelController.CardPos4);
+                ActionManager.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/3Panel");
+                ReturnedCards[0].transform.SetParent(ActionManager.CardPos1);
+                ReturnedCards[1].transform.SetParent(ActionManager.CardPos2);
+                ReturnedCards[2].transform.SetParent(ActionManager.CardPos4);
                 break;
             case 4:
-                PanelController.PanelText.transform.localPosition = new Vector3(-0.181f, 0.679f, 0f);
-                PanelController.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/4Panel");
-                ReturnedCards[0].transform.SetParent(PanelController.CardPos1);
-                ReturnedCards[1].transform.SetParent(PanelController.CardPos2);
-                ReturnedCards[2].transform.SetParent(PanelController.CardPos4);
-                ReturnedCards[3].transform.SetParent(PanelController.CardPos3);
+                ActionManager.PanelText.transform.localPosition = new Vector3(-0.181f, 0.679f, 0f);
+                ActionManager.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/4Panel");
+                ReturnedCards[0].transform.SetParent(ActionManager.CardPos1);
+                ReturnedCards[1].transform.SetParent(ActionManager.CardPos2);
+                ReturnedCards[2].transform.SetParent(ActionManager.CardPos4);
+                ReturnedCards[3].transform.SetParent(ActionManager.CardPos3);
                 break;
         }
         
@@ -194,7 +194,7 @@ public class PanelController : MonoBehaviour
 
         foreach (Card c in cardsToRemove)
         {
-            Board.DestroyCard(c);
+            _boardState.DestroyCard(c);
             InputCards.Remove(c);
         }
 
@@ -207,7 +207,7 @@ public class PanelController : MonoBehaviour
     
     public static void SetPanelActive(bool bActive)
     {
-        if (PanelController.Instance.gameObject == null)
+        if (ActionManager.Instance.gameObject == null)
         {
             Debug.LogError("Panel is not initialized!");
             return;
@@ -215,12 +215,12 @@ public class PanelController : MonoBehaviour
         
         if (bActive)
         {
-            PanelController.Instance.gameObject.SetActive(true);
+            ActionManager.Instance.gameObject.SetActive(true);
             Time.timeScale = 0.0f;
         }
         else
         {             
-            PanelController.Instance.gameObject.SetActive(false);
+            ActionManager.Instance.gameObject.SetActive(false);
             Time.timeScale = 1.0f;
         }
     }
@@ -237,7 +237,7 @@ public class PanelController : MonoBehaviour
                 string currentWord = words[i];
                 bool matchFound = false;
 
-                foreach (KeyValuePair<string, Deck> kvp in Board.Decks)
+                foreach (KeyValuePair<string, Deck> kvp in BoardState.Decks)
                 {
                     // Skip the Action deck for these checks
                     if (kvp.Key == "Action")
@@ -269,7 +269,7 @@ public class PanelController : MonoBehaviour
     {
         
      //set true to start
-         ActionRef = Board.Decks["Action"].FirstOrDefault(c => c.Name.ToLower() == words[0]);
+         ActionRef = BoardState.Decks["Action"].FirstOrDefault(c => c.Name.ToLower() == words[0]);
         
          // Check if the first word matches an action card
          if (words.Length == 1 && ActionRef != null)
@@ -279,7 +279,7 @@ public class PanelController : MonoBehaviour
              return;
          }
 
-         PanelController.FindActionResult(words);
+         ActionManager.FindActionResult(words);
          
          if (InputCards.Count > 0 && words.Length > 1)
          {

@@ -6,18 +6,16 @@ using UnityEngine;
 using UnityEngine.UI;  // Needed for UI elements like Panels
 
 
-public class Board : MonoBehaviour
+public class BoardState : MonoBehaviour
 {
-
-
-    static public Board board;
+    static public BoardState Instance;
     static public CardDB Database;
     static public Dictionary<string, Deck> Decks;
     public Card CardToAdd;
 
-    public static Board GetInstance()
+    public static BoardState GetInstance()
     {
-        return board;
+        return Instance;
     }
 
     public void DestroyCard(Card CardToDestroy)
@@ -49,7 +47,7 @@ public class Board : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        board = gameObject.GetComponent<Board>();
+        Instance = gameObject.GetComponent<BoardState>();
         Database = new CardDB();
         InitializeDecks();
         AddStartingCards();
