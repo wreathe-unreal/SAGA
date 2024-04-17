@@ -25,7 +25,6 @@ public class Card : MonoBehaviour
     void Start()
     {
         AnimController = GetComponent<Animator>();
-
     }
     void Update()
     {
@@ -169,14 +168,13 @@ public class Card : MonoBehaviour
     }
 
 
-    public void ExecuteActionResult()
+    public void CookActionResult()
     {
         gameObject.transform.SetParent(null);
         gameObject.transform.localScale = new Vector3(55, 55, 1);
         Board.Decks["Action"].SetCardPositions();
         Timer.StartTimer(CurrentActionResult.Duration);
         Timer.OnTimerComplete += OnTimerExpired;
-
 
     }
 
@@ -191,58 +189,12 @@ public class Card : MonoBehaviour
         if (IsTimerFinished() && CurrentActionResult != null)
         {
             Time.timeScale = 0.0f;
-            Terminal.SetPanelActive(true);
-            Terminal.Panel.transform.Find("FlavorText").GetComponent<TMP_Text>().text = CurrentActionResult.OutcomeText;
-            
-
-            foreach (string cardID in CurrentActionResult.ReturnedCardIDs)
-            {
-                Board.ReturnedCards.Add(Board.GetInstance().AddCard(cardID, false));
-            }
-            
-            switch (Board.ReturnedCards.Count)
-            {
-                case 1:
-                    Terminal.Panel.GetComponent<MeshRenderer>().material.mainTexture = Resources.Load<Texture>("Images/2Panel");
-                    Board.ReturnedCards[0].transform.SetParent(Terminal.CardPos1);
-                    break;
-                case 2:
-                    Terminal.Panel.GetComponent<MeshRenderer>().material.mainTexture = Resources.Load<Texture>("Images/2Panel");
-                    Board.ReturnedCards[0].transform.SetParent(Terminal.CardPos1);
-                    Board.ReturnedCards[1].transform.SetParent(Terminal.CardPos2);
-                    break;
-                case 3:
-                    Terminal.Panel.GetComponent<MeshRenderer>().material.mainTexture = Resources.Load<Texture>("Images/3Panel");
-                    Board.ReturnedCards[0].transform.SetParent(Terminal.CardPos1);
-                    Board.ReturnedCards[1].transform.SetParent(Terminal.CardPos2);
-                    Board.ReturnedCards[2].transform.SetParent(Terminal.CardPos4);
-                    break;
-                case 4:
-                    Terminal.Panel.transform.Find("FlavorText").localPosition = new Vector3(-0.181f, 0.679f, 0f);
-                    Terminal.Panel.GetComponent<MeshRenderer>().material.mainTexture = Resources.Load<Texture>("Images/4Panel");
-                    Board.ReturnedCards[0].transform.SetParent(Terminal.CardPos1);
-                    Board.ReturnedCards[1].transform.SetParent(Terminal.CardPos2);
-                    Board.ReturnedCards[2].transform.SetParent(Terminal.CardPos4);
-                    Board.ReturnedCards[3].transform.SetParent(Terminal.CardPos3);
-                    break;
-            }
-            
-            foreach (Card c in Board.ReturnedCards)
-            {
-             
-                c.transform.localScale = new Vector3(1f, 1f, 1f);
-                c.transform.localPosition = new Vector3(0f, 0f, 0f);
-            }
-            
-
+            PanelController.DisplayReturnPanel(this);
+            Timer.timerText.text = "";
+            CurrentActionResult = null;
+            //handle quantity xd
+            //flip them
         }
-        
-        //handle quantity xd
-        
-        //flip them
-        
-        Timer.timerText.text = "";
-        CurrentActionResult = null;
     }
 
     

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;  // Needed for UI elements like Panels
@@ -7,11 +8,12 @@ using UnityEngine.UI;  // Needed for UI elements like Panels
 
 public class Board : MonoBehaviour
 {
+
+
     static public Board board;
     static public CardDB Database;
     static public Dictionary<string, Deck> Decks;
     public Card CardToAdd;
-    public static List<Card> ReturnedCards;
 
     public static Board GetInstance()
     {
@@ -22,13 +24,13 @@ public class Board : MonoBehaviour
     {
         Deck SearchDeck = Decks[CardToDestroy.GetDeckType()];
 
-        
-        for(int i = SearchDeck.Cards.Count - 1; i >= 0; i--)
+
+        for (int i = SearchDeck.Cards.Count - 1; i >= 0; i--)
         {
             if (SearchDeck.Cards[i].ID == CardToDestroy.ID)
             {
                 SearchDeck.Cards[i].ModifyQuantity(-1);
-                
+
                 if (SearchDeck.Cards[i].Quantity == 0)
                 {
                     Card cardToBeDestroyed = SearchDeck.Cards[i];
@@ -43,13 +45,12 @@ public class Board : MonoBehaviour
             }
         }
     }
-    
+
     // Start is called before the first frame update
     void Start()
     {
         board = gameObject.GetComponent<Board>();
         Database = new CardDB();
-        ReturnedCards = new List<Card>();
         InitializeDecks();
         AddStartingCards();
 
@@ -61,24 +62,24 @@ public class Board : MonoBehaviour
         
     }
 
-    public Card AddCard(string cardID, bool bSetCardPositionsAfterAdding)
+    public Card AddCard(string cardID, int quantity, bool bSetCardPositionsAfterAdding)
     {
         CardData cd = CardDB.CardDataLookup[cardID];
         string deckType = cd.GetDeckType();
         Card foundCard = null;
-        
+
         bool bExistsInDeckAlready = false;
-        
+
         foreach (Card c in Decks[deckType].Cards)
         {
             if (c.ID == cd.ID)
             {
-                c.ModifyQuantity(1);
+                c.ModifyQuantity(quantity);
                 bExistsInDeckAlready = true;
                 foundCard = c;
             }
         }
-        
+
 
         if (!bExistsInDeckAlready)
         {
@@ -89,6 +90,7 @@ public class Board : MonoBehaviour
             {
                 Decks[deckType].SetCardPositions();
             }
+
             return newCard;
         }
         else
@@ -97,11 +99,12 @@ public class Board : MonoBehaviour
             {
                 Decks[deckType].SetCardPositions();
             }
+
             return foundCard;
         }
     }
 
-    private void InitializeDecks()
+    private static void InitializeDecks()
     {
         Decks = new Dictionary<string, Deck>();
         Decks[""] = new Deck("");
@@ -124,26 +127,11 @@ public class Board : MonoBehaviour
 
         foreach (string s in InitialCards)
         {
-            AddCard(s, true);
+            AddCard(s, 1, true);
         }
     }
 
-    public static void ReturnAndClean()
-    {
-        foreach (Card c in ReturnedCards)
-        {
-            c.transform.SetParent(null);
-            c.transform.localScale = new Vector3(55f, 55f, 1f);
-
-        }
-
-        foreach (Deck d in Decks.Values)
-        {
-            d.SetCardPositions();
-        }
-
-        ReturnedCards = new List<Card>();
-        Terminal.SetPanelActive(false);
-    }
-
+    
 }
+
+
