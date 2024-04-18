@@ -18,27 +18,27 @@ public class ActionManager : MonoBehaviour
     public static Card ActionRef;
     
     //instance
-    public static ActionManager Instance; // Singleton instance
+    public static ActionManager This; // Singleton instance
 
     public static MeshRenderer MeshRenderer;
-    private static Transform PanelTextTransform;
     public static TMP_Text PanelText;
-    private static BoardState _boardState;
+    private static BoardState BoardState;
     public static Transform CardPos1;
     public static Transform CardPos2;
     public static Transform CardPos3;
     public static Transform CardPos4;
+    private static AudioSource AudioSource;
     
     void Awake()
     {
-        if (Instance == null)
+        if (This == null)
         {
-            Instance = this; // Assign the instance
-            DontDestroyOnLoad(gameObject); // Optional: Keep this object alive when loading new scenes
+            This = this;
+            DontDestroyOnLoad(gameObject);
         }
-        else if (Instance != this)
+        else if (This != this)
         {
-            Destroy(gameObject); // Destroy this instance because it's a duplicate
+            Destroy(gameObject);
             return;
         }
     }
@@ -50,14 +50,14 @@ public class ActionManager : MonoBehaviour
         ReturnedCards = new List<Card>();
         ReturnedQuantities = new List<int>();
         TextInput = FindObjectOfType<TMP_InputField>();
-        _boardState = FindObjectOfType<BoardState>();
-        CardPos1 = gameObject.transform.Find("LeftCard");
-        CardPos2 = gameObject.transform.Find("RightCard");
-        CardPos3 = gameObject.transform.Find("TopCard");
-        CardPos4 = gameObject.transform.Find("BottomCard");
-        PanelTextTransform = gameObject.transform.Find("FlavorText");
-        PanelText = PanelTextTransform.GetComponent<TMP_Text>();
-        MeshRenderer = gameObject.GetComponent<MeshRenderer>();
+        BoardState = FindObjectOfType<BoardState>();
+        CardPos1 = gameObject.transform.Find("Panel/LeftCard");
+        CardPos2 = gameObject.transform.Find("Panel/RightCard");
+        CardPos3 = gameObject.transform.Find("Panel/BottomCard");
+        CardPos4 = gameObject.transform.Find("Panel/TopCard");
+        PanelText = gameObject.transform.Find("Panel/FlavorText").GetComponent<TMP_Text>();
+        MeshRenderer = gameObject.transform.Find("Panel").GetComponent<MeshRenderer>();
+        AudioSource = gameObject.transform.Find("Panel").GetComponent<AudioSource>();
         SetPanelActive(false);
 
     }
@@ -69,13 +69,15 @@ public class ActionManager : MonoBehaviour
     }
     
     public static void CloseReturnPanel()
-    {
+    { 
+        print("closing return panel");
         if (ReturnedCards.Count > 0)
         {
                 foreach (Card c in ReturnedCards)
                 {
                     c.transform.SetParent(null);
-                    c.transform.localScale = new Vector3(55f, 55f, 1f);
+                    c.transform.localPosition = new Vector3(1,1,1);
+                    c.transform.localScale = new Vector3(1, 1, 1);
 
                 }
 
@@ -92,6 +94,7 @@ public class ActionManager : MonoBehaviour
     
     public static void DisplayActionPanel(ActionResult AR)
     {
+        
         SetPanelActive(true);
         PanelText.text = AR.FlavorText;
 
@@ -122,12 +125,12 @@ public class ActionManager : MonoBehaviour
          
          
                  
-        ActionRef.transform.localScale = new Vector3(1f, 1f, 1f);
+        ActionRef.transform.localScale = new Vector3(.95f, .89f, 1f);
         ActionRef.transform.localPosition = new Vector3(0f, 0f, 0f);                 
         foreach (Card c in InputCards)
         {
              
-            c.transform.localScale = new Vector3(1f, 1f, 1f);
+            c.transform.localScale = new Vector3(.95f, .89f, 1f);
             c.transform.localPosition = new Vector3(0f, 0f, 0f);
         }
          
@@ -177,8 +180,10 @@ public class ActionManager : MonoBehaviour
         foreach (Card c in ReturnedCards)
         {
          
-            c.transform.localScale = new Vector3(1f, 1f, 1f);
+            c.transform.localScale = new Vector3(.95f, .89f, 1f);
             c.transform.localPosition = new Vector3(0f, 0f, 0f);
+            c.SetFaceUpState(true);
+
         }
     }
     
@@ -194,7 +199,7 @@ public class ActionManager : MonoBehaviour
 
         foreach (Card c in cardsToRemove)
         {
-            _boardState.DestroyCard(c);
+            BoardState.DestroyCard(c);
             InputCards.Remove(c);
         }
 
@@ -207,22 +212,14 @@ public class ActionManager : MonoBehaviour
     
     public static void SetPanelActive(bool bActive)
     {
-        if (ActionManager.Instance.gameObject == null)
+        if (ActionManager.This == null)
         {
-            Debug.LogError("Panel is not initialized!");
+            Debug.LogError("Panel or ActionManager instance is not initialized!");
             return;
         }
-        
-        if (bActive)
-        {
-            ActionManager.Instance.gameObject.SetActive(true);
-            Time.timeScale = 0.0f;
-        }
-        else
-        {             
-            ActionManager.Instance.gameObject.SetActive(false);
-            Time.timeScale = 1.0f;
-        }
+    
+        ActionManager.This.gameObject.SetActive(bActive);
+        Time.timeScale = bActive ? 0.0f : 1.0f;
     }
     
     public static void FindActionResult(string[] words)

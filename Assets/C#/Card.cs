@@ -4,12 +4,15 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
+
 
 public class Card : MonoBehaviour
 {
+    public MeshRenderer BorderMesh;
     public Timer Timer;
-    private Color CardColor;
+    private Color TypeColor;
     public Animator AnimController;
     public CardData Data;
     public string ID;
@@ -17,20 +20,34 @@ public class Card : MonoBehaviour
     public string Name;
     public string ImagePath;
     public int Quantity;
-    public TextMeshProUGUI DisplayName;
-    public TextMeshProUGUI DisplayQuantity;
+    public TextMeshProUGUI TMP_Name;
+    public TextMeshProUGUI TMP_Quantity;
     public ActionResult CurrentActionResult; //for verb cards only
-    
+    private Vector3 OriginalScale;
+    private Coroutine ScaleCoroutine;
+    public string DeckType;
+    public TextMeshProUGUI TMP_MouseOverFlavor;
+    public TextMeshProUGUI TMP_MouseOverName;
+    public Camera MainCamera;
 
+    void Awake()
+    {
+        SetFaceUpState(false);
+    }
     void Start()
     {
-        AnimController = GetComponent<Animator>();
+        DeckType = GetDeckType();
+        OriginalScale = transform.localScale; // Store the original scale
+        Rigidbody RigidBody = gameObject.GetComponent<Rigidbody>();
+        MainCamera = FindObjectOfType<Camera>();
+
     }
+
     void Update()
     {
     }
-    
-    public string GetDeckType()
+
+    private string GetDeckType()
     {
         switch (Data.Type)
         {
@@ -69,97 +86,91 @@ public class Card : MonoBehaviour
         }
     }
 
+    public void SetFaceUpState(bool bIsFaceUp)
+    {
+            AnimController.SetBool("bIsFaceUp", bIsFaceUp);
+    }
+
     public void Initialize(string cardID)
     {
         Data = CardDB.CardDataLookup[cardID];
+        
+        DeckType = GetDeckType();
         ID = cardID;
         Name = Data.Name;
+        TMP_Name.text = Name;
         Quantity = 1;
         ImagePath = Data.ImagePath.Substring(0, Data.ImagePath.Length - 4);
         GetComponentInChildren<Image>().sprite = Resources.Load<Sprite>("Images/" + ImagePath);
-        DisplayName.text = Name;
+        
 
         SetCardColor();
-        DisplayName.color = CardColor;
-        foreach (Transform child in transform)
-        {
-            // Check if the child's name is "Cube"
-            if (child.name.Contains("Border"))
-            {
-                Renderer renderer = child.gameObject.GetComponent<Renderer>();
-                if (renderer != null)
-                {
-                    // Set the color of the material
-                    renderer.material.color = CardColor;
-                }
-            }
+        TMP_Name.color = TypeColor;
 
-        }
-        
-        
+        BorderMesh.material.color = TypeColor;
     }
 
     public void SetCardColor()
     {
-        switch (GetDeckType())
+        switch (DeckType)
         {
             case "Crafting":
-                CardColor = new Color(51 / 255f, 204 / 255f, 255 / 255f);
+                TypeColor = new Color(51 / 255f, 204 / 255f, 255 / 255f);
                 break;
             case "Object":
-                CardColor = new Color(0 / 255f, 255 / 255f, 153 / 255f);
+                TypeColor = new Color(0 / 255f, 255 / 255f, 153 / 255f);
                 break;
             case "Character":
-                CardColor = new Color(0 / 255f, 0 / 255f, 204 / 255f);
+                TypeColor = new Color(0 / 255f, 0 / 255f, 204 / 255f);
                 break;
             case "Fleet":
-                CardColor = new Color(255 / 255f, 255 / 255f, 0 / 255f);
+                TypeColor = new Color(255 / 255f, 255 / 255f, 0 / 255f);
                 break;
             case "Cargo":
-                CardColor = new Color(153 / 255f, 102 / 255f, 51 / 255f);
+                TypeColor = new Color(153 / 255f, 102 / 255f, 51 / 255f);
                 break;
             case "Habitat":
-                CardColor = new Color(153 / 255f, 51 / 255f, 255 / 255f);
+                TypeColor = new Color(153 / 255f, 51 / 255f, 255 / 255f);
                 break;
             case "System":
-                CardColor = new Color(204 / 255f, 0 / 255f, 204 / 255f);
+                TypeColor = new Color(204 / 255f, 0 / 255f, 204 / 255f);
                 break;
             case "Action":
-                CardColor = new Color(255 / 255f, 128 / 255f, 0 / 255f);
+                TypeColor = new Color(255 / 255f, 128 / 255f, 0 / 255f);
                 break;
             case "Ambition":
-                CardColor = new Color(255 / 255f, 51 / 255f, 133 / 255f);
+                TypeColor = new Color(255 / 255f, 51 / 255f, 133 / 255f);
                 break;
             case "Currency":
-                CardColor = new Color(0 / 255f, 102 / 255f, 0 / 255f);
+                TypeColor = new Color(0 / 255f, 102 / 255f, 0 / 255f);
                 break;
             default:
-                CardColor = new Color(255 / 255f, 255 / 255f, 255 / 255f);
+                TypeColor = new Color(255 / 255f, 255 / 255f, 255 / 255f);
                 break;
         }
     }
+
     public void SetPosition(Vector3 newPos)
     {
-            this.transform.position = newPos;  // This should update the GameObject's world position
-            gameObject.transform.position = newPos;
+        transform.position = newPos;
 
     }
 
     public void ModifyQuantity(int modifier)
     {
         Quantity = Mathf.Clamp(Quantity + modifier, 0, Int32.MaxValue);
-        
+
         if (Quantity > 1)
         {
-            DisplayQuantity.enabled = true;
+            TMP_Quantity.enabled = true;
         }
 
         if (Quantity == 0)
         {
-            DisplayQuantity.enabled = false;
+            TMP_Quantity.enabled = false;
         }
-        
-        DisplayQuantity.text = $"{Quantity}";
+
+        TMP_Quantity.text = $"{Quantity}";
     }
 
     void FlipCard()
@@ -171,7 +182,7 @@ public class Card : MonoBehaviour
     public void CookActionResult()
     {
         gameObject.transform.SetParent(null);
-        gameObject.transform.localScale = new Vector3(55, 55, 1);
+        gameObject.transform.localScale = new Vector3(25, 25, 1);
         BoardState.Decks["Action"].SetCardPositions();
         Timer.StartTimer(CurrentActionResult.Duration);
         Timer.OnTimerComplete += OnTimerExpired;
@@ -181,14 +192,13 @@ public class Card : MonoBehaviour
     private void OnTimerExpired()
     {
         Timer.timerText.text = "Done";
-        
+
     }
 
     public void OpenAction()
     {
         if (IsTimerFinished() && CurrentActionResult != null)
         {
-            Time.timeScale = 0.0f;
             ActionManager.DisplayReturnPanel(this);
             Timer.timerText.text = "";
             CurrentActionResult = null;
@@ -197,10 +207,53 @@ public class Card : MonoBehaviour
         }
     }
 
-    
+
 
     public bool IsTimerFinished()
     {
         return Timer.timeRemaining <= 0;
     }
+
+    void OnMouseOver()
+    {
+        if (ScaleCoroutine != null)
+            StopCoroutine(ScaleCoroutine);
+
+        Vector3 targetScale = new Vector3(2.5f, 2.5f, 1f);
+        transform.localScale = Vector3.Lerp(transform.localScale, targetScale * (MainCamera.orthographicSize / 157), Time.deltaTime * 10);
+
+        if (transform.localScale.x  > (2.0f * (MainCamera.orthographicSize / 157)) && transform.localRotation.y == 0)
+        {
+            TMP_MouseOverName.text = Name;
+            TMP_MouseOverFlavor.text = CardDB.CardDataLookup[ID].FlavorText;
+        }
+    }
+
+    void OnMouseExit()
+    {
+        TMP_MouseOverName.text = "";
+        TMP_MouseOverFlavor.text = "";
+        if (ScaleCoroutine != null)
+        {
+            StopCoroutine(ScaleCoroutine);
+        }
+        
+        ScaleCoroutine = StartCoroutine(ScaleToSize(OriginalScale, .15f));
+    }
+
+    IEnumerator ScaleToSize(Vector3 targetScale, float duration)
+    {
+        float time = 0;
+        Vector3 startScale = transform.localScale;
+
+        while (time < duration)
+        {
+            transform.localScale = Vector3.Lerp(startScale, targetScale, Mathf.Pow(time / duration, 2));
+            time += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.localScale = targetScale; // Ensure the target scale is set after interpolation
+    }
+    
 }

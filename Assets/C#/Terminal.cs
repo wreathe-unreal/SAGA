@@ -8,7 +8,7 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 public class Terminal : MonoBehaviour
 {
-     [FormerlySerializedAs("PanelController")] public ActionManager ActionManager;
+     public ActionManager ActionManager;
      public TMP_Text PanelText;
      public TMP_InputField TextInput;
      private float LastActionTime;
@@ -17,7 +17,6 @@ public class Terminal : MonoBehaviour
      
      void Start()
      {
-         
          CooldownDuration = .5f;
          bFirstCoro = true;
 

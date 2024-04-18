@@ -5,45 +5,83 @@ using TMPro;
 
 public class CameraController : MonoBehaviour
 {
-    public Vector3 StartPositionOffset = new Vector3(0, 0, 0);
-    public float HorizontalMoveSpeed = 50.0f;
-    public float VerticalMoveSpeed = 50.0f;
+    public float HorizontalMoveSpeed = 150.0f;
+    public float VerticalMoveSpeed = 150.0f;
     public TMP_InputField InputField;
 
-    public float ZoomVelocity = 15f;
-    public float MinZoom = 60f;
-    public float MaxZoom = 175.0f;
+    public float ZoomVelocity = 80f;
+    public float MinZoom = 65f;
+    public float MaxZoom = 159.0f;
 
     public float MinX = -100f;
     public float MaxX = 100f;
     public float MinY = -100f;
     public float MaxY = 100f;
-    
-    // Base bounds before scaling
-    public float BaseMinX = -175f;
-    public float BaseMaxX = 175f;
-    public float BaseMinY = -150f;
-    public float BaseMaxY = 15f;
+
+    public float BaseMinX = -150f;
+    public float BaseMaxX = 150f;
+    public float BaseMinY = -125f;
+    public float BaseMaxY = 125f;
 
     public float ScreenEdgeThreshold = 20f; 
+    public float ZoomSmoothing = 10f;
+    public float RollAngle = 7f; 
+    public float RollReturnSpeed = 10f;
+    public float PitchAngle = 7f; 
+    public float PitchReturnSpeed = 10f;
 
     private Camera cam;
     private Vector3 newPosition;
+    private float targetOrthographicSize;
+    public float AnimSpeed = 50;
+    private float AnimTimer;
+
+    void Awake()
+    {
+        cam = GetComponent<Camera>();
+        targetOrthographicSize = cam.orthographicSize; // Initialize target size
+        UpdateBounds();
+        HandleMovement();
+        HandleZoom();
+    }
+    
 
     void Start()
     {
-        cam = GetComponent<Camera>();
-        cam.transform.position = StartPositionOffset + new Vector3(0, 0, -10); // Ensure Z position keeps camera focused
+        cam.orthographic = false;
+        cam.fieldOfView = 179;
+        
+
+
     }
 
     void Update()
     {
+        if(cam.orthographic == false)
+        {
+            AnimTimer += Time.deltaTime * AnimSpeed; 
+            
+            cam.fieldOfView = Mathf.Lerp(178, 50, AnimTimer);
+
+            if (AnimTimer >= 1)
+            {
+                cam.orthographic = true;
+            }
+            else
+            {
+                return;
+            }
+        }
+        
         if (InputField != null && InputField.isFocused)
             return;
 
         HandleMovement();
         HandleZoom();
         UpdateBounds();
+        HandleRoll();
+        HandlePitch();
+
     }
 
     void HandleMovement()
@@ -51,7 +89,6 @@ public class CameraController : MonoBehaviour
         float moveX = Input.GetAxis("Horizontal") * HorizontalMoveSpeed * Time.deltaTime;
         float moveY = Input.GetAxis("Vertical") * VerticalMoveSpeed * Time.deltaTime;
 
-        // Check for mouse position at the edges of the screen
         if (Input.mousePosition.x <= ScreenEdgeThreshold)
             moveX -= HorizontalMoveSpeed * Time.deltaTime;
         if (Input.mousePosition.x >= Screen.width - ScreenEdgeThreshold)
@@ -65,7 +102,6 @@ public class CameraController : MonoBehaviour
         newPosition.x = Mathf.Clamp(newPosition.x, MinX, MaxX);
         newPosition.y = Mathf.Clamp(newPosition.y, MinY, MaxY);
 
-        // Apply the clamped position
         transform.position = newPosition;
     }
 
@@ -74,12 +110,12 @@ public class CameraController : MonoBehaviour
         float scroll = Input.GetAxis("Mouse ScrollWheel") * ZoomVelocity;
         if (cam.orthographic)
         {
-            cam.orthographicSize -= scroll;
-            cam.orthographicSize = Mathf.Clamp(cam.orthographicSize, MinZoom, MaxZoom);
+            targetOrthographicSize -= scroll;
+            targetOrthographicSize = Mathf.Clamp(targetOrthographicSize, MinZoom, MaxZoom);
+            cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, targetOrthographicSize, Time.deltaTime * ZoomSmoothing);
         }
     }
 
-    // Update the movement bounds based on the current zoom level
     void UpdateBounds()
     {
         float zoomScale = (MaxZoom - cam.orthographicSize) / (MaxZoom - MinZoom);
@@ -87,5 +123,21 @@ public class CameraController : MonoBehaviour
         MaxX = BaseMaxX * zoomScale;
         MinY = BaseMinY * zoomScale;
         MaxY = BaseMaxY * zoomScale;
+    }
+    
+    void HandleRoll()
+    {
+        float horizontalInput = Input.GetAxis("Horizontal");
+        float targetYRotation = horizontalInput * RollAngle;
+        Quaternion targetRotation = Quaternion.Euler(0, targetYRotation, 0);
+        cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, targetRotation, Time.deltaTime * RollReturnSpeed);
+    }
+    
+    void HandlePitch()
+    {
+        float verticalInput = Input.GetAxis("Vertical");
+        float targetXRotation = -verticalInput * PitchAngle;
+        Quaternion targetRotation = Quaternion.Euler(targetXRotation, 0, 0);
+        cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, targetRotation, Time.deltaTime * PitchReturnSpeed);
     }
 }

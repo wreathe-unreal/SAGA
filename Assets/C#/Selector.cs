@@ -32,7 +32,7 @@ public class KeyDetector
     }
 }
 
-public class CardSelector : MonoBehaviour
+public class Selector : MonoBehaviour
 {
     public KeyDetector InputController = new KeyDetector();
     public int Index = 0;

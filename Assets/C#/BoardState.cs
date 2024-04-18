@@ -20,7 +20,7 @@ public class BoardState : MonoBehaviour
 
     public void DestroyCard(Card CardToDestroy)
     {
-        Deck SearchDeck = Decks[CardToDestroy.GetDeckType()];
+        Deck SearchDeck = Decks[CardToDestroy.DeckType];
 
 
         for (int i = SearchDeck.Cards.Count - 1; i >= 0; i--)
@@ -47,6 +47,7 @@ public class BoardState : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Physics.queriesHitTriggers = true;
         Instance = gameObject.GetComponent<BoardState>();
         Database = new CardDB();
         InitializeDecks();
@@ -63,7 +64,7 @@ public class BoardState : MonoBehaviour
     public Card AddCard(string cardID, int quantity, bool bSetCardPositionsAfterAdding)
     {
         CardData cd = CardDB.CardDataLookup[cardID];
-        string deckType = cd.GetDeckType();
+        string deckType = cd.DeckType;
         Card foundCard = null;
 
         bool bExistsInDeckAlready = false;
@@ -125,7 +126,8 @@ public class BoardState : MonoBehaviour
 
         foreach (string s in InitialCards)
         {
-            AddCard(s, 1, true);
+            Card c = AddCard(s, 1, true);
+            c.SetFaceUpState(true);
         }
     }
 

@@ -19,6 +19,7 @@ public class CardData
     public string Type;
     public string Property;
     public List<ActionData> Actions;
+    public string DeckType;
     
     public Dictionary<ActionKey, ActionResult> ActionMap;
     
@@ -55,9 +56,11 @@ public class CardData
             a.ActionKey.ConvertSecondaryCardSpecifiers(); //converts all of the list of list of strings to a list of CardSpecifier objects
             this.ActionMap[a.ActionKey] = a.ActionResult; //add the processed action key and action result to the cardData map
         }
+
+        DeckType = GetDeckType();
     }
     
-    public string GetDeckType()
+    private string GetDeckType()
     {
         switch (this.Type)
         {
@@ -98,3 +101,17 @@ public class CardData
 }
 
 
+public class RawCardData
+{
+    public int Lifespan;
+    public string ID;
+    public string Name;
+    public int Price;
+    public string ImagePath;
+    public string FlavorText;
+    public string System;
+    public string Habitat;
+    public string Type;
+    public string Property;
+    public List<ActionData> Actions;
+}
