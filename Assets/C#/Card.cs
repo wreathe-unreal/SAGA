@@ -28,6 +28,8 @@ public class Card : MonoBehaviour
     public string DeckType;
     public TextMeshProUGUI TMP_MouseOverFlavor;
     public TextMeshProUGUI TMP_MouseOverName;
+    public TextMeshProUGUI TMP_MouseOverFlavorLeft;
+    public TextMeshProUGUI TMP_MouseOverNameLeft;
     public Camera MainCamera;
 
     void Awake()
@@ -173,12 +175,6 @@ public class Card : MonoBehaviour
         TMP_Quantity.text = $"{Quantity}";
     }
 
-    void FlipCard()
-    {
-        AnimController.SetTrigger("CardFlipTrigger");
-    }
-
-
     public void CookActionResult()
     {
         gameObject.transform.SetParent(null);
@@ -219,13 +215,22 @@ public class Card : MonoBehaviour
         if (ScaleCoroutine != null)
             StopCoroutine(ScaleCoroutine);
 
-        Vector3 targetScale = new Vector3(2.5f, 2.5f, 1f);
+        Vector3 targetScale = new Vector3(2.5f, 2.5f, 2f);
         transform.localScale = Vector3.Lerp(transform.localScale, targetScale * (MainCamera.orthographicSize / 157), Time.deltaTime * 10);
 
-        if (transform.localScale.x  > (2.0f * (MainCamera.orthographicSize / 157)) && transform.localRotation.y == 0)
+        if (transform.localScale.x  > (1.0f * (MainCamera.orthographicSize / 157)) && transform.localRotation.y == 0)
         {
-            TMP_MouseOverName.text = Name;
-            TMP_MouseOverFlavor.text = CardDB.CardDataLookup[ID].FlavorText;
+            print(this.GetDeckType());
+            if (this.GetDeckType() != "System" && this.GetDeckType() != "Character" && this.GetDeckType() != "Action")
+            {
+                TMP_MouseOverName.text = Name;
+                TMP_MouseOverFlavor.text = CardDB.CardDataLookup[ID].FlavorText;
+            }
+            else
+            {
+                TMP_MouseOverNameLeft.text = Name;
+                TMP_MouseOverFlavorLeft.text = CardDB.CardDataLookup[ID].FlavorText;
+            }
         }
     }
 
@@ -233,6 +238,9 @@ public class Card : MonoBehaviour
     {
         TMP_MouseOverName.text = "";
         TMP_MouseOverFlavor.text = "";
+        TMP_MouseOverNameLeft.text = "";
+        TMP_MouseOverFlavorLeft.text = "";
+        
         if (ScaleCoroutine != null)
         {
             StopCoroutine(ScaleCoroutine);

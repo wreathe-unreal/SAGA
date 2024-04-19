@@ -51,7 +51,7 @@ public class Terminal : MonoBehaviour
          if(ActionPanelGUI.gameObject != null && ActionPanelGUI.gameObject.activeSelf && ActionGUI.ReturnedCards.Count > 0 )
          {
              print("closing return panel");
-             ActionGUI.CloseReturnPanel();
+             ActionGUI.ExecuteReturnPanel();
              yield return new WaitForSecondsRealtime(CooldownDuration);
          }
          

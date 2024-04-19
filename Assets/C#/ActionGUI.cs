@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,14 +26,15 @@ public class ActionGUI : MonoBehaviour
     public static ActionGUI This; // Singleton instance
 
     public static MeshRenderer MeshRenderer;
-    public static TMP_Text PanelText;
+    public static TMP_Text FlavorText;
     private static BoardState BoardState;
     public static Transform CardPos1;
     public static Transform CardPos2;
     public static Transform CardPos3;
     public static Transform CardPos4;
     private static AudioSource AudioSource;
-    
+    private static TMP_Text TitleText;
+
     void Awake()
     {
         if (This == null)
@@ -55,13 +57,6 @@ public class ActionGUI : MonoBehaviour
         ReturnedQuantities = new List<int>();
         TextInput = FindObjectOfType<TMP_InputField>();
         BoardState = FindObjectOfType<BoardState>();
-        CardPos1 = gameObject.transform.Find("Panel/LeftCard");
-        CardPos2 = gameObject.transform.Find("Panel/RightCard");
-        CardPos3 = gameObject.transform.Find("Panel/BottomCard");
-        CardPos4 = gameObject.transform.Find("Panel/TopCard");
-        PanelText = gameObject.transform.Find("Panel/FlavorText").GetComponent<TMP_Text>();
-        MeshRenderer = gameObject.transform.Find("Panel").GetComponent<MeshRenderer>();
-        AudioSource = gameObject.transform.Find("Panel").GetComponent<AudioSource>();
         SetPanelActive(false);
 
     }
@@ -71,8 +66,13 @@ public class ActionGUI : MonoBehaviour
     {
         
     }
+
+    public static void CancelActionPanel()
+    {
+        
+    }
     
-    public static void CloseReturnPanel()
+    public static void ExecuteReturnPanel()
     { 
         print("closing return panel");
         if (ReturnedCards.Count > 0)
@@ -89,48 +89,54 @@ public class ActionGUI : MonoBehaviour
                 {
                     d.SetCardPositions();
                 }
-
-                ReturnedCards = new List<Card>();
+                
         }
-        
         SetPanelActive(false);
+        ReturnedCards = new List<Card>();
+
     }
     
     public static void DisplayActionPanel(ActionData actionData)
     {
         CurrentAction = actionData;
         SetPanelActive(true);
-        PanelText.text = actionData.ActionResult.FlavorText;
+        
 
         switch (InputCards.Count)
         {
             case 1:
-                ActionGUI.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/2Panel");
-                ActionRef.transform.SetParent(CardPos1);
-                InputCards[0].transform.SetParent(CardPos2);
-
-
+                AudioSource = This.transform.Find("2Panel").GetComponent<AudioSource>();
+                ActionRef.transform.SetParent(This.transform.FindDeepChild("2Panel/LeftCard"));
+                InputCards[0].transform.SetParent(This.transform.FindDeepChild("2Panel/RightCard"));
+                TitleText = This.transform.FindDeepChild("2Panel/TitleText").GetComponent<TMP_Text>();
+                FlavorText = This.transform.FindDeepChild("2Panel/FlavorText").GetComponent<TMP_Text>();
                 break;
             case 2:
-                ActionGUI.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/3Panel");
-                ActionRef.transform.SetParent(CardPos1);
-                InputCards[0].transform.SetParent(CardPos2);
-                InputCards[1].transform.SetParent(CardPos3);
-
+                AudioSource = This.transform.Find("3Panel").GetComponent<AudioSource>();
+                ActionRef.transform.SetParent(This.transform.FindDeepChild("3Panel/LeftCard"));
+                InputCards[0].transform.SetParent(This.transform.FindDeepChild("3Panel/MiddleCard"));
+                InputCards[1].transform.SetParent(This.transform.FindDeepChild("3Panel/RightCard"));
+                TitleText = This.transform.FindDeepChild("3Panel/TitleText").GetComponent<TMP_Text>();
+                FlavorText = This.transform.FindDeepChild("3Panel/FlavorText").GetComponent<TMP_Text>();
                 break;
             case 3:
-                ActionGUI.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/4Panel");
-                ActionRef.transform.SetParent(CardPos1);
-                InputCards[0].transform.SetParent(CardPos2);
-                InputCards[1].transform.SetParent(CardPos3);
-                InputCards[2].transform.SetParent(CardPos4);
+                AudioSource = This.transform.Find("4Panel").GetComponent<AudioSource>();
+                ActionRef.transform.SetParent(This.transform.FindDeepChild("4Panel/TopCard"));
+                InputCards[0].transform.SetParent(This.transform.FindDeepChild("4Panel/LeftCard"));
+                InputCards[1].transform.SetParent(This.transform.FindDeepChild("4Panel/RightCard"));
+                InputCards[2].transform.SetParent(This.transform.FindDeepChild("4Panel/BottomCard"));
+                TitleText = This.transform.FindDeepChild("4Panel/TitleText").GetComponent<TMP_Text>();
+                FlavorText = This.transform.FindDeepChild("4Panel/FlavorText").GetComponent<TMP_Text>();
                 break;
         }
          
+        TitleText.text = actionData.ActionResult.Title;
+        FlavorText.text = actionData.ActionResult.FlavorText;
          
                  
         ActionRef.transform.localScale = new Vector3(.95f, .89f, 1f);
-        ActionRef.transform.localPosition = new Vector3(0f, 0f, 0f);                 
+        ActionRef.transform.localPosition = new Vector3(0f, 0f, 0f);       
+        
         foreach (Card c in InputCards)
         {
              
@@ -143,11 +149,7 @@ public class ActionGUI : MonoBehaviour
 
     public static void DisplayReturnPanel(Card OpenedActionCard)
     {
-        PanelText.text = OpenedActionCard.CurrentActionResult.OutcomeText;
-        SetPanelActive(true);
-
-        
-
+         
         for(int i = 0; i < OpenedActionCard.CurrentActionResult.ReturnedCardIDs.Count; i++)
         {
             string id = OpenedActionCard.CurrentActionResult.ReturnedCardIDs[i];
@@ -155,32 +157,44 @@ public class ActionGUI : MonoBehaviour
             ReturnedCards.Add(BoardState.GetInstance().AddCard(id, qty, false));
         }
         
+        SetPanelActive(true);
+        
         switch (ReturnedCards.Count)
         {
             case 1:
-                ActionGUI.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/2Panel");
-                ReturnedCards[0].transform.SetParent(ActionGUI.CardPos1);
+                AudioSource = This.transform.Find("1Panel").GetComponent<AudioSource>();
+                ReturnedCards[0].transform.SetParent(This.transform.FindDeepChild("1Panel/OnlyCard"));
+                TitleText = This.transform.FindDeepChild("1Panel/TitleText").GetComponent<TMP_Text>();
+                FlavorText = This.transform.FindDeepChild("1Panel/FlavorText").GetComponent<TMP_Text>();
                 break;
             case 2:
-                ActionGUI.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/2Panel");
-                ReturnedCards[0].transform.SetParent(ActionGUI.CardPos1);
-                ReturnedCards[1].transform.SetParent(ActionGUI.CardPos2);
+                AudioSource = This.transform.Find("2Panel").GetComponent<AudioSource>();
+                ReturnedCards[0].transform.SetParent(This.transform.FindDeepChild("2Panel/LeftCard"));
+                ReturnedCards[1].transform.SetParent(This.transform.FindDeepChild("2Panel/RightCard"));
+                TitleText = This.transform.FindDeepChild("2Panel/TitleText").GetComponent<TMP_Text>();
+                FlavorText = This.transform.FindDeepChild("2Panel/FlavorText").GetComponent<TMP_Text>();
                 break;
             case 3:
-                ActionGUI.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/3Panel");
-                ReturnedCards[0].transform.SetParent(ActionGUI.CardPos1);
-                ReturnedCards[1].transform.SetParent(ActionGUI.CardPos2);
-                ReturnedCards[2].transform.SetParent(ActionGUI.CardPos4);
+                AudioSource = This.transform.Find("3Panel").GetComponent<AudioSource>();
+                ReturnedCards[0].transform.SetParent(This.transform.FindDeepChild("3Panel/LeftCard"));
+                ReturnedCards[1].transform.SetParent(This.transform.FindDeepChild("3Panel/MiddleCard"));
+                ReturnedCards[2].transform.SetParent(This.transform.FindDeepChild("3Panel/RightCard"));
+                TitleText = This.transform.FindDeepChild("3Panel/TitleText").GetComponent<TMP_Text>();
+                FlavorText = This.transform.FindDeepChild("3Panel/FlavorText").GetComponent<TMP_Text>();
                 break;
             case 4:
-                ActionGUI.PanelText.transform.localPosition = new Vector3(-0.181f, 0.679f, 0f);
-                ActionGUI.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/4Panel");
-                ReturnedCards[0].transform.SetParent(ActionGUI.CardPos1);
-                ReturnedCards[1].transform.SetParent(ActionGUI.CardPos2);
-                ReturnedCards[2].transform.SetParent(ActionGUI.CardPos4);
-                ReturnedCards[3].transform.SetParent(ActionGUI.CardPos3);
+                AudioSource = This.transform.Find("4Panel").GetComponent<AudioSource>();
+                ReturnedCards[0].transform.SetParent(This.transform.FindDeepChild("4Panel/TopCard"));
+                ReturnedCards[1].transform.SetParent(This.transform.FindDeepChild("4Panel/LeftCard"));
+                ReturnedCards[2].transform.SetParent(This.transform.FindDeepChild("4Panel/RightCard"));
+                ReturnedCards[3].transform.SetParent(This.transform.FindDeepChild("4Panel/BottomCard"));
+                TitleText = This.transform.FindDeepChild("4Panel/TitleText").GetComponent<TMP_Text>();
+                FlavorText = This.transform.FindDeepChild("4Panel/FlavorText").GetComponent<TMP_Text>();
                 break;
         }
+         
+        TitleText.text = OpenedActionCard.CurrentActionResult.Title;
+        FlavorText.text = OpenedActionCard.CurrentActionResult.OutcomeText;
         
         foreach (Card c in ReturnedCards)
         {
@@ -197,8 +211,13 @@ public class ActionGUI : MonoBehaviour
         PlayerState.Instance.AttributeMap[CurrentAction.ActionResult.AttributeModified] += CurrentAction.ActionResult.AttributeModifier;
         PlayerState.Instance.IncrementActionRepetition(CurrentAction);
 
-        List<Card> cardsToRemove = new List<Card>();
+        ActionRef.CookActionResult();
+        ActionRef.transform.SetParent(null);
+        ActionRef = null;
 
+        SetPanelActive(false);
+
+        List<Card> cardsToRemove = new List<Card>();
         foreach (Card c in InputCards)
         {
             cardsToRemove.Add(c);
@@ -209,10 +228,7 @@ public class ActionGUI : MonoBehaviour
             BoardState.DestroyCard(c);
             InputCards.Remove(c);
         }
-
-        ActionRef.CookActionResult();
-        SetPanelActive(false);
-        ActionRef = null;
+        
         CurrentAction = null;
         InputCards = new List<Card>(); // Clear other cards
     
@@ -225,8 +241,25 @@ public class ActionGUI : MonoBehaviour
             Debug.LogError("Panel or ActionManager instance is not initialized!");
             return;
         }
-    
-        ActionGUI.This.gameObject.SetActive(bActive);
+
+        int cardsToDisplay = InputCards.Count > 0 ? InputCards.Count + 1  : ReturnedCards.Count;
+
+        switch(cardsToDisplay)
+        {
+            case 1:
+                ActionGUI.This.gameObject.transform.Find("1Panel").gameObject.SetActive(bActive);
+                break;
+            case 2:
+                ActionGUI.This.gameObject.transform.Find("2Panel").gameObject.SetActive(bActive);
+                break;
+            case 3:
+                ActionGUI.This.gameObject.transform.Find("3Panel").gameObject.SetActive(bActive);
+                break;
+            case 4:
+                ActionGUI.This.gameObject.transform.Find("4Panel").gameObject.SetActive(bActive);
+                break;
+        }
+
         Time.timeScale = bActive ? 0.0f : 1.0f;
     }
     
