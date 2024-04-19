@@ -21,20 +21,20 @@ public class CardData
     public List<ActionData> Actions;
     public string DeckType;
     
-    public Dictionary<ActionKey, ActionResult> ActionMap;
-    
-    public ActionResult GetActionResult(string actionName, List<CardData> cardData)
+    public ActionData FindActionData(string actionName, List<CardData> cardData)
     {
-        foreach (ActionKey k in ActionMap.Keys)
+        foreach (ActionData ad in Actions)
         {
-            if (k.Match(actionName, cardData, PlayerState.Instance.GetPlayerState()))
+            if (ad.ActionKey.HasKeyMatch(actionName, cardData, PlayerState.Instance.GetPlayerState(), ad))
             {
-                return ActionMap[k];
+                return ad;
             }
         }
         
         return null;
     }
+    
+    
 
     public CardData(RawCardData rcd)
     {
@@ -49,12 +49,10 @@ public class CardData
         Type = rcd.Type;
         Property = rcd.Property;
         Actions = rcd.Actions;
-        this.ActionMap = new Dictionary<ActionKey, ActionResult>();
         
         foreach (ActionData a in rcd.Actions)
         {
             a.ActionKey.ConvertSecondaryCardSpecifiers(); //converts all of the list of list of strings to a list of CardSpecifier objects
-            this.ActionMap[a.ActionKey] = a.ActionResult; //add the processed action key and action result to the cardData map
         }
 
         DeckType = GetDeckType();

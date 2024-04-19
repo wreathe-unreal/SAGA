@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,8 +16,36 @@ public class PlayerState : MonoBehaviour
 {
     public string Location;
     public Dictionary<string, float> AttributeMap = new Dictionary<string, float>();
+    private Dictionary<ActionData, int> ActionRepetitionsMap;
     private static PlayerState _Instance;
 
+    private void Start()
+    {
+        ActionRepetitionsMap = new Dictionary<ActionData, int>();
+
+    }
+
+    public int GetActionRepetition(ActionData actionData)
+    {
+        if (!ActionRepetitionsMap.ContainsKey(actionData))
+        {
+            ActionRepetitionsMap[actionData] = 0;
+        }
+
+        return ActionRepetitionsMap[actionData];
+
+    }
+
+    public void IncrementActionRepetition(ActionData actionData)
+    {
+        if (!ActionRepetitionsMap.ContainsKey(actionData))
+        {
+            ActionRepetitionsMap[actionData] = 1;
+        }
+
+        ActionRepetitionsMap[actionData]++;
+    }
+    
     // Property to access the instance
     public static PlayerState Instance
     {

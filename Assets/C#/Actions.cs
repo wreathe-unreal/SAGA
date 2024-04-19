@@ -61,6 +61,8 @@ public class ActionKey
     public string ActionName;
     public string Attribute;
     public int AttributeMinimum;
+    public int RepetitionsMinimum;
+    public int RepetitionsMaximum;
     public string ID;
     public string ReqLocation;
     public List<List<string>> SecondaryCardSpecifiers;
@@ -79,13 +81,13 @@ public class ActionKey
         SecondaryCardSpecifiers = new List<List<string>>(); //clear the string placeholders now that they are deserialized
     }
 
-    public bool Match(string actionName, List<CardData> cardData, PlayerState player)
+    public bool HasKeyMatch(string actionName, List<CardData> cardData, PlayerState player, ActionData ad)
     {
         if (actionName != ActionName && player.Location != this.ReqLocation)
         {
             return false;
         }
-
+        
         if (this.AttributeMinimum != 0 && player.AttributeMap[Attribute] <= this.AttributeMinimum)
         {
             return false;
@@ -96,7 +98,12 @@ public class ActionKey
         {
             return false;
         }
-
+        
+        if ( player.GetActionRepetition(ad) < RepetitionsMinimum || player.GetActionRepetition(ad) > RepetitionsMaximum) 
+        {
+            return false;
+        }
+        
         for (int i = 1; i < SecondaryCardSpecifiersReal.Count; i++)
         {
             if (!SecondaryCardSpecifiersReal[i].MatchCard(cardData[i]))
@@ -125,8 +132,10 @@ public ActionKey()
         
     }
 }
+
 public class ActionResult
 {
+    public string Title;
     public string AttributeModified;
     public float AttributeModifier;
     public int Duration;

@@ -5,9 +5,13 @@ using TMPro;
 using UnityEngine;
 
 
-public class ActionManager : MonoBehaviour
+public class ActionGUI : MonoBehaviour
 {
     public static TMP_InputField TextInput;
+    
+    
+    public static ActionData CurrentAction;
+
     
     //for action return only
     public static List<Card> ReturnedCards;
@@ -18,7 +22,7 @@ public class ActionManager : MonoBehaviour
     public static Card ActionRef;
     
     //instance
-    public static ActionManager This; // Singleton instance
+    public static ActionGUI This; // Singleton instance
 
     public static MeshRenderer MeshRenderer;
     public static TMP_Text PanelText;
@@ -92,30 +96,30 @@ public class ActionManager : MonoBehaviour
         SetPanelActive(false);
     }
     
-    public static void DisplayActionPanel(ActionResult AR)
+    public static void DisplayActionPanel(ActionData actionData)
     {
-        
+        CurrentAction = actionData;
         SetPanelActive(true);
-        PanelText.text = AR.FlavorText;
+        PanelText.text = actionData.ActionResult.FlavorText;
 
         switch (InputCards.Count)
         {
             case 1:
-                ActionManager.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/2Panel");
+                ActionGUI.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/2Panel");
                 ActionRef.transform.SetParent(CardPos1);
                 InputCards[0].transform.SetParent(CardPos2);
 
 
                 break;
             case 2:
-                ActionManager.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/3Panel");
+                ActionGUI.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/3Panel");
                 ActionRef.transform.SetParent(CardPos1);
                 InputCards[0].transform.SetParent(CardPos2);
                 InputCards[1].transform.SetParent(CardPos3);
 
                 break;
             case 3:
-                ActionManager.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/4Panel");
+                ActionGUI.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/4Panel");
                 ActionRef.transform.SetParent(CardPos1);
                 InputCards[0].transform.SetParent(CardPos2);
                 InputCards[1].transform.SetParent(CardPos3);
@@ -142,6 +146,7 @@ public class ActionManager : MonoBehaviour
         PanelText.text = OpenedActionCard.CurrentActionResult.OutcomeText;
         SetPanelActive(true);
 
+        
 
         for(int i = 0; i < OpenedActionCard.CurrentActionResult.ReturnedCardIDs.Count; i++)
         {
@@ -153,27 +158,27 @@ public class ActionManager : MonoBehaviour
         switch (ReturnedCards.Count)
         {
             case 1:
-                ActionManager.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/2Panel");
-                ReturnedCards[0].transform.SetParent(ActionManager.CardPos1);
+                ActionGUI.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/2Panel");
+                ReturnedCards[0].transform.SetParent(ActionGUI.CardPos1);
                 break;
             case 2:
-                ActionManager.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/2Panel");
-                ReturnedCards[0].transform.SetParent(ActionManager.CardPos1);
-                ReturnedCards[1].transform.SetParent(ActionManager.CardPos2);
+                ActionGUI.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/2Panel");
+                ReturnedCards[0].transform.SetParent(ActionGUI.CardPos1);
+                ReturnedCards[1].transform.SetParent(ActionGUI.CardPos2);
                 break;
             case 3:
-                ActionManager.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/3Panel");
-                ReturnedCards[0].transform.SetParent(ActionManager.CardPos1);
-                ReturnedCards[1].transform.SetParent(ActionManager.CardPos2);
-                ReturnedCards[2].transform.SetParent(ActionManager.CardPos4);
+                ActionGUI.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/3Panel");
+                ReturnedCards[0].transform.SetParent(ActionGUI.CardPos1);
+                ReturnedCards[1].transform.SetParent(ActionGUI.CardPos2);
+                ReturnedCards[2].transform.SetParent(ActionGUI.CardPos4);
                 break;
             case 4:
-                ActionManager.PanelText.transform.localPosition = new Vector3(-0.181f, 0.679f, 0f);
-                ActionManager.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/4Panel");
-                ReturnedCards[0].transform.SetParent(ActionManager.CardPos1);
-                ReturnedCards[1].transform.SetParent(ActionManager.CardPos2);
-                ReturnedCards[2].transform.SetParent(ActionManager.CardPos4);
-                ReturnedCards[3].transform.SetParent(ActionManager.CardPos3);
+                ActionGUI.PanelText.transform.localPosition = new Vector3(-0.181f, 0.679f, 0f);
+                ActionGUI.MeshRenderer.material.mainTexture = Resources.Load<Texture>("Images/4Panel");
+                ReturnedCards[0].transform.SetParent(ActionGUI.CardPos1);
+                ReturnedCards[1].transform.SetParent(ActionGUI.CardPos2);
+                ReturnedCards[2].transform.SetParent(ActionGUI.CardPos4);
+                ReturnedCards[3].transform.SetParent(ActionGUI.CardPos3);
                 break;
         }
         
@@ -187,9 +192,11 @@ public class ActionManager : MonoBehaviour
         }
     }
     
-    public void CloseActionPanel()
+    public void ExecuteActionPanel()
     {
-       
+        PlayerState.Instance.AttributeMap[CurrentAction.ActionResult.AttributeModified] += CurrentAction.ActionResult.AttributeModifier;
+        PlayerState.Instance.IncrementActionRepetition(CurrentAction);
+
         List<Card> cardsToRemove = new List<Card>();
 
         foreach (Card c in InputCards)
@@ -206,23 +213,24 @@ public class ActionManager : MonoBehaviour
         ActionRef.CookActionResult();
         SetPanelActive(false);
         ActionRef = null;
+        CurrentAction = null;
         InputCards = new List<Card>(); // Clear other cards
     
     }
     
     public static void SetPanelActive(bool bActive)
     {
-        if (ActionManager.This == null)
+        if (ActionGUI.This == null)
         {
             Debug.LogError("Panel or ActionManager instance is not initialized!");
             return;
         }
     
-        ActionManager.This.gameObject.SetActive(bActive);
+        ActionGUI.This.gameObject.SetActive(bActive);
         Time.timeScale = bActive ? 0.0f : 1.0f;
     }
     
-    public static void FindActionResult(string[] words)
+    public static void FindInputCards(string[] words)
     {
         if (ActionRef != null && words.Length >= 2)
         {
@@ -276,7 +284,7 @@ public class ActionManager : MonoBehaviour
              return;
          }
 
-         ActionManager.FindActionResult(words);
+         ActionGUI.FindInputCards(words);
          
          if (InputCards.Count > 0 && words.Length > 1)
          {
@@ -289,7 +297,7 @@ public class ActionManager : MonoBehaviour
              }
              
              ActionKey actionKeyToFind = new ActionKey(ActionRef.Name, InputCards[0].ID, PlayerState.Instance.Location, cardSpecifiers);
-
+             
              CardData mainCardData = CardDB.CardDataLookup[InputCards[0].ID];
 
              List<CardData> cdList = new List<CardData>();
@@ -298,17 +306,16 @@ public class ActionManager : MonoBehaviour
                  cdList.Add(CardDB.CardDataLookup[c.ID]);
              }
 
-             ActionResult ar = mainCardData.GetActionResult(ActionRef.Name, cdList);
+             ActionData ad = mainCardData.FindActionData(ActionRef.Name, cdList);
 
-             if (ar == null)
+             if (ad == null)
              {
                  TextInput.text = "IMPOSSIBLE.";
                  return; //no action found
              }
              
-             ActionRef.CurrentActionResult = ar;
-             
-             DisplayActionPanel(ar);
+             ActionRef.CurrentActionResult = ad.ActionResult;
+             DisplayActionPanel(ad);
          }
     }
 

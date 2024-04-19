@@ -199,7 +199,7 @@ public class Card : MonoBehaviour
     {
         if (IsTimerFinished() && CurrentActionResult != null)
         {
-            ActionManager.DisplayReturnPanel(this);
+            ActionGUI.DisplayReturnPanel(this);
             Timer.timerText.text = "";
             CurrentActionResult = null;
             //handle quantity xd

@@ -8,7 +8,7 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 public class Terminal : MonoBehaviour
 {
-     public ActionManager ActionManager;
+     public ActionGUI ActionPanelGUI;
      public TMP_Text PanelText;
      public TMP_InputField TextInput;
      private float LastActionTime;
@@ -48,15 +48,15 @@ public class Terminal : MonoBehaviour
         
          
          
-         if(ActionManager.gameObject != null && ActionManager.gameObject.activeSelf && ActionManager.ReturnedCards.Count > 0 )
+         if(ActionPanelGUI.gameObject != null && ActionPanelGUI.gameObject.activeSelf && ActionGUI.ReturnedCards.Count > 0 )
          {
              print("closing return panel");
-             ActionManager.CloseReturnPanel();
+             ActionGUI.CloseReturnPanel();
              yield return new WaitForSecondsRealtime(CooldownDuration);
          }
          
          // Handling no action card scenario
-         if (ActionManager.ActionRef == null) 
+         if (ActionGUI.ActionRef == null) 
          {
              
              if (TextInput.text != "> ACTION + CARD" && TextInput.text != "CARD(S) NOT FOUND."
@@ -69,7 +69,7 @@ public class Terminal : MonoBehaviour
          }
          else
          {
-             ActionManager.CloseActionPanel();
+             ActionPanelGUI.ExecuteActionPanel();
          }
 
          TextInput.text = "> ACTION + CARD";
@@ -93,7 +93,7 @@ public class Terminal : MonoBehaviour
              words[i] = words[i].ToLower();
          }
 
-         ActionManager.ExecuteInput(words);
+         ActionGUI.ExecuteInput(words);
          
      }
      
