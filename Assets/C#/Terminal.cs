@@ -31,6 +31,11 @@ public class Terminal : MonoBehaviour
              StartCoroutine(HandleInput());
              bFirstCoro = false; //no cooldown for first enter coro
          }
+
+         if (Input.GetKeyDown(KeyCode.Escape) && ActionGUI.IsActionPanelOpen())
+         {
+             ActionGUI.CancelActionPanel();
+         }
      }
 
      IEnumerator HandleInput()
@@ -50,7 +55,6 @@ public class Terminal : MonoBehaviour
          
          if(ActionPanelGUI.gameObject != null && ActionPanelGUI.gameObject.activeSelf && ActionGUI.ReturnedCards.Count > 0 )
          {
-             print("closing return panel");
              ActionGUI.ExecuteReturnPanel();
              yield return new WaitForSecondsRealtime(CooldownDuration);
          }

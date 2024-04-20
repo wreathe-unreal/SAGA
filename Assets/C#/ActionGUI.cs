@@ -70,29 +70,53 @@ public class ActionGUI : MonoBehaviour
     public static void CancelActionPanel()
     {
         
+        if (InputCards.Count > 0)
+        {
+            foreach (Card c in InputCards)
+            {
+                c.transform.SetParent(null);
+                c.transform.localPosition = new Vector3(1,1,1);
+                c.transform.localScale = new Vector3(1, 1, 1);
+            }
+
+            foreach (Deck d in BoardState.Decks.Values)
+            {
+                d.SetCardPositions();
+            }
+                
+        }
+        ActionRef.transform.SetParent(null);
+        ActionRef = null;
+        SetPanelActive(false);
+        CurrentAction = null;
+        InputCards = new List<Card>(); // Clear other cards
     }
     
     public static void ExecuteReturnPanel()
     { 
-        print("closing return panel");
         if (ReturnedCards.Count > 0)
         {
-                foreach (Card c in ReturnedCards)
-                {
-                    c.transform.SetParent(null);
-                    c.transform.localPosition = new Vector3(1,1,1);
-                    c.transform.localScale = new Vector3(1, 1, 1);
+            foreach (Card c in ReturnedCards)
+            {
+                c.transform.SetParent(null);
+                c.transform.localPosition = new Vector3(1,1,1);
+                c.transform.localScale = new Vector3(1, 1, 1);
+            }
 
-                }
-
-                foreach (Deck d in BoardState.Decks.Values)
-                {
-                    d.SetCardPositions();
-                }
+            foreach (Deck d in BoardState.Decks.Values)
+            {
+                d.SetCardPositions();
+            }
                 
         }
         SetPanelActive(false);
         ReturnedCards = new List<Card>();
+
+    }
+
+    public static bool IsActionPanelOpen()
+    {
+        return (InputCards.Count > 0 && ActionRef != null);
 
     }
     
@@ -202,6 +226,8 @@ public class ActionGUI : MonoBehaviour
             c.transform.localScale = new Vector3(.95f, .89f, 1f);
             c.transform.localPosition = new Vector3(0f, 0f, 0f);
             c.SetFaceUpState(true);
+            print("Displaying" + c.ID);
+
 
         }
     }

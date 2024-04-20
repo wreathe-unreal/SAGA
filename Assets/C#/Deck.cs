@@ -47,7 +47,7 @@ public class Deck : IEnumerable<Card>
         return positions;
     }
 
-    public void SetCardPositions()
+    public void SetCardPositions() 
     {
             for (int i = 0; i < Positions.Count; i++)
             {
@@ -55,6 +55,7 @@ public class Deck : IEnumerable<Card>
                 {
                     // Assign position to card
                     Cards[i].SetPosition(Positions[i]);
+                    //Cards[i].StartCoroutine(Cards[i].ScaleToSize(new Vector3(1, 1, 1), .40f));
                 }
             }
 

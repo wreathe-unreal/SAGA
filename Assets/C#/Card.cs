@@ -10,6 +10,7 @@ using UnityEngine.UI;
 
 public class Card : MonoBehaviour
 {
+    public Image PieTimer;
     public MeshRenderer BorderMesh;
     public Timer Timer;
     private Color TypeColor;
@@ -39,7 +40,6 @@ public class Card : MonoBehaviour
     void Start()
     {
         DeckType = GetDeckType();
-        OriginalScale = transform.localScale; // Store the original scale
         Rigidbody RigidBody = gameObject.GetComponent<Rigidbody>();
         MainCamera = FindObjectOfType<Camera>();
 
@@ -154,6 +154,7 @@ public class Card : MonoBehaviour
 
     public void SetPosition(Vector3 newPos)
     {
+        
         transform.position = newPos;
 
     }
@@ -178,17 +179,25 @@ public class Card : MonoBehaviour
     public void CookActionResult()
     {
         gameObject.transform.SetParent(null);
-        gameObject.transform.localScale = new Vector3(25, 25, 1);
+        gameObject.transform.localScale = new Vector3(5, 5, 1);
+        StartCoroutine(ScaleToSize(new Vector3(1, 1, 1), .40f));
         BoardState.Decks["Action"].SetCardPositions();
         Timer.StartTimer(CurrentActionResult.Duration);
-        Timer.OnTimerComplete += OnTimerExpired;
+        Timer.OnTimerComplete += UpdateTimerText;
+        Timer.OnTimerUpdate += UpdateTimerBar;
 
     }
 
-    private void OnTimerExpired()
+    private void UpdateTimerBar()
     {
-        Timer.timerText.text = "Done";
+        PieTimer.fillAmount = 1 - (Timer.timeRemaining / Timer.duration);
 
+    }
+    
+    private void UpdateTimerText()
+    {
+        Timer.timerText.faceColor = new Color32(153, 255, 51, 255);
+        Timer.timerText.text = "Done";
     }
 
     public void OpenAction()
@@ -197,9 +206,13 @@ public class Card : MonoBehaviour
         {
             ActionGUI.DisplayReturnPanel(this);
             Timer.timerText.text = "";
+            Timer.timerText.faceColor = new Color32(255, 255, 255, 255);
+            PieTimer.fillAmount = 0;
             CurrentActionResult = null;
+            
+            
+            
             //handle quantity xd
-            //flip them
         }
     }
 
@@ -214,13 +227,16 @@ public class Card : MonoBehaviour
     {
         if (ScaleCoroutine != null)
             StopCoroutine(ScaleCoroutine);
-
-        Vector3 targetScale = new Vector3(2.5f, 2.5f, 2f);
+        
+        Vector3 targetScale = new Vector3(2.25f, 2.25f, 1f);
         transform.localScale = Vector3.Lerp(transform.localScale, targetScale * (MainCamera.orthographicSize / 157), Time.deltaTime * 10);
 
+        Vector3 originalPosition = transform.localPosition;
+        originalPosition.z = -5;
+        transform.localPosition = originalPosition;
+        
         if (transform.localScale.x  > (1.0f * (MainCamera.orthographicSize / 157)) && transform.localRotation.y == 0)
         {
-            print(this.GetDeckType());
             if (this.GetDeckType() != "System" && this.GetDeckType() != "Character" && this.GetDeckType() != "Action")
             {
                 TMP_MouseOverName.text = Name;
@@ -240,16 +256,20 @@ public class Card : MonoBehaviour
         TMP_MouseOverFlavor.text = "";
         TMP_MouseOverNameLeft.text = "";
         TMP_MouseOverFlavorLeft.text = "";
+
+        Vector3 originalPosition = transform.localPosition;
+        originalPosition.z = 0;
+        transform.localPosition = originalPosition;
         
         if (ScaleCoroutine != null)
         {
             StopCoroutine(ScaleCoroutine);
         }
         
-        ScaleCoroutine = StartCoroutine(ScaleToSize(OriginalScale, .15f));
+        ScaleCoroutine = StartCoroutine(ScaleToSize(new Vector3(1f, 1f, 1f), .15f));
     }
 
-    IEnumerator ScaleToSize(Vector3 targetScale, float duration)
+    public IEnumerator ScaleToSize(Vector3 targetScale, float duration)
     {
         float time = 0;
         Vector3 startScale = transform.localScale;
