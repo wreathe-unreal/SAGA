@@ -28,7 +28,7 @@ public class Terminal : MonoBehaviour
          // Listen for key down event only once in Update
          if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
          {
-             StartCoroutine(HandleInput());
+             StartCoroutine(HandleEnterInput());
              bFirstCoro = false; //no cooldown for first enter coro
          }
 
@@ -38,7 +38,7 @@ public class Terminal : MonoBehaviour
          }
      }
 
-     IEnumerator HandleInput()
+     IEnumerator HandleEnterInput()
      {
          if (!bFirstCoro)
          {
@@ -75,8 +75,6 @@ public class Terminal : MonoBehaviour
          {
              ActionPanelGUI.ExecuteActionPanel();
          }
-
-         TextInput.text = "> ACTION + CARD";
          // Wait for the cooldown duration before allowing another action, unaffected by Time.timeScale
          yield return new WaitForSecondsRealtime(CooldownDuration);
      }
@@ -84,8 +82,8 @@ public class Terminal : MonoBehaviour
      public void ParseText(string input)
      {
          string error = "ERROR.";
-         var words = input.Split(new[] { " + " }, StringSplitOptions.RemoveEmptyEntries);
-
+         string[] words = input.Split(new[] { "+" }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToArray();
+         
          if (words.Length > 4)
          {
              TextInput.text = error;

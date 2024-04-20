@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.LookDev;
 
-public class SkyboxRotation : MonoBehaviour
+public class Skybox : MonoBehaviour
 {
     public float SkyBoxRotationSpeed = -.4f;
     

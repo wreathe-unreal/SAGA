@@ -61,7 +61,7 @@ public class CameraController : MonoBehaviour
         {
             AnimTimer += Time.deltaTime * AnimSpeed; 
             
-            cam.fieldOfView = Mathf.Lerp(178, 50, AnimTimer);
+            cam.fieldOfView = Mathf.Lerp(178, 59, AnimTimer);
 
             if (AnimTimer >= 1)
             {

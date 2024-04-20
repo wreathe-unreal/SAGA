@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public class ActionGUI : MonoBehaviour
@@ -369,7 +370,8 @@ public class ActionGUI : MonoBehaviour
 
              if (ad == null)
              {
-                 TextInput.text = "IMPOSSIBLE.";
+                 TextInput.text = "IMPOSSIBLE.";// Get the current ColorBlock from the TextInput
+                 ActionRef = null;
                  return; //no action found
              }
              
