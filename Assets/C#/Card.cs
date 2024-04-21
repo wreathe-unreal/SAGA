@@ -202,8 +202,10 @@ public class Card : MonoBehaviour
     
     private void UpdateTimerText()
     {
-        Timer.timerText.faceColor = new Color32(153, 255, 51, 255);
-        Timer.timerText.text = "*";
+        TMP_Name.color = new Color(102/255, 255/255, 26/255);
+        Timer.timerText.text = "";
+        // Timer.timerText.faceColor = new Color32(153, 255, 51, 255);
+        // Timer.timerText.text = "*";
     }
 
     public void OpenAction()
@@ -211,8 +213,8 @@ public class Card : MonoBehaviour
         if (IsTimerFinished() && CurrentActionResult != null)
         {
             ActionGUI.DisplayReturnPanel(this);
-            Timer.timerText.text = "";
             Timer.timerText.faceColor = new Color32(255, 255, 255, 255);
+            TMP_Name.color = TypeColor;
             PieTimer.fillAmount = 0;
             CurrentActionResult = null;
             

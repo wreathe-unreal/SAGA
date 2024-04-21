@@ -62,7 +62,7 @@ public class CardScaler : MonoBehaviour
         }
 
         Vector3 targetScale = new Vector3(2.0f, 2.0f, 1f);
-        CardBeingScaled.transform.localScale = Vector3.Lerp(CardBeingScaled.transform.localScale, targetScale * (MainCamera.orthographicSize / 240), Time.deltaTime * 10);
+        CardBeingScaled.transform.localScale = Vector3.Lerp(CardBeingScaled.transform.localScale, targetScale * (MainCamera.orthographicSize / 157), Time.deltaTime * 10);
 
         
         // Clamp to screen edges

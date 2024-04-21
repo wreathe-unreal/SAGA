@@ -79,7 +79,7 @@ public class CameraController : MonoBehaviour
 
         HandleMovement();
         HandleZoom();
-        //HandleZoomMovement();
+        HandleZoomMovement();
         UpdateBounds();
         HandleRoll();
         HandlePitch();
