@@ -11,7 +11,6 @@ using UnityEngine.UI;
 
 public class Card : MonoBehaviour
 {
-    private static string CardBeingScaled = "";
     public Image PieTimer;
     public MeshRenderer BorderMesh;
     public Timer Timer;
@@ -51,7 +50,6 @@ public class Card : MonoBehaviour
 
     void Update()
     {
-        if (Time.timeScale == 0f) ;
     }
 
     public string GetDeckType()
@@ -202,7 +200,7 @@ public class Card : MonoBehaviour
     
     private void UpdateTimerText()
     {
-        TMP_Name.color = new Color(102/255, 255/255, 26/255);
+        TMP_Name.color = new Color(191/255, 1, 0);
         Timer.timerText.text = "";
         // Timer.timerText.faceColor = new Color32(153, 255, 51, 255);
         // Timer.timerText.text = "*";

@@ -14,6 +14,7 @@ public class Attribute
 
 public class PlayerState : MonoBehaviour
 {
+    public Starship Starship;
     public string Location;
     public Dictionary<string, float> AttributeMap = new Dictionary<string, float>();
     private Dictionary<ActionData, int> ActionRepetitionsMap;
