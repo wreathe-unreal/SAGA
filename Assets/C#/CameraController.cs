@@ -23,12 +23,13 @@ public class CameraController : MonoBehaviour
     public float BaseMinY = -125f;
     public float BaseMaxY = 125f;
 
-    public float ScreenEdgeThreshold = 20f; 
+    public float ScreenEdgeThreshold = 1f; 
     public float ZoomSmoothing = 10f;
     public float RollAngle = 7f; 
     public float RollReturnSpeed = 10f;
     public float PitchAngle = 7f; 
     public float PitchReturnSpeed = 10f;
+    public float ZoomMovementSpeed = 40f;
 
     private Camera cam;
     private Vector3 newPosition;
@@ -78,6 +79,7 @@ public class CameraController : MonoBehaviour
 
         HandleMovement();
         HandleZoom();
+        //HandleZoomMovement();
         UpdateBounds();
         HandleRoll();
         HandlePitch();
@@ -107,12 +109,40 @@ public class CameraController : MonoBehaviour
 
     void HandleZoom()
     {
+        
         float scroll = Input.GetAxis("Mouse ScrollWheel") * ZoomVelocity;
         if (cam.orthographic)
         {
             targetOrthographicSize -= scroll;
             targetOrthographicSize = Mathf.Clamp(targetOrthographicSize, MinZoom, MaxZoom);
             cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, targetOrthographicSize, Time.deltaTime * ZoomSmoothing);
+        }
+    }
+
+    void HandleZoomMovement()
+    {
+        // for moving while zooming
+        Vector3 MousePos = Input.mousePosition;
+        MousePos = cam.ScreenToViewportPoint(MousePos);
+        MousePos.x -= .5f;
+        MousePos.y -= .5f;
+        
+        if (targetOrthographicSize > cam.orthographicSize)
+        {
+            MousePos *= -1;
+        }
+        
+        MousePos *= ZoomMovementSpeed * 10 * Time.deltaTime;
+
+        
+        
+        if (Mathf.Abs(cam.orthographicSize - targetOrthographicSize) > .5f)
+        {
+            newPosition = transform.position + new Vector3(MousePos.x, MousePos.y, 0);
+            newPosition.x = Mathf.Clamp(newPosition.x, MinX, MaxX);
+            newPosition.y = Mathf.Clamp(newPosition.y, MinY, MaxY);
+
+            transform.position = newPosition;
         }
     }
 

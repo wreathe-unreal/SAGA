@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -10,6 +11,7 @@ using UnityEngine.UI;
 
 public class Card : MonoBehaviour
 {
+    private static string CardBeingScaled = "";
     public Image PieTimer;
     public MeshRenderer BorderMesh;
     public Timer Timer;
@@ -24,8 +26,8 @@ public class Card : MonoBehaviour
     public TextMeshProUGUI TMP_Name;
     public TextMeshProUGUI TMP_Quantity;
     public ActionResult CurrentActionResult; //for verb cards only
-    private Vector3 OriginalScale;
     private Coroutine ScaleCoroutine;
+    private Coroutine PositionCoroutine;
     public string DeckType;
     public TextMeshProUGUI TMP_MouseOverFlavor;
     public TextMeshProUGUI TMP_MouseOverName;
@@ -33,6 +35,8 @@ public class Card : MonoBehaviour
     public TextMeshProUGUI TMP_MouseOverNameLeft;
     public Camera MainCamera;
 
+    public Vector3 OriginalPosition;
+    
     void Awake()
     {
         SetFaceUpState(false);
@@ -47,9 +51,10 @@ public class Card : MonoBehaviour
 
     void Update()
     {
+        if (Time.timeScale == 0f) ;
     }
 
-    private string GetDeckType()
+    public string GetDeckType()
     {
         switch (Data.Type)
         {
@@ -87,7 +92,7 @@ public class Card : MonoBehaviour
                 return Data.Type;
         }
     }
-
+    
     public void SetFaceUpState(bool bIsFaceUp)
     {
             AnimController.SetBool("bIsFaceUp", bIsFaceUp);
@@ -156,6 +161,7 @@ public class Card : MonoBehaviour
     {
         
         transform.position = newPos;
+        OriginalPosition = newPos;
 
     }
 
@@ -197,7 +203,7 @@ public class Card : MonoBehaviour
     private void UpdateTimerText()
     {
         Timer.timerText.faceColor = new Color32(153, 255, 51, 255);
-        Timer.timerText.text = "Done";
+        Timer.timerText.text = "*";
     }
 
     public void OpenAction()
@@ -225,48 +231,11 @@ public class Card : MonoBehaviour
 
     void OnMouseOver()
     {
-        if (ScaleCoroutine != null)
-            StopCoroutine(ScaleCoroutine);
-        
-        Vector3 targetScale = new Vector3(2.25f, 2.25f, 1f);
-        transform.localScale = Vector3.Lerp(transform.localScale, targetScale * (MainCamera.orthographicSize / 157), Time.deltaTime * 10);
-
-        Vector3 originalPosition = transform.localPosition;
-        originalPosition.z = -5;
-        transform.localPosition = originalPosition;
-        
-        if (transform.localScale.x  > (1.0f * (MainCamera.orthographicSize / 157)) && transform.localRotation.y == 0)
-        {
-            if (this.GetDeckType() != "System" && this.GetDeckType() != "Character" && this.GetDeckType() != "Action")
-            {
-                TMP_MouseOverName.text = Name;
-                TMP_MouseOverFlavor.text = CardDB.CardDataLookup[ID].FlavorText;
-            }
-            else
-            {
-                TMP_MouseOverNameLeft.text = Name;
-                TMP_MouseOverFlavorLeft.text = CardDB.CardDataLookup[ID].FlavorText;
-            }
-        }
     }
 
     void OnMouseExit()
     {
-        TMP_MouseOverName.text = "";
-        TMP_MouseOverFlavor.text = "";
-        TMP_MouseOverNameLeft.text = "";
-        TMP_MouseOverFlavorLeft.text = "";
 
-        Vector3 originalPosition = transform.localPosition;
-        originalPosition.z = 0;
-        transform.localPosition = originalPosition;
-        
-        if (ScaleCoroutine != null)
-        {
-            StopCoroutine(ScaleCoroutine);
-        }
-        
-        ScaleCoroutine = StartCoroutine(ScaleToSize(new Vector3(1f, 1f, 1f), .15f));
     }
 
     public IEnumerator ScaleToSize(Vector3 targetScale, float duration)
@@ -282,6 +251,19 @@ public class Card : MonoBehaviour
         }
 
         transform.localScale = targetScale; // Ensure the target scale is set after interpolation
+    }
+    
+    public IEnumerator MoveToPosition(Vector3 targetPosition, float duration)
+    {
+        float time = 0;
+        Vector3 startPosition = transform.localPosition;
+        while (time < duration)
+        {
+            transform.localPosition = Vector3.Lerp(startPosition, targetPosition, time / duration);
+            time += Time.deltaTime;
+            yield return null;
+        }
+        transform.localPosition = targetPosition;  // Ensure the position is exactly the target position at the end.
     }
     
 }

@@ -25,7 +25,7 @@ public class ActionGUI : MonoBehaviour
     
     //instance
     public static ActionGUI This; // Singleton instance
-
+    public static Camera MainCamera;
     public static MeshRenderer MeshRenderer;
     public static TMP_Text FlavorText;
     private static BoardState BoardState;
@@ -52,13 +52,13 @@ public class ActionGUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        MainCamera = FindObjectOfType<Camera>();
         ActionRef = null;
         InputCards = new List<Card>();
         ReturnedCards = new List<Card>();
         ReturnedQuantities = new List<int>();
         TextInput = FindObjectOfType<TMP_InputField>();
         BoardState = FindObjectOfType<BoardState>();
-        SetPanelActive(false);
 
     }
     
@@ -121,10 +121,18 @@ public class ActionGUI : MonoBehaviour
 
     }
     
+    public static bool IsReturnPanelOpen()
+    {
+        return (ReturnedCards.Count > 0);
+
+    }
+    
     public static void DisplayActionPanel(ActionData actionData)
     {
         CurrentAction = actionData;
         SetPanelActive(true);
+
+        
         
 
         switch (InputCards.Count)
@@ -160,13 +168,15 @@ public class ActionGUI : MonoBehaviour
          
                  
         ActionRef.transform.localScale = new Vector3(.95f, .89f, 1f);
-        ActionRef.transform.localPosition = new Vector3(0f, 0f, 0f);       
+        ActionRef.transform.localPosition = new Vector3(0f, 0f, 0f);
+        ActionRef.OriginalPosition = ActionRef.transform.position;
         
         foreach (Card c in InputCards)
         {
-             
+            
             c.transform.localScale = new Vector3(.95f, .89f, 1f);
             c.transform.localPosition = new Vector3(0f, 0f, 0f);
+            c.OriginalPosition = c.transform.position;
         }
          
          
@@ -226,6 +236,7 @@ public class ActionGUI : MonoBehaviour
          
             c.transform.localScale = new Vector3(.95f, .89f, 1f);
             c.transform.localPosition = new Vector3(0f, 0f, 0f);
+            c.OriginalPosition = c.transform.position;
             c.SetFaceUpState(true);
             print("Displaying" + c.ID);
 
@@ -271,23 +282,54 @@ public class ActionGUI : MonoBehaviour
 
         int cardsToDisplay = InputCards.Count > 0 ? InputCards.Count + 1  : ReturnedCards.Count;
 
+        Transform PanelToDisplay;
+        
         switch(cardsToDisplay)
         {
             case 1:
-                ActionGUI.This.gameObject.transform.Find("1Panel").gameObject.SetActive(bActive);
+                PanelToDisplay = ActionGUI.This.gameObject.transform.Find("1Panel");
                 break;
             case 2:
-                ActionGUI.This.gameObject.transform.Find("2Panel").gameObject.SetActive(bActive);
+                PanelToDisplay = ActionGUI.This.gameObject.transform.Find("2Panel");
                 break;
             case 3:
-                ActionGUI.This.gameObject.transform.Find("3Panel").gameObject.SetActive(bActive);
+                PanelToDisplay = ActionGUI.This.gameObject.transform.Find("3Panel");
                 break;
             case 4:
-                ActionGUI.This.gameObject.transform.Find("4Panel").gameObject.SetActive(bActive);
+                PanelToDisplay = ActionGUI.This.gameObject.transform.Find("4Panel");
+                break;
+            default:
+                PanelToDisplay = null;
                 break;
         }
 
+        if (PanelToDisplay == null)
+        {
+            return;
+        }
+
+        PanelToDisplay = NormalizePanel(PanelToDisplay);
+        PanelToDisplay.gameObject.SetActive(bActive);
+
         Time.timeScale = bActive ? 0.0f : 1.0f;
+    }
+
+    public static Transform NormalizePanel(Transform transform)
+    {
+        
+        //normalize scale
+        float xScaling = transform.localScale.x * MainCamera.orthographicSize / 240;
+        float ysCaling = transform.localScale.y * MainCamera.orthographicSize / 240;
+        transform.localScale = new Vector3(xScaling, ysCaling, transform.localScale.z);
+        
+        //normalize position
+        Vector3 newPos = MainCamera.ViewportToWorldPoint(Vector3.one / 2);
+        newPos.z = transform.position.z;
+        transform.position = newPos;
+
+        return transform;
+
+
     }
     
     public static void FindInputCards(string[] words)
