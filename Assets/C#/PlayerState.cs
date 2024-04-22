@@ -47,6 +47,12 @@ public class PlayerState : MonoBehaviour
         ActionRepetitionsMap[actionData]++;
     }
     
+    public void DecrementActionRepetition(ActionData actionData)
+    {
+
+        ActionRepetitionsMap[actionData]--;
+    }
+    
     // Property to access the instance
     public static PlayerState Instance
     {

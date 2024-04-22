@@ -25,7 +25,6 @@ public class Deck : IEnumerable<Card>
         {
             Debug.LogError("CardPositions parent GameObject not found in the scene.");
         }
-        
     }
     
     List<Vector3> CollectPositions(GameObject parentObject, string groupName)

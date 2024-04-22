@@ -24,7 +24,7 @@ public class Card : MonoBehaviour
     public int Quantity;
     public TextMeshProUGUI TMP_Name;
     public TextMeshProUGUI TMP_Quantity;
-    public ActionResult CurrentActionResult; //for verb cards only
+    public ActionData CurrentActionData;
     private Coroutine ScaleCoroutine;
     private Coroutine PositionCoroutine;
     public string DeckType;
@@ -186,7 +186,7 @@ public class Card : MonoBehaviour
         gameObject.transform.localScale = new Vector3(5, 5, 1);
         StartCoroutine(ScaleToSize(new Vector3(1, 1, 1), .40f));
         BoardState.Decks["Action"].SetCardPositions();
-        Timer.StartTimer(CurrentActionResult.Duration);
+        Timer.StartTimer(CurrentActionData.ActionResult.Duration);
         Timer.OnTimerComplete += UpdateTimerText;
         Timer.OnTimerUpdate += UpdateTimerBar;
 
@@ -208,16 +208,17 @@ public class Card : MonoBehaviour
 
     public void OpenAction()
     {
-        if (IsTimerFinished() && CurrentActionResult != null)
+        if (IsTimerFinished() && CurrentActionData.ActionResult != null)
         {
             ActionGUI.DisplayReturnPanel(this);
             Timer.timerText.faceColor = new Color32(255, 255, 255, 255);
             TMP_Name.color = TypeColor;
             PieTimer.fillAmount = 0;
-            CurrentActionResult = null;
-            
-            
-            
+            CurrentActionData = null;
+            ActionGUI.CurrentAction = null;
+
+
+
             //handle quantity xd
         }
     }

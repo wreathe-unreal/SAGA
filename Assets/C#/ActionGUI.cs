@@ -22,6 +22,8 @@ public class ActionGUI : MonoBehaviour
     //for action display only
     public static List<Card> InputCards;
     public static Card ActionRef;
+
+    public static Card BattleOpponent;
     
     //instance
     public static ActionGUI This; // Singleton instance
@@ -127,14 +129,11 @@ public class ActionGUI : MonoBehaviour
 
     }
     
-    public static void DisplayActionPanel(ActionData actionData)
+    public static void DisplayActionPanel()
     {
-        CurrentAction = actionData;
+        CurrentAction = ActionRef.CurrentActionData;
         SetPanelActive(true);
-
         
-        
-
         switch (InputCards.Count)
         {
             case 1:
@@ -163,8 +162,8 @@ public class ActionGUI : MonoBehaviour
                 break;
         }
          
-        TitleText.text = actionData.ActionResult.Title;
-        FlavorText.text = actionData.ActionResult.FlavorText;
+        TitleText.text = CurrentAction.ActionResult.Title;
+        FlavorText.text = CurrentAction.ActionResult.FlavorText;
          
                  
         ActionRef.transform.localScale = new Vector3(.95f, .89f, 1f);
@@ -184,14 +183,25 @@ public class ActionGUI : MonoBehaviour
 
     public static void DisplayReturnPanel(Card OpenedActionCard)
     {
-         
-        for(int i = 0; i < OpenedActionCard.CurrentActionResult.ReturnedCardIDs.Count; i++)
+        if (OpenedActionCard.ID == "battle" && !PlayerState.Instance.Starship.GetBattleResults(BattleOpponent.Data.Price)) //if the action is a battle and the player loses
         {
-            string id = OpenedActionCard.CurrentActionResult.ReturnedCardIDs[i];
-            int qty = OpenedActionCard.CurrentActionResult.ReturnedQuantities[i];
-            ReturnedCards.Add(BoardState.GetInstance().AddCard(id, qty, false));
+            PlayerState.Instance.DecrementActionRepetition(OpenedActionCard.CurrentActionData);
+            ReturnedCards.Add(BoardState.GetInstance().AddCard(OpenedActionCard.ID, 1, false));
+            ReturnedCards.Add(BoardState.GetInstance().AddCard(BattleOpponent.ID, 1, false));
         }
-        
+        else //otherwise proceed as normal
+        {
+           
+            for(int i = 0; i < OpenedActionCard.CurrentActionData.ActionResult.ReturnedCardIDs.Count; i++)
+            {
+                string id = OpenedActionCard.CurrentActionData.ActionResult.ReturnedCardIDs[i];
+                int qty = OpenedActionCard.CurrentActionData.ActionResult.ReturnedQuantities[i];
+                
+                    ReturnedCards.Add(BoardState.GetInstance().AddCard(id, qty, false));
+            } 
+        }
+         
+
         SetPanelActive(true);
         
         switch (ReturnedCards.Count)
@@ -228,8 +238,8 @@ public class ActionGUI : MonoBehaviour
                 break;
         }
          
-        TitleText.text = OpenedActionCard.CurrentActionResult.Title;
-        FlavorText.text = OpenedActionCard.CurrentActionResult.OutcomeText;
+        TitleText.text = OpenedActionCard.CurrentActionData.ActionResult.Title;
+        FlavorText.text = OpenedActionCard.CurrentActionData.ActionResult.OutcomeText;
         
         foreach (Card c in ReturnedCards)
         {
@@ -416,9 +426,9 @@ public class ActionGUI : MonoBehaviour
                  ActionRef = null;
                  return; //no action found
              }
-             
-             ActionRef.CurrentActionResult = ad.ActionResult;
-             DisplayActionPanel(ad);
+
+             ActionRef.CurrentActionData = ad;
+             DisplayActionPanel();
          }
     }
 
