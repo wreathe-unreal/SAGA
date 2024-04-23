@@ -73,7 +73,10 @@ public class BoardState : MonoBehaviour
         {
             if (c.ID == cd.ID)
             {
-                c.ModifyQuantity(quantity);
+                if (c.DeckType != "Action")
+                {
+                    c.ModifyQuantity(quantity);
+                }
                 bExistsInDeckAlready = true;
                 foundCard = c;
             }
@@ -122,7 +125,7 @@ public class BoardState : MonoBehaviour
 
     private void AddStartingCards()
     {
-        List<string> InitialCards = new List<string> { "work", "glint", "deep_miner_mining", "deepmine" };
+        List<string> InitialCards = new List<string> { "work", "glint", "toil_the_deep", "deepmine" };
 
         foreach (string s in InitialCards)
         {

@@ -1,7 +1,7 @@
 {
     "EProperty": 
     [
-	      "Agricultural",
+          "Agricultural",
         "Ally",
         "Anarchic",
         "Arcane",
@@ -56,7 +56,15 @@
         "Transposition",
         "Uncommon",
         "Vampiric",
-        "Wealthy"
+        "Wealthy",
+        "Shuttle",
+        "Frigate",
+        "Destroyer",
+        "Cruiser",
+        "Battleship",
+        "Titan",
+        "Worldship",
+        "Excalibur"
     ],
     "EType": 
     [
@@ -65,27 +73,35 @@
         "Currency",
         "Crafting",
         "Engine",
-	      "Power Supply",
-	      "Portal Drive",
-	      "Cargo Hold",
-	      "Thermal Weapon",
-	      "Laser Weapon",
-	      "Psychic Weapon",
-	      "Arcane Weapon",
-	      "Ramming Weapon",
-	      "Kinetic Weapon",
-	      "Shield Generator",
-	      "Engine Coolant",
-	      "Armor Plating",
-	      "Magical Ward",
-	      "Hull",
+          "Power Supply",
+          "Portal Drive",
+          "Cargo Hold",
+          "Thermal Weapon",
+          "Laser Weapon",
+          "Psychic Weapon",
+          "Arcane Weapon",
+          "Ramming Weapon",
+          "Kinetic Weapon",
+          "Shield Generator",
+          "Engine Coolant",
+          "Armor Plating",
+          "Magical Ward",
+          "Hull",
         "Character",
         "Ambition",
         "Cargo",
         "Fleet",
         "Habitat",
         "System",
-        "Enemy"
+        "Power Supply",
+        "Shield Generator",
+        "Cargo Hold",
+        "Portal Drive",
+        "Kinetic Weapon",
+        "Energy Weapon",
+        "Missle Weapon",
+        "Engine",
+        "Thrusters"
     ],
     "ESystem": 
     [
@@ -150,14 +166,21 @@
     "EAttribute": 
     [
         "Health",
-	      "Fame",
-	      "Prowess",
-	      "Credit",
-	      "Intrepidity",
+          "Fame",
+          "Prowess",
+          "Credit",
+          "Intrepidity",
         "Arcanum",
-        "King Arthur Fame",
-        "Deep Miner Progress",
-        "Helldiver Uma Dialogue"
-        
+        "Toil Progress",
+        "Helldiver Uma Progress",
+        "Greyhound Progress",
+        "Component Research Progress",
+        "Shattered Shuttle Progress",
+        "Avalon Reputation",
+        "Merlin Reputation",
+        "Glint Reputation",
+        "Nocturne Reputation",
+        "MacbethIV Reputation",
+        "Bane Reputation"
     ]
 }

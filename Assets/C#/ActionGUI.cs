@@ -34,6 +34,7 @@ public class ActionGUI : MonoBehaviour
     public static Transform CardPos4;
     private static AudioSource AudioSource;
     private static TMP_Text TitleText;
+    private static Transform OriginalTransform;
 
     void Awake()
     {
@@ -58,6 +59,7 @@ public class ActionGUI : MonoBehaviour
         ReturnedQuantities = new List<int>();
         TextInput = FindObjectOfType<TMP_InputField>();
         BoardState = FindObjectOfType<BoardState>();
+        
 
     }
     
@@ -191,7 +193,7 @@ public class ActionGUI : MonoBehaviour
                 string id = OpenedActionCard.CurrentAction.ActionResult.ReturnedCardIDs[i];
                 int qty = OpenedActionCard.CurrentAction.ActionResult.ReturnedQuantities[i];
                 
-                    ReturnedCards.Add(BoardState.GetInstance().AddCard(id, qty, false));
+                ReturnedCards.Add(BoardState.GetInstance().AddCard(id, qty, false));
             } 
         }
 
@@ -228,6 +230,16 @@ public class ActionGUI : MonoBehaviour
                 ReturnedCards[3].transform.SetParent(This.transform.FindDeepChild("4Panel/BottomCard"));
                 TitleText = This.transform.FindDeepChild("4Panel/TitleText").GetComponent<TMP_Text>();
                 FlavorText = This.transform.FindDeepChild("4Panel/FlavorText").GetComponent<TMP_Text>();
+                break;
+            case 5:
+                AudioSource = This.transform.Find("5Panel").GetComponent<AudioSource>();
+                ReturnedCards[0].transform.SetParent(This.transform.FindDeepChild("5Panel/TopCard"));
+                ReturnedCards[1].transform.SetParent(This.transform.FindDeepChild("5Panel/LeftCard"));
+                ReturnedCards[2].transform.SetParent(This.transform.FindDeepChild("5Panel/RightCard"));
+                ReturnedCards[3].transform.SetParent(This.transform.FindDeepChild("5Panel/BottomLeftCard"));
+                ReturnedCards[4].transform.SetParent(This.transform.FindDeepChild("4Panel/BottomRightCard"));
+                TitleText = This.transform.FindDeepChild("5Panel/TitleText").GetComponent<TMP_Text>();
+                FlavorText = This.transform.FindDeepChild("5Panel/FlavorText").GetComponent<TMP_Text>();
                 break;
         }
          
@@ -308,6 +320,9 @@ public class ActionGUI : MonoBehaviour
             case 4:
                 PanelToDisplay = ActionGUI.This.gameObject.transform.Find("4Panel");
                 break;
+            case 5:
+                PanelToDisplay = ActionGUI.This.gameObject.transform.Find("5Panel");
+                break;
             default:
                 PanelToDisplay = null;
                 break;
@@ -326,7 +341,7 @@ public class ActionGUI : MonoBehaviour
 
     public static Transform NormalizePanel(Transform transform)
     {
-        
+        transform.localScale = new Vector3(424.60388f, 282.37645f, 1.05557001f); //original transform
         //normalize scale
         float xScaling = transform.localScale.x * MainCamera.orthographicSize / 240;
         float ysCaling = transform.localScale.y * MainCamera.orthographicSize / 240;
