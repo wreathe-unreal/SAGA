@@ -10,9 +10,6 @@ using UnityEngine.UI;
 public class ActionGUI : MonoBehaviour
 {
     public static TMP_InputField TextInput;
-    
-    
-    public static ActionData CurrentAction;
 
     
     //for action return only
@@ -21,7 +18,7 @@ public class ActionGUI : MonoBehaviour
     
     //for action display only
     public static List<Card> InputCards;
-    public static Card ActionRef;
+    public static Card ActionCard;
 
     public static Card BattleOpponent;
     
@@ -55,7 +52,7 @@ public class ActionGUI : MonoBehaviour
     void Start()
     {
         MainCamera = FindObjectOfType<Camera>();
-        ActionRef = null;
+        ActionCard = null;
         InputCards = new List<Card>();
         ReturnedCards = new List<Card>();
         ReturnedQuantities = new List<int>();
@@ -88,10 +85,9 @@ public class ActionGUI : MonoBehaviour
             }
                 
         }
-        ActionRef.transform.SetParent(null);
-        ActionRef = null;
+        ActionCard.transform.SetParent(null);
+        ActionCard = null;
         SetPanelActive(false);
-        CurrentAction = null;
         InputCards = new List<Card>(); // Clear other cards
     }
     
@@ -119,7 +115,7 @@ public class ActionGUI : MonoBehaviour
 
     public static bool IsActionPanelOpen()
     {
-        return (InputCards.Count > 0 && ActionRef != null);
+        return (InputCards.Count > 0 && ActionCard != null);
 
     }
     
@@ -131,21 +127,20 @@ public class ActionGUI : MonoBehaviour
     
     public static void DisplayActionPanel()
     {
-        CurrentAction = ActionRef.CurrentActionData;
         SetPanelActive(true);
         
         switch (InputCards.Count)
         {
             case 1:
                 AudioSource = This.transform.Find("2Panel").GetComponent<AudioSource>();
-                ActionRef.transform.SetParent(This.transform.FindDeepChild("2Panel/LeftCard"));
+                ActionCard.transform.SetParent(This.transform.FindDeepChild("2Panel/LeftCard"));
                 InputCards[0].transform.SetParent(This.transform.FindDeepChild("2Panel/RightCard"));
                 TitleText = This.transform.FindDeepChild("2Panel/TitleText").GetComponent<TMP_Text>();
                 FlavorText = This.transform.FindDeepChild("2Panel/FlavorText").GetComponent<TMP_Text>();
                 break;
             case 2:
                 AudioSource = This.transform.Find("3Panel").GetComponent<AudioSource>();
-                ActionRef.transform.SetParent(This.transform.FindDeepChild("3Panel/LeftCard"));
+                ActionCard.transform.SetParent(This.transform.FindDeepChild("3Panel/LeftCard"));
                 InputCards[0].transform.SetParent(This.transform.FindDeepChild("3Panel/MiddleCard"));
                 InputCards[1].transform.SetParent(This.transform.FindDeepChild("3Panel/RightCard"));
                 TitleText = This.transform.FindDeepChild("3Panel/TitleText").GetComponent<TMP_Text>();
@@ -153,7 +148,7 @@ public class ActionGUI : MonoBehaviour
                 break;
             case 3:
                 AudioSource = This.transform.Find("4Panel").GetComponent<AudioSource>();
-                ActionRef.transform.SetParent(This.transform.FindDeepChild("4Panel/TopCard"));
+                ActionCard.transform.SetParent(This.transform.FindDeepChild("4Panel/TopCard"));
                 InputCards[0].transform.SetParent(This.transform.FindDeepChild("4Panel/LeftCard"));
                 InputCards[1].transform.SetParent(This.transform.FindDeepChild("4Panel/RightCard"));
                 InputCards[2].transform.SetParent(This.transform.FindDeepChild("4Panel/BottomCard"));
@@ -162,13 +157,13 @@ public class ActionGUI : MonoBehaviour
                 break;
         }
          
-        TitleText.text = CurrentAction.ActionResult.Title;
-        FlavorText.text = CurrentAction.ActionResult.FlavorText;
+        TitleText.text = ActionCard.CurrentAction.ActionResult.Title;
+        FlavorText.text = ActionCard.CurrentAction.ActionResult.FlavorText;
          
                  
-        ActionRef.transform.localScale = new Vector3(.95f, .89f, 1f);
-        ActionRef.transform.localPosition = new Vector3(0f, 0f, 0f);
-        ActionRef.OriginalPosition = ActionRef.transform.position;
+        ActionCard.transform.localScale = new Vector3(.95f, .89f, 1f);
+        ActionCard.transform.localPosition = new Vector3(0f, 0f, 0f);
+        ActionCard.OriginalPosition = ActionCard.transform.position;
         
         foreach (Card c in InputCards)
         {
@@ -185,25 +180,23 @@ public class ActionGUI : MonoBehaviour
     {
         if (OpenedActionCard.ID == "battle" && !PlayerState.Instance.Starship.GetBattleResults(BattleOpponent.Data.Price)) //if the action is a battle and the player loses
         {
-            PlayerState.Instance.DecrementActionRepetition(OpenedActionCard.CurrentActionData);
+            PlayerState.Instance.DecrementActionRepetition(OpenedActionCard.CurrentAction);
             ReturnedCards.Add(BoardState.GetInstance().AddCard(OpenedActionCard.ID, 1, false));
             ReturnedCards.Add(BoardState.GetInstance().AddCard(BattleOpponent.ID, 1, false));
         }
         else //otherwise proceed as normal
         {
-           
-            for(int i = 0; i < OpenedActionCard.CurrentActionData.ActionResult.ReturnedCardIDs.Count; i++)
+            for(int i = 0; i < OpenedActionCard.CurrentAction.ActionResult.ReturnedCardIDs.Count; i++)
             {
-                string id = OpenedActionCard.CurrentActionData.ActionResult.ReturnedCardIDs[i];
-                int qty = OpenedActionCard.CurrentActionData.ActionResult.ReturnedQuantities[i];
+                string id = OpenedActionCard.CurrentAction.ActionResult.ReturnedCardIDs[i];
+                int qty = OpenedActionCard.CurrentAction.ActionResult.ReturnedQuantities[i];
                 
                     ReturnedCards.Add(BoardState.GetInstance().AddCard(id, qty, false));
             } 
         }
-         
 
         SetPanelActive(true);
-        
+
         switch (ReturnedCards.Count)
         {
             case 1:
@@ -238,8 +231,8 @@ public class ActionGUI : MonoBehaviour
                 break;
         }
          
-        TitleText.text = OpenedActionCard.CurrentActionData.ActionResult.Title;
-        FlavorText.text = OpenedActionCard.CurrentActionData.ActionResult.OutcomeText;
+        TitleText.text = OpenedActionCard.CurrentAction.ActionResult.Title;
+        FlavorText.text = OpenedActionCard.CurrentAction.ActionResult.OutcomeText;
         
         foreach (Card c in ReturnedCards)
         {
@@ -248,20 +241,18 @@ public class ActionGUI : MonoBehaviour
             c.transform.localPosition = new Vector3(0f, 0f, 0f);
             c.OriginalPosition = c.transform.position;
             c.SetFaceUpState(true);
-            print("Displaying" + c.ID);
-
 
         }
     }
     
     public void ExecuteActionPanel()
     {
-        PlayerState.Instance.AttributeMap[CurrentAction.ActionResult.AttributeModified] += CurrentAction.ActionResult.AttributeModifier;
-        PlayerState.Instance.IncrementActionRepetition(CurrentAction);
+        PlayerState.Instance.AttributeMap[ActionCard.CurrentAction.ActionResult.AttributeModified] += ActionCard.CurrentAction.ActionResult.AttributeModifier;
+        PlayerState.Instance.IncrementActionRepetition(ActionCard.CurrentAction);
 
-        ActionRef.CookActionResult();
-        ActionRef.transform.SetParent(null);
-        ActionRef = null;
+        ActionCard.CookActionResult();
+        ActionCard.transform.SetParent(null);
+        ActionCard = null;
 
         SetPanelActive(false);
 
@@ -277,7 +268,6 @@ public class ActionGUI : MonoBehaviour
             InputCards.Remove(c);
         }
         
-        CurrentAction = null;
         InputCards = new List<Card>(); // Clear other cards
     
     }
@@ -289,6 +279,16 @@ public class ActionGUI : MonoBehaviour
             Debug.LogError("Panel or ActionManager instance is not initialized!");
             return;
         }
+
+        if (bActive)
+        {
+            TextInput.interactable = false;
+        }
+        else
+        {
+            TextInput.interactable = true;
+        }
+        
 
         int cardsToDisplay = InputCards.Count > 0 ? InputCards.Count + 1  : ReturnedCards.Count;
 
@@ -342,9 +342,9 @@ public class ActionGUI : MonoBehaviour
 
     }
     
-    public static void FindInputCards(string[] words)
+    public static void SetInputCards(string[] words)
     {
-        if (ActionRef != null && words.Length >= 2)
+        if (ActionCard != null && words.Length >= 2)
         {
             InputCards = new List<Card>();
             
@@ -374,7 +374,7 @@ public class ActionGUI : MonoBehaviour
 
                 if (!matchFound)
                 {
-                    ActionRef = null;
+                    ActionCard = null;
                     InputCards = new List<Card>();
                     break;
                 }
@@ -382,21 +382,14 @@ public class ActionGUI : MonoBehaviour
         }
     }
 
-    public static void ExecuteInput(string[] words)
+    public static ActionData FindAction(string[] words)
     {
-        
-     //set true to start
-         ActionRef = BoardState.Decks["Action"].FirstOrDefault(c => c.Name.ToLower() == words[0]);
-        
-         // Check if the first word matches an action card
-         if (words.Length == 1 && ActionRef != null)
-         {
-             ActionRef.OpenAction(); //early exit if just a action and we open the action
-             ActionRef = null;
-             return;
-         }
+        if (ActionCard == null)
+        {
+            return null;
+        }
 
-         ActionGUI.FindInputCards(words);
+         ActionGUI.SetInputCards(words);
          
          if (InputCards.Count > 0 && words.Length > 1)
          {
@@ -408,7 +401,7 @@ public class ActionGUI : MonoBehaviour
                  cardSpecifiers.Add(cs);
              }
              
-             ActionKey actionKeyToFind = new ActionKey(ActionRef.Name, InputCards[0].ID, PlayerState.Instance.Location, cardSpecifiers);
+             ActionKey actionKeyToFind = new ActionKey(ActionCard.Name, InputCards[0].ID, PlayerState.Instance.Location, cardSpecifiers);
              
              CardData mainCardData = CardDB.CardDataLookup[InputCards[0].ID];
 
@@ -418,18 +411,19 @@ public class ActionGUI : MonoBehaviour
                  cdList.Add(CardDB.CardDataLookup[c.ID]);
              }
 
-             ActionData ad = mainCardData.FindActionData(ActionRef.Name, cdList);
+             ActionData ad = mainCardData.FindActionData(ActionCard.Name, cdList);
 
              if (ad == null)
              {
                  TextInput.text = "IMPOSSIBLE.";// Get the current ColorBlock from the TextInput
-                 ActionRef = null;
-                 return; //no action found
+                 ActionCard = null;
+                 return null; //no action found
              }
-
-             ActionRef.CurrentActionData = ad;
-             DisplayActionPanel();
+             
+             return ad;
          }
+
+         return null;
     }
 
 }

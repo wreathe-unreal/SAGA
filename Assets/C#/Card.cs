@@ -14,7 +14,7 @@ public class Card : MonoBehaviour
     public Image PieTimer;
     public MeshRenderer BorderMesh;
     public Timer Timer;
-    private Color TypeColor;
+    public Color TypeColor;
     public Animator AnimController;
     public CardData Data;
     public string ID;
@@ -24,10 +24,11 @@ public class Card : MonoBehaviour
     public int Quantity;
     public TextMeshProUGUI TMP_Name;
     public TextMeshProUGUI TMP_Quantity;
-    public ActionData CurrentActionData;
+    public ActionData CurrentAction;
     private Coroutine ScaleCoroutine;
     private Coroutine PositionCoroutine;
     public string DeckType;
+    public TextMeshProUGUI TMP_MouseOverProperty;
     public TextMeshProUGUI TMP_MouseOverFlavor;
     public TextMeshProUGUI TMP_MouseOverName;
     public TextMeshProUGUI TMP_MouseOverFlavorLeft;
@@ -42,6 +43,7 @@ public class Card : MonoBehaviour
     }
     void Start()
     {
+        Timer = gameObject.GetComponent<Timer>();
         DeckType = GetDeckType();
         Rigidbody RigidBody = gameObject.GetComponent<Rigidbody>();
         MainCamera = FindObjectOfType<Camera>();
@@ -186,7 +188,7 @@ public class Card : MonoBehaviour
         gameObject.transform.localScale = new Vector3(5, 5, 1);
         StartCoroutine(ScaleToSize(new Vector3(1, 1, 1), .40f));
         BoardState.Decks["Action"].SetCardPositions();
-        Timer.StartTimer(CurrentActionData.ActionResult.Duration);
+        Timer.StartTimer(CurrentAction.ActionResult.Duration);
         Timer.OnTimerComplete += UpdateTimerText;
         Timer.OnTimerUpdate += UpdateTimerBar;
 
@@ -208,17 +210,14 @@ public class Card : MonoBehaviour
 
     public void OpenAction()
     {
-        if (IsTimerFinished() && CurrentActionData.ActionResult != null)
+        if (IsTimerFinished() && CurrentAction.ActionResult != null)
         {
             ActionGUI.DisplayReturnPanel(this);
             Timer.timerText.faceColor = new Color32(255, 255, 255, 255);
             TMP_Name.color = TypeColor;
             PieTimer.fillAmount = 0;
-            CurrentActionData = null;
-            ActionGUI.CurrentAction = null;
-
-
-
+            CurrentAction = null;
+            ActionGUI.ActionCard = null;
             //handle quantity xd
         }
     }
@@ -239,7 +238,50 @@ public class Card : MonoBehaviour
 
     }
 
-    public IEnumerator ScaleToSize(Vector3 targetScale, float duration)
+    public void StartMoving(Vector3 newPos, float Duration)
+    {
+
+        if (this != null && this.PositionCoroutine != null)
+        {
+            StopCoroutine(this.PositionCoroutine);
+        }
+        
+        this.PositionCoroutine = StartCoroutine(this.MoveToPosition(newPos, Duration));  // Lerp position back to original
+
+    }
+    public void StartScaling(Vector3 targetScale, float Duration)
+    {
+        if (this != null && this.ScaleCoroutine != null)
+        {
+            StopCoroutine(this.ScaleCoroutine);
+        }
+        
+        this.ScaleCoroutine = StartCoroutine(this.ScaleToSize(targetScale, Duration));
+    }
+
+    public void RevertPosition()
+    {
+
+        if (this != null && this.PositionCoroutine != null)
+        {
+            StopCoroutine(this.PositionCoroutine);
+        }
+        this.PositionCoroutine = StartCoroutine(this.MoveToPosition(this.OriginalPosition, .15f));  // Lerp position back to original
+
+    }
+    public void RevertScaling()
+    {
+        
+        if (this != null && this.ScaleCoroutine != null)
+        {
+            StopCoroutine(this.ScaleCoroutine);
+        }
+
+        this.ScaleCoroutine = StartCoroutine(this.ScaleToSize(Vector3.one, .15f));
+    }
+
+    
+    private IEnumerator ScaleToSize(Vector3 targetScale, float duration)
     {
         float time = 0;
         Vector3 startScale = transform.localScale;
@@ -254,7 +296,7 @@ public class Card : MonoBehaviour
         transform.localScale = targetScale; // Ensure the target scale is set after interpolation
     }
     
-    public IEnumerator MoveToPosition(Vector3 targetPosition, float duration)
+    private IEnumerator MoveToPosition(Vector3 targetPosition, float duration)
     {
         float time = 0;
         Vector3 startPosition = transform.localPosition;

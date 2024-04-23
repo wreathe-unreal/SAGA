@@ -1,20 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class CardScaler : MonoBehaviour
 {
     public Camera MainCamera;
     public Card CardBeingScaled;
-    public ActionGUI ActionPanel;
-    public Coroutine ScaleCoroutine;
-
-    public Coroutine PositionCoroutine;
+    private List<string> LeftMouseoverDeckTypes = new List<string>();
     // Start is called before the first frame update
     void Start()
     {
         MainCamera = GetComponent<Camera>();
-
+        LeftMouseoverDeckTypes = new List<string> { "System", "Cargo", "Crafting", "Action", "Enemy", "Habitat" };
     }
 
     // Update is called once per frame
@@ -23,6 +21,7 @@ public class CardScaler : MonoBehaviour
         //use raycast since raycasts work regardless of timescale 0
         RaycastHit hit;
         Ray ray = MainCamera.ScreenPointToRay(Input.mousePosition);
+        
         if (!Physics.Raycast(ray, out hit, float.MaxValue, 1<<3))
         {
             if (CardBeingScaled != null)
@@ -48,20 +47,18 @@ public class CardScaler : MonoBehaviour
     void MouseOver()
     {
          
-        //find a normalized position of the mouse in regards to the screen and prevent the below code from running if it's within 15%
-
+        //find a normalized position of the mouse in regards to the screen and exit early if it's near the very edges
         Vector3 mousePosition = MainCamera.ScreenToViewportPoint(Input.mousePosition);
         if ((mousePosition.x < .05f && mousePosition.x > 95f) || (mousePosition.y > .05f && mousePosition.y > .95f))
         {
             return;
         }
-
-        if (ScaleCoroutine != null)
-        {
-            StopCoroutine(ScaleCoroutine);
-        }
-
+        
+        //start scaling coroutine
         Vector3 targetScale = new Vector3(2.0f, 2.0f, 1f);
+        CardBeingScaled.StartScaling(new Vector3(2.0f, 2.0f, 1f), .15f);
+
+        //adjust scaling based on camera zoom level
         CardBeingScaled.transform.localScale = Vector3.Lerp(CardBeingScaled.transform.localScale, targetScale * (MainCamera.orthographicSize / 157), Time.deltaTime * 10);
 
         
@@ -73,20 +70,22 @@ public class CardScaler : MonoBehaviour
         viewportPosition.z = CardBeingScaled.transform.position.z;
         CardBeingScaled.transform.position = viewportPosition;
         
-        if (CardBeingScaled.GetDeckType() != "System" 
-            && CardBeingScaled.GetDeckType() != "Cargo" 
-            && CardBeingScaled.GetDeckType() != "Crafting" 
-            && CardBeingScaled.GetDeckType() != "Action" 
-            && CardBeingScaled.GetDeckType() != "Enemy")
+        //display left or right depending on deck type
+        if (LeftMouseoverDeckTypes.Contains(CardBeingScaled.GetDeckType()))
         {
-            CardBeingScaled.TMP_MouseOverName.text = CardBeingScaled.Name;
-            CardBeingScaled.TMP_MouseOverFlavor.text = CardDB.CardDataLookup[CardBeingScaled.ID].FlavorText;
+            CardBeingScaled.TMP_MouseOverNameLeft.text = CardBeingScaled.Name;
+            CardBeingScaled.TMP_MouseOverFlavorLeft.text = CardBeingScaled.Data.FlavorText;
         }
         else
         {
-            CardBeingScaled.TMP_MouseOverNameLeft.text = CardBeingScaled.Name;
-            CardBeingScaled.TMP_MouseOverFlavorLeft.text = CardDB.CardDataLookup[CardBeingScaled.ID].FlavorText;
+            CardBeingScaled.TMP_MouseOverName.text = CardBeingScaled.Name;
+            CardBeingScaled.TMP_MouseOverFlavor.text = CardBeingScaled.Data.FlavorText;
         }
+
+        string cardPropertyTypeText = CardBeingScaled.Data.Property + "\n" + CardBeingScaled.Data.Type;
+        cardPropertyTypeText = cardPropertyTypeText.ToLower();
+        CardBeingScaled.TMP_MouseOverProperty.text = cardPropertyTypeText;
+        CardBeingScaled.TMP_MouseOverProperty.color = CardBeingScaled.TypeColor;
     }
     
     void MouseExit()
@@ -96,19 +95,11 @@ public class CardScaler : MonoBehaviour
         CardBeingScaled.TMP_MouseOverFlavor.text = "";
         CardBeingScaled.TMP_MouseOverNameLeft.text = "";
         CardBeingScaled.TMP_MouseOverFlavorLeft.text = "";
+        CardBeingScaled.TMP_MouseOverProperty.text = "";
 
-        if (ScaleCoroutine != null)
-        {
-            StopCoroutine(ScaleCoroutine);
-        }
+        CardBeingScaled.RevertScaling();
+        CardBeingScaled.RevertPosition();
 
-        if (PositionCoroutine != null)
-        {
-            StopCoroutine(PositionCoroutine);
-        }
-
-        ScaleCoroutine = StartCoroutine(CardBeingScaled.ScaleToSize(Vector3.one, .15f));
-        PositionCoroutine = StartCoroutine(CardBeingScaled.MoveToPosition(CardBeingScaled.OriginalPosition, .15f));  // Lerp position back to original
         CardBeingScaled = null;
     }
     
