@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.EventSystems;
 
 public class CameraController : MonoBehaviour
 {
@@ -73,9 +74,11 @@ public class CameraController : MonoBehaviour
                 return;
             }
         }
-        
+
         if (InputField != null && InputField.isFocused)
+        {
             return;
+        }
 
         HandleMovement();
         HandleZoom();

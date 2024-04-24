@@ -6,31 +6,33 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
+using System.Text.RegularExpressions; // Include this namespace for Regex
 using UnityEngine.UI;
 public class Terminal : MonoBehaviour
 {
      public ActionGUI ActionPanelGUI;
      public TMP_Text PanelText;
-     public TMP_InputField TextInput;
+     public static TMP_InputField TextInput;
      private float LastActionTime;
      private float CooldownDuration;
      private bool bFirstCoro;
+     private string[] ParsedText;
      
      void Start()
      {
          CooldownDuration = .5f;
          bFirstCoro = true;
+         TextInput = gameObject.GetComponent<TMP_InputField>();
 
 
      }
      
      void Update()
      {
-         
          // Listen for key down event only once in Update
          if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
          {
-             StartCoroutine(HandleEnterInput());
+             StartInputCoroutine();
              bFirstCoro = false; //no cooldown for first enter coro
          }
 
@@ -41,7 +43,12 @@ public class Terminal : MonoBehaviour
          }
      }
 
-     IEnumerator HandleEnterInput()
+     public void StartInputCoroutine()
+     {
+         StartCoroutine(HandleEnterInput());
+     }
+     
+    private IEnumerator HandleEnterInput()
      {
          if (!bFirstCoro)
          {
@@ -54,7 +61,7 @@ public class Terminal : MonoBehaviour
          // Update the last action time immediately
          LastActionTime = Time.realtimeSinceStartup;
          
-         if(ActionPanelGUI.gameObject != null && ActionPanelGUI.gameObject.activeSelf && ActionGUI.ReturnedCards.Count > 0 )
+         if(ActionGUI.ReturnedCards.Count > 0 )
          {
              ActionGUI.ExecuteReturnPanel();
              yield break;
@@ -64,30 +71,34 @@ public class Terminal : MonoBehaviour
          if (ActionGUI.ActionCard == null) 
          {
              
-             if (TextInput.text != "> ACTION + CARD" && TextInput.text != "CARD(S) NOT FOUND."
-                && TextInput.text != "ACTION NOT FOUND." && TextInput.text != "" 
-                && !ActionGUI.IsActionPanelOpen() && !ActionGUI.IsReturnPanelOpen())
+             if (!ActionGUI.IsActionPanelOpen() && !ActionGUI.IsReturnPanelOpen())
              {
                  TextInput.interactable = false;
-                 string[] parsedText = ParseText(TextInput.text); // Parse and search
-                 ActionGUI.ActionCard = BoardState.Decks["Action"].FirstOrDefault(c => c.Name.ToLower() == parsedText[0]);
+                 ParseText();
+                 ActionGUI.ActionCard = BoardState.Decks["Action"].FirstOrDefault(c => c.Name.ToLower() == ParsedText[0]);
 
                 if (ActionGUI.ActionCard != null)
                 {
                      // Check if the first word matches an action card
-                     if (parsedText.Length == 1 && ActionGUI.ActionCard.Timer.timeRemaining <= 0)
+                     if (ParsedText.Length == 1 && ActionGUI.ActionCard.Timer.timeRemaining <= 0)
                      {
                          ActionGUI.ActionCard.OpenAction(); //early exit if just a action and we open the action
                          yield break;
                      }
 
-                     ActionGUI.ActionCard.CurrentAction = ActionGUI.FindAction(parsedText);
+                     ActionGUI.ActionCard.CurrentAction = ActionGUI.FindAction(ParsedText);
 
-                     if (ActionGUI.ActionCard.CurrentAction != null)
+                     print("here");
+                     if (ActionGUI.ActionCard.CurrentAction == null)
                      {
-                         ActionGUI.DisplayActionPanel();
+                         TextInput.text = "IMPOSSIBLE."; // Get the current ColorBlock from the TextInput
+                         ActionGUI.ActionCard = null;
+                     }
+                     else
+                     {
+                        ActionGUI.DisplayActionPanel();
                          yield break;
-                     } 
+                     }
                 }
                 else
                 {
@@ -106,15 +117,15 @@ public class Terminal : MonoBehaviour
          yield return new WaitForSecondsRealtime(CooldownDuration);
      }
 
-     public string[] ParseText(string input)
+     public void ParseText()
      {
-         string error = "ERROR.";
+         ParsedText = Array.Empty<string>();
+         string input = TextInput.text;
          string[] words = input.Split(new[] { "+" }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToArray();
-         
+
          if (words.Length > 4)
          {
-             TextInput.text = error;
-             return new string[0];
+             TextInput.text = "ERROR.";
          }
 
          for (int i = 0; i < words.Length; i++)
@@ -122,8 +133,27 @@ public class Terminal : MonoBehaviour
              words[i] = words[i].ToLower();
          }
 
-         return words;
-
+         ParsedText = words;
      }
-     
+
+     public static void AddCardName(string cardName)
+     {
+         if (TextInput.text.ToLower() == "> action + card" || TextInput.text.ToLower() == "impossible.")
+         {
+             TextInput.text = "";
+         }
+
+         string append = "";
+         if (TextInput.text.Length > 0)
+         {
+             append = " + " + cardName;
+
+         }
+         else
+         {
+             append = cardName;
+
+         }
+        TextInput.text += append;
+     }
 }

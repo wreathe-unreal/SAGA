@@ -6,7 +6,8 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
-using UnityEngine.UI;
+using UnityEngine.UIElements;
+using Image = UnityEngine.UI.Image;
 
 
 public class Card : MonoBehaviour
@@ -52,6 +53,24 @@ public class Card : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetMouseButtonDown(0) && !ActionGUI.IsActionPanelOpen() && !ActionGUI.IsReturnPanelOpen())  // 0 is the left mouse button
+        {
+            Ray ray = MainCamera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.transform == transform)  // Check if the hit object is this GameObject
+                {
+                    OnClicked(hit.transform.gameObject.GetComponent<Card>());
+                }
+            }
+        }
+    }
+
+    private void OnClicked(Card c)
+    {
+        Terminal.AddCardName(c.Name);
     }
 
     public string GetDeckType()
@@ -159,10 +178,9 @@ public class Card : MonoBehaviour
 
     public void SetPosition(Vector3 newPos)
     {
-        
         transform.position = newPos;
         OriginalPosition = newPos;
-
+        RevertPosition();
     }
 
     public void ModifyQuantity(int modifier)

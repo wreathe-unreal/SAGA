@@ -5,18 +5,20 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public string SceneName;
+    
+    public void ChangeScene()
     {
-        StartCoroutine(LoadBasicSceneAfterDelay());
+        SceneManager.LoadScene(SceneName);
     }
-
-    IEnumerator LoadBasicSceneAfterDelay()
+    
+    public void ChangeScene(float delay)
     {
-        // Wait for 2 seconds
-        yield return new WaitForSeconds(2);
-
-        // Load the scene named "Basic Scene"
-        SceneManager.LoadScene("Base Scene");
+        Invoke("ChangeScene", delay);
+    }
+    
+    public void ReloadCurrentScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

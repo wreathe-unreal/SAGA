@@ -77,7 +77,6 @@ public class ActionGUI : MonoBehaviour
             foreach (Card c in InputCards)
             {
                 c.transform.SetParent(null);
-                c.transform.localPosition = new Vector3(1,1,1);
                 c.transform.localScale = new Vector3(1, 1, 1);
             }
 
@@ -100,7 +99,6 @@ public class ActionGUI : MonoBehaviour
             foreach (Card c in ReturnedCards)
             {
                 c.transform.SetParent(null);
-                c.transform.localPosition = new Vector3(1,1,1);
                 c.transform.localScale = new Vector3(1, 1, 1);
             }
 
@@ -156,6 +154,16 @@ public class ActionGUI : MonoBehaviour
                 InputCards[2].transform.SetParent(This.transform.FindDeepChild("4Panel/BottomCard"));
                 TitleText = This.transform.FindDeepChild("4Panel/TitleText").GetComponent<TMP_Text>();
                 FlavorText = This.transform.FindDeepChild("4Panel/FlavorText").GetComponent<TMP_Text>();
+                break;
+            case 4:
+                AudioSource = This.transform.Find("5Panel").GetComponent<AudioSource>();
+                ActionCard.transform.SetParent(This.transform.FindDeepChild("4Panel/TopCard"));
+                InputCards[0].transform.SetParent(This.transform.FindDeepChild("4Panel/LeftCard"));
+                InputCards[1].transform.SetParent(This.transform.FindDeepChild("4Panel/RightCard"));
+                InputCards[2].transform.SetParent(This.transform.FindDeepChild("4Panel/BottomLeftCard"));
+                InputCards[3].transform.SetParent(This.transform.FindDeepChild("4Panel/BottomRightCard"));
+                TitleText = This.transform.FindDeepChild("5Panel/TitleText").GetComponent<TMP_Text>();
+                FlavorText = This.transform.FindDeepChild("5Panel/FlavorText").GetComponent<TMP_Text>();
                 break;
         }
          
@@ -399,11 +407,6 @@ public class ActionGUI : MonoBehaviour
 
     public static ActionData FindAction(string[] words)
     {
-        if (ActionCard == null)
-        {
-            return null;
-        }
-
          ActionGUI.SetInputCards(words);
          
          if (InputCards.Count > 0 && words.Length > 1)
@@ -426,16 +429,7 @@ public class ActionGUI : MonoBehaviour
                  cdList.Add(CardDB.CardDataLookup[c.ID]);
              }
 
-             ActionData ad = mainCardData.FindActionData(ActionCard.Name, cdList);
-
-             if (ad == null)
-             {
-                 TextInput.text = "IMPOSSIBLE.";// Get the current ColorBlock from the TextInput
-                 ActionCard = null;
-                 return null; //no action found
-             }
-             
-             return ad;
+             return mainCardData.FindActionData(ActionCard.Name, cdList);
          }
 
          return null;
