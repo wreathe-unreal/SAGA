@@ -25,15 +25,20 @@ public class Card : MonoBehaviour
     public int Quantity;
     public TextMeshProUGUI TMP_Name;
     public TextMeshProUGUI TMP_Quantity;
-    public ActionData CurrentAction;
+    public ActionData CurrentActionData;
+    public ActionData CurrentActionHint;
     private Coroutine ScaleCoroutine;
     private Coroutine PositionCoroutine;
     public string DeckType;
+    public TextMeshProUGUI TMP_TopName;
     public TextMeshProUGUI TMP_MouseOverProperty;
     public TextMeshProUGUI TMP_MouseOverFlavor;
     public TextMeshProUGUI TMP_MouseOverName;
     public TextMeshProUGUI TMP_MouseOverFlavorLeft;
     public TextMeshProUGUI TMP_MouseOverNameLeft;
+    public MeshRenderer LeftSmoke;
+    public MeshRenderer RightSmoke;
+    public MeshRenderer BottomSmoke;
     public Camera MainCamera;
 
     public Vector3 OriginalPosition;
@@ -62,6 +67,10 @@ public class Card : MonoBehaviour
             {
                 if (hit.transform == transform)  // Check if the hit object is this GameObject
                 {
+                    if (hit.transform.gameObject.name.Contains("Quad"))
+                    {
+                        return; 
+                    }
                     OnClicked(hit.transform.gameObject.GetComponent<Card>());
                 }
             }
@@ -70,7 +79,15 @@ public class Card : MonoBehaviour
 
     private void OnClicked(Card c)
     {
-        Terminal.AddCardName(c.Name);
+        if (c.Timer.timeRemaining <= 0 && (c.CurrentActionData != null || c.CurrentActionHint != null))
+        {
+            Player.State.SetActionCard(c);
+            Player.State.GetActionCard().OpenAction();
+        }
+        else
+        {
+            Terminal.AppendText(c.Name);
+        }
     }
 
     public string GetDeckType()
@@ -78,35 +95,21 @@ public class Card : MonoBehaviour
         switch (Data.Type)
         {
             case "Engine":
-                return "Spaceship";
             case "Power Supply":
-                return "Spaceship";
             case "Portal Drive":
-                return "Spaceship";
             case "Cargo Hold":
-                return "Spaceship";
             case "Thermal Weapon":
-                return "Spaceship";
             case "Laser Weapon":
-                return "Spaceship";
             case "Psychic Weapon":
-                return "Spaceship";
             case "Arcane Weapon":
-                return "Spaceship";
             case "Ramming Weapon":
-                return "Spaceship";
             case "Kinetic Weapon":
-                return "Spaceship";
             case "Shield Generator":
-                return "Spaceship";
             case "Engine Coolant":
-                return "Spaceship";
             case "Armor Plating":
-                return "Spaceship";
             case "Magical Ward":
-                return "Spaceship";
             case "Hull":
-                return "Spaceship";
+                return "Starship";
             default:
                 return Data.Type;
         }
@@ -124,13 +127,25 @@ public class Card : MonoBehaviour
         DeckType = GetDeckType();
         ID = cardID;
         Name = Data.Name;
-        TMP_Name.text = Name;
         Quantity = 1;
         ImagePath = Data.ImagePath.Substring(0, Data.ImagePath.Length - 4);
         GetComponentInChildren<Image>().sprite = Resources.Load<Sprite>("Images/" + ImagePath);
         
 
         SetCardColor();
+        if (DeckType == "Action")
+        {
+            TMP_Name.text = Name;
+            TMP_TopName.text = "";
+
+        }
+        else
+        {
+            TMP_Name.text = "";
+            TMP_TopName.text = Name;
+        }
+
+        TMP_TopName.color = TypeColor;
         TMP_Name.color = TypeColor;
 
         BorderMesh.material.color = TypeColor;
@@ -170,6 +185,15 @@ public class Card : MonoBehaviour
             case "Currency":
                 TypeColor = new Color(0 / 255f, 102 / 255f, 0 / 255f);
                 break;
+            case "Starship":
+                TypeColor = new Color(153/255, 255/255, 51/255);
+                break;
+            case "Quest":
+                TypeColor = new Color(255 / 255f, 191 / 255f, 0 / 255f);
+                break;
+            case "Enemy":
+                TypeColor = new Color(255/255f, 0, 0);
+                break;
             default:
                 TypeColor = new Color(255 / 255f, 255 / 255f, 255 / 255f);
                 break;
@@ -206,7 +230,7 @@ public class Card : MonoBehaviour
         gameObject.transform.localScale = new Vector3(5, 5, 1);
         StartCoroutine(ScaleToSize(new Vector3(1, 1, 1), .40f));
         BoardState.Decks["Action"].SetCardPositions();
-        Timer.StartTimer(CurrentAction.ActionResult.Duration);
+        Timer.StartTimer(CurrentActionData.ActionResult.Duration);
         Timer.OnTimerComplete += UpdateTimerText;
         Timer.OnTimerUpdate += UpdateTimerBar;
 
@@ -228,14 +252,14 @@ public class Card : MonoBehaviour
 
     public void OpenAction()
     {
-        if (IsTimerFinished() && CurrentAction.ActionResult != null)
+        if (IsTimerFinished() && CurrentActionData.ActionResult != null)
         {
             ActionGUI.DisplayReturnPanel(this);
             Timer.timerText.faceColor = new Color32(255, 255, 255, 255);
             TMP_Name.color = TypeColor;
             PieTimer.fillAmount = 0;
-            CurrentAction = null;
-            ActionGUI.ActionCard = null;
+            CurrentActionData = null;
+            Player.State.NullActionCard();
             //handle quantity xd
         }
     }
@@ -326,5 +350,6 @@ public class Card : MonoBehaviour
         }
         transform.localPosition = targetPosition;  // Ensure the position is exactly the target position at the end.
     }
+
     
 }

@@ -20,6 +20,26 @@ public class CardSpecifier
     public string ID;
     public string Type;
     public string Property;
+
+    public string GetSpecifierText()
+    {
+        if(this.ID != "")
+        {
+            return this.ID;
+        }
+        if(this.Type != "" && this.Property == "")
+        {
+            return this.Type;
+        }
+        if(this.Type != "" && this.Property != "")
+        {
+            return this.Property + " " + this.Type;
+        }
+        else
+        {
+            return this.Property;
+        }
+    }
     
     public bool MatchCard(CardData cardData)
     {
@@ -81,14 +101,14 @@ public class ActionKey
         SecondaryCardSpecifiers = new List<List<string>>(); //clear the string placeholders now that they are deserialized
     }
 
-    public bool HasKeyMatch(string actionName, List<CardData> cardData, PlayerState player, ActionData ad)
+    public bool HasKeyMatch(string actionName, List<CardData> cardData, Player player, ActionData ad)
     {
         if (actionName != ActionName && player.Location != this.ReqLocation)
         {
             return false;
         }
         
-        if (this.AttributeMinimum != 0 && player.AttributeMap[Attribute] <= this.AttributeMinimum)
+        if (player.AttributeMap[Attribute] < this.AttributeMinimum)
         {
             return false;
         }
@@ -114,6 +134,34 @@ public class ActionKey
 
         return true;
     }
+    
+    public bool IsKeyHint(string actionName, List<CardData> cardData, Player player, ActionData ad)
+    {
+        if (actionName != ActionName && player.Location != this.ReqLocation)
+        {
+            return false;
+        }
+                
+                                                   
+        if (player.AttributeMap[Attribute] < this.AttributeMinimum)
+        {
+            return false;
+        }
+
+
+        if (cardData[0].ID != ID)
+        {
+            return false;
+        }
+        
+        if ( player.GetActionRepetition(ad) < RepetitionsMinimum || player.GetActionRepetition(ad) > RepetitionsMaximum)
+        {
+            return false;
+        }
+
+        return true;
+    }
+    
 
     //constructor for making actionkeys to check for matches
     public ActionKey(string ActionName, string ID, string ReqLocation, List<CardSpecifier> SecondaryCardSpecifiers)
@@ -151,7 +199,7 @@ public class ActionResult
 
     Dictionary<string, int> Execute()
     {
-        PlayerState.Instance.AttributeMap[AttributeModified] += AttributeModifier;
+        Player.State.AttributeMap[AttributeModified] += AttributeModifier;
         Dictionary<string, int> ReturnedCards = new Dictionary<string, int>();
         for(int i =0; i < ReturnedCardIDs.Count; i++)
         {

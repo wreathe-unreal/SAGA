@@ -159,9 +159,9 @@ public class Starship : MonoBehaviour
         
         return power switch
         { 
-            < 4 => "shuttle",
-            < 6 => "lantern",
-            < 8 => "cutter",
+            < 4  => "shuttle",
+            < 6  => "lantern",
+            < 8  => "cutter",
             < 10 => "lancer",
             < 12 => "caravan",
             < 14 => "eagle",
@@ -186,7 +186,7 @@ public class Starship : MonoBehaviour
             < 52 => "dreadnought",
             < 54 => "space_station",
             < 56 => "worldship",
-            <= 64 => "excalibur",
+            <=64 => "excalibur",
             > 64 => "excalibur",
             _ => throw new ArgumentOutOfRangeException(nameof(power), $"Not expected power value: {power}")
         };

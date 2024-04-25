@@ -70,19 +70,35 @@ public class CardScaler : MonoBehaviour
         viewportPosition.z = CardBeingScaled.transform.position.z;
         CardBeingScaled.transform.position = viewportPosition;
         
+        
         //display left or right depending on deck type
         if (LeftMouseoverDeckTypes.Contains(CardBeingScaled.GetDeckType()))
         {
+            CardBeingScaled.LeftSmoke.gameObject.SetActive(true);
             CardBeingScaled.TMP_MouseOverNameLeft.text = CardBeingScaled.Name;
             CardBeingScaled.TMP_MouseOverFlavorLeft.text = CardBeingScaled.Data.FlavorText;
         }
         else
         {
+            CardBeingScaled.RightSmoke.gameObject.SetActive(true);
             CardBeingScaled.TMP_MouseOverName.text = CardBeingScaled.Name;
             CardBeingScaled.TMP_MouseOverFlavor.text = CardBeingScaled.Data.FlavorText;
         }
 
-        string cardPropertyTypeText = CardBeingScaled.Data.Property + "\n" + CardBeingScaled.Data.Type;
+        string cardPropertyTypeText;
+        if (CardBeingScaled.Data.Property == "")
+        {
+            cardPropertyTypeText = CardBeingScaled.Data.Type;
+
+        }
+        else
+        {
+            cardPropertyTypeText = CardBeingScaled.Data.Property + "\n" + CardBeingScaled.Data.Type;
+
+        }
+
+        CardBeingScaled.BottomSmoke.gameObject.SetActive(true);
+        
         cardPropertyTypeText = cardPropertyTypeText.ToLower();
         CardBeingScaled.TMP_MouseOverProperty.text = cardPropertyTypeText;
         CardBeingScaled.TMP_MouseOverProperty.color = CardBeingScaled.TypeColor;
@@ -90,12 +106,15 @@ public class CardScaler : MonoBehaviour
     
     void MouseExit()
     {
-        
+        CardBeingScaled.LeftSmoke.gameObject.SetActive(false);
+        CardBeingScaled.RightSmoke.gameObject.SetActive(false);
+        CardBeingScaled.BottomSmoke.gameObject.SetActive(false);
         CardBeingScaled.TMP_MouseOverName.text = "";
         CardBeingScaled.TMP_MouseOverFlavor.text = "";
         CardBeingScaled.TMP_MouseOverNameLeft.text = "";
         CardBeingScaled.TMP_MouseOverFlavorLeft.text = "";
         CardBeingScaled.TMP_MouseOverProperty.text = "";
+        
 
         CardBeingScaled.RevertScaling();
         CardBeingScaled.RevertPosition();

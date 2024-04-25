@@ -2,7 +2,49 @@
     {
         "Actions": [
         ],
-        "FlavorText": "",
+        "FlavorText": "The home of the Dwarves. Beneath the iron skies of Glint, ale flows like rivers and slave's chains bind the cosmos; here, wealth is forged in the furnaces of tyranny.",
+        "Habitat": "",
+        "ID": "glint",
+        "ImagePath": "glint.png",
+        "Lifespan": 0,
+        "Name": "Glint",
+        "Price": 0,
+        "Property": "Dwarven",
+        "System": "Glint",
+        "Type": "System"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Beneath the endless surface firestorm, enslaved souls toil in endless dark, mining the seeds of their own despair.",
+        "Habitat": "Deepmine",
+        "ID": "deepmine",
+        "ImagePath": "deepmine.png",
+        "Lifespan": 0,
+        "Name": "Deepmine",
+        "Price": 0,
+        "Property": "Mineable",
+        "System": "Glint",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Gleaming gold, each piece stamped with the seal of Glint—coveted, hoarded, bound in blood.",
+        "Habitat": "",
+        "ID": "gold",
+        "ImagePath": "gold.png",
+        "Lifespan": 0,
+        "Name": "Gold",
+        "Price": 1,
+        "Property": "Precious",
+        "System": "",
+        "Type": "Currency"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "One must work, be it clashing with ships among stars, trading with distant moons, or even the silent struggle deep within the mines.  ",
         "Habitat": "",
         "ID": "work",
         "ImagePath": "work.png",
@@ -15,8 +57,253 @@
     },
     {
         "Actions": [
+            {
+                "ActionKey": {
+                    "ActionName": "Work",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "toil_in_the_depths",
+                    "MaxRepetitions": 0,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "Deepmine",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "DeepmineToil",
+                    "AttributeModifier": 1,
+                    "Duration": 8,
+                    "FlavorText": "As bound, there is little to do but bend my back, swing, and draw redemption from the sweltering cave.",
+                    "OutcomeText": "Peaking from the end of your assigned tunnel, a metallic glimmer catches your eye, curious and out of place for a ruby mine...\n\n\n\n\n",
+                    "ReturnedCardIDs": [
+                        "work",
+                        "toil_in_the_depths",
+                        "glimmer_in_the_dark"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Title": "Another Day in Deepmine"
+                }
+            },
+            {
+                "ActionKey": {
+                    "ActionName": "Work",
+                    "Attribute": "DeepmineToil",
+                    "AttributeMinimum": 1,
+                    "ID": "toil_in_the_depths",
+                    "MaxRepetitions": 4,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "DeepmineToil",
+                    "AttributeModifier": 1,
+                    "Duration": 8,
+                    "FlavorText": "The toil continues.",
+                    "OutcomeText": "With relentless determination, each meager coin is squirreled away, a quiet accumulation against the heavy yoke of fate.",
+                    "ReturnedCardIDs": [
+                        "work",
+                        "toil_in_the_depths",
+                        "gold"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Title": "Acquisition of Funds"
+                }
+            },
+            {
+                "ActionKey": {
+                    "ActionName": "Work",
+                    "Attribute": "DeepmineToil",
+                    "AttributeMinimum": 2,
+                    "ID": "toil_in_the_depths",
+                    "MaxRepetitions": 0,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                        [
+                            "glint",
+                            "",
+                            ""
+                        ],
+                        [
+                            "",
+                            "Currency",
+                            ""
+                        ],
+                        [
+                            "",
+                            "",
+                            "Secret"
+                        ]
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 8,
+                    "FlavorText": "This will not work. Will it?",
+                    "OutcomeText": "We actually should never see this text.",
+                    "ReturnedCardIDs": [
+                        "work",
+                        "toil_in_the_depths"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1
+                    ],
+                    "Title": "Action Hint Test"
+                }
+            }
         ],
-        "FlavorText": "",
+        "FlavorText": "Bound by ink and iron, this contract seals your fate to the shadows beneath, where you will toil until the dwarf's claim over you is satisfied.",
+        "Habitat": "",
+        "ID": "toil_in_the_depths",
+        "ImagePath": "toil_in_the_depths.png",
+        "Lifespan": 0,
+        "Name": "Toil In the Depths",
+        "Price": 0,
+        "Property": "Contract",
+        "System": "",
+        "Type": "Quest"
+    },
+    {
+        "Actions": [
+            {
+                "ActionKey": {
+                    "ActionName": "Work",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "glimmer_in_the_dark",
+                    "MaxRepetitions": 0,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 12,
+                    "FlavorText": "Every clandestine strike of the pickaxe a step closer to the treasure shrouded in the earth.",
+                    "OutcomeText": "Fate smiles at you, the wrecked hull of a shuttle emerges whispering the promise of escape.  By law of salvage, it's yours to dream with.",
+                    "ReturnedCardIDs": [
+                        "work",
+                        "shattered_shuttle",
+                        "dream",
+                        "gold",
+                        "talk"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    "Title": "A Secret Excavation"
+                }
+            }
+        ],
+        "FlavorText": "A glimmer of metal in the rock—best keep it secret and excavate it alone.",
+        "Habitat": "",
+        "ID": "glimmer_in_the_dark",
+        "ImagePath": "glimmer_in_the_dark.png",
+        "Lifespan": 0,
+        "Name": "Glimmer In The Dark",
+        "Price": 0,
+        "Property": "Secret",
+        "System": "",
+        "Type": "Object"
+    },
+    {
+        "Actions": [
+            {
+                "ActionKey": {
+                    "ActionName": "Dream",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "shattered_shuttle",
+                    "MaxRepetitions": 0,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 8,
+                    "FlavorText": "When did I stop dreaming? Was it when I entered this Hell? ",
+                    "OutcomeText": "In your bunk, you dreamt of exploring the stars. Bringing the buried ship back to life and getting out of these mines is all that matters to you now.",
+                    "ReturnedCardIDs": [
+                        "dream",
+                        "shattered_shuttle",
+                        "talk"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Title": "A Night to Remember"
+                }
+            },
+            {
+                "ActionKey": {
+                    "ActionName": "Work",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "shattered_shuttle",
+                    "MaxRepetitions": 0,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 8,
+                    "FlavorText": "In the hidden hours, hopefully your loud repairwork does not attract unwanted attention.",
+                    "OutcomeText": "You hear the clank of your overseer's boots.",
+                    "ReturnedCardIDs": [
+                        "work",
+                        "shattered_shuttle",
+                        "helldiver_uma"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Title": "Ressurection of a Shuttle"
+                }
+            }
+        ],
+        "FlavorText": "It whispers of escape, by the laws of salvage, it is yours to dream with.  ",
+        "Habitat": "",
+        "ID": "shattered_shuttle",
+        "ImagePath": "shattered_shuttle.png",
+        "Lifespan": 0,
+        "Name": "Shattered Shuttle",
+        "Price": 0,
+        "Property": "Junk",
+        "System": "",
+        "Type": "Hull"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Dreams, like distant stars, beckon the bold from the safety of known shores to the wild seas of possibility.",
         "Habitat": "",
         "ID": "dream",
         "ImagePath": "dream.png",
@@ -30,7 +317,7 @@
     {
         "Actions": [
         ],
-        "FlavorText": "",
+        "FlavorText": "Words yield worlds—spun with silk for diplomacy, edged with steel for defiance, whispered for romance, or roared for revolution.",
         "Habitat": "",
         "ID": "talk",
         "ImagePath": "talk.png",
@@ -44,2920 +331,15 @@
     {
         "Actions": [
         ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "trade",
-        "ImagePath": "trade.png",
-        "Lifespan": 0,
-        "Name": "Trade",
-        "Price": 0,
-        "Property": "",
-        "System": "",
-        "Type": "Action"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "travel",
-        "ImagePath": "travel.png",
-        "Lifespan": 0,
-        "Name": "Travel",
-        "Price": 0,
-        "Property": "",
-        "System": "",
-        "Type": "Action"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "research",
-        "ImagePath": "research.png",
-        "Lifespan": 0,
-        "Name": "Research",
-        "Price": 0,
-        "Property": "",
-        "System": "",
-        "Type": "Action"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "craft",
-        "ImagePath": "craft.png",
-        "Lifespan": 0,
-        "Name": "Craft",
-        "Price": 0,
-        "Property": "",
-        "System": "",
-        "Type": "Action"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "explore",
-        "ImagePath": "explore.png",
-        "Lifespan": 0,
-        "Name": "Explore",
-        "Price": 0,
-        "Property": "",
-        "System": "",
-        "Type": "Action"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "battle",
-        "ImagePath": "battle.png",
-        "Lifespan": 0,
-        "Name": "Battle",
-        "Price": 0,
-        "Property": "",
-        "System": "",
-        "Type": "Action"
-    },
-    {
-        "Actions": [
-            {
-                "ActionKey": {
-                    "ActionName": "Travel",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "deepmine",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "",
-                    "AttributeModifier": 0,
-                    "Duration": 8,
-                    "FlavorText": "I adjust my heading towards Deepmine.",
-                    "OutcomeText": "It's infernal surface, the smoky peaks and fiery chasms welcome you with indifference.",
-                    "ReturnedCardIDs": [
-                        "travel",
-                        "deepmine"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1
-                    ],
-                    "Title": "Travel to Deepmine"
-                }
-            },
-            {
-                "ActionKey": {
-                    "ActionName": "Explore",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "deepmine",
-                    "MaxRepetitions": 1,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "Deepmine",
-                    "SecondaryCardSpecifiers": [
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "",
-                    "AttributeModifier": 0,
-                    "Duration": 8,
-                    "FlavorText": "I delve through crag and fire.",
-                    "OutcomeText": "Inside the volcanic mountain, you find a heart of living flame.",
-                    "ReturnedCardIDs": [
-                        "explore",
-                        "deepmine",
-                        "flaming_essence"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1,
-                        1
-                    ],
-                    "Title": "Explore Deepmine"
-                }
-            }
-        ],
-        "FlavorText": "With it's surface engulfed in flame and smoke, the only rule below is: don't ask what the creature beside you did to retreat here.",
-        "Habitat": "Deepmine",
-        "ID": "deepmine",
-        "ImagePath": "deepmine.png",
-        "Lifespan": 0,
-        "Name": "Deepmine",
-        "Price": 0,
-        "Property": "Colony",
-        "System": "Glint",
-        "Type": "Habitat"
-    },
-    {
-        "Actions": [
-            {
-                "ActionKey": {
-                    "ActionName": "Work",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "toil_the_deep",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "Deepmine",
-                    "SecondaryCardSpecifiers": [
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "Toil Progress",
-                    "AttributeModifier": 1,
-                    "Duration": 8,
-                    "FlavorText": "There is little else to do but bend my back and put the flame to the tunnel.",
-                    "OutcomeText": "In the stretch of tunnel you've been assigned, you see a glint... a shimmer... what could it be?",
-                    "ReturnedCardIDs": [
-                        "work",
-                        "toil_the_deep",
-                        "glint_in_the_wall",
-                        "gold"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1,
-                        1,
-                        1
-                    ],
-                    "Title": "Toil in the Deepmines"
-                }
-            },
-            {
-                "ActionKey": {
-                    "ActionName": "Work",
-                    "Attribute": "Toil Progress",
-                    "AttributeMinimum": 1,
-                    "ID": "toil_the_deep",
-                    "MaxRepetitions": 20,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "Deepmine",
-                    "SecondaryCardSpecifiers": [
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "",
-                    "AttributeModifier": 0,
-                    "Duration": 8,
-                    "FlavorText": "There is little else to do but bend my back and put the flame to the tunnel.",
-                    "OutcomeText": "You do the day's work, your hands and back sore. One can only endure so much...",
-                    "ReturnedCardIDs": [
-                        "work",
-                        "toil_the_deep",
-                        "gold"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1,
-                        1
-                    ],
-                    "Title": "Toil in the Deepmines"
-                }
-            }
-        ],
-        "FlavorText": "As the contract binds, there is little else to do but bend my back and put the flame to the tunnel.",
-        "Habitat": "Deepmine",
-        "ID": "toil_the_deep",
-        "ImagePath": "toil_the_deep.png",
-        "Lifespan": 0,
-        "Name": "Toil the Deep",
-        "Price": 0,
-        "Property": "Civilian",
-        "System": "Glint",
-        "Type": "Ambition"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "Harken to that melodious sound of the clink of coin.",
-        "Habitat": "",
-        "ID": "gold",
-        "ImagePath": "gold.png",
-        "Lifespan": 0,
-        "Name": "Gold",
-        "Price": 0,
-        "Property": "Economic",
-        "System": "",
-        "Type": "Currency"
-    },
-    {
-        "Actions": [
-            {
-                "ActionKey": {
-                    "ActionName": "Work",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "glint_in_the_wall",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "",
-                    "AttributeModifier": 0,
-                    "Duration": 8,
-                    "FlavorText": "Fate must be smiling at me.",
-                    "OutcomeText": "Entombed in stone you find the skeleton of a small craft, by the laws of salvage it's yours to dream with.",
-                    "ReturnedCardIDs": [
-                        "shattered_shuttle",
-                        "dream"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1
-                    ],
-                    "Title": "Excavating the Find"
-                }
-            }
-        ],
-        "FlavorText": "A shimmering glint embedded in the grasp of stone... This is going to take some work.",
-        "Habitat": "Deepmine",
-        "ID": "glint_in_the_wall",
-        "ImagePath": "glint_in_the_wall.png",
-        "Lifespan": 0,
-        "Name": "Glint in the Wall",
-        "Price": 0,
-        "Property": "Secret",
-        "System": "Glint",
-        "Type": "Ambition"
-    },
-    {
-        "Actions": [
-            {
-                "ActionKey": {
-                    "ActionName": "Dream",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "shattered_shuttle",
-                    "MaxRepetitions": 1,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "",
-                    "AttributeModifier": 0,
-                    "Duration": 8,
-                    "FlavorText": "When did I stop dreaming? Was it when I entered this Hell? Was it before?",
-                    "OutcomeText": "With your surface time before bed, you gaze into space. Bringing the broken ship back to life and getting out of these mines is all that matters to you now.",
-                    "ReturnedCardIDs": [
-                        "shattered_shuttle",
-                        "talk",
-                        "helldiver_uma"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1,
-                        1
-                    ],
-                    "Title": "Dreaming of Freedom"
-                }
-            },
-            {
-                "ActionKey": {
-                    "ActionName": "Craft",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "shattered_shuttle",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                        [
-                            "jolt_battery",
-                            "",
-                            ""
-                        ],
-                        [
-                            "cracked_capacitor",
-                            "",
-                            ""
-                        ],
-                        [
-                            "microvault",
-                            "",
-                            ""
-                        ],
-                        [
-                            "spark_jump",
-                            "",
-                            ""
-                        ]
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "Shattered Shuttle Progree",
-                    "AttributeModifier": 1,
-                    "Duration": 8,
-                    "FlavorText": "I put my nose to the grinding bench, and install some of the parts.",
-                    "OutcomeText": "She's half done, you're almost there.",
-                    "ReturnedCardIDs": [
-                        "craft",
-                        "half_built_shuttle"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1
-                    ],
-                    "Title": "Welding her Together"
-                }
-            }
-        ],
-        "FlavorText": "The remnants of someone else's dream, perhaps you can make it your own.",
-        "Habitat": "",
-        "ID": "shattered_shuttle",
-        "ImagePath": "shattered_shuttle.png",
-        "Lifespan": 0,
-        "Name": "Shattered Shuttle",
-        "Price": 0,
-        "Property": "Junk",
-        "System": "",
-        "Type": "Object"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "The flaming heart of a fiery mountain, it's vibrant heat is intoxicating, and must be contained to be handled.",
-        "Habitat": "",
-        "ID": "flaming_essence",
-        "ImagePath": "flaming_essence.png",
-        "Lifespan": 0,
-        "Name": "Flaming Essence",
-        "Price": 0,
-        "Property": "Arcane",
-        "System": "",
-        "Type": "Object"
-    },
-    {
-        "Actions": [
-            {
-                "ActionKey": {
-                    "ActionName": "Talk",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "helldiver_uma",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "Helldiver Uma Progress",
-                    "AttributeModifier": 1,
-                    "Duration": 8,
-                    "FlavorText": "I approach the shift supervisor to see to speak of Freedom.",
-                    "OutcomeText": "She suggests that you save to take a trip to Wreckage Bay. They might have what you need.",
-                    "ReturnedCardIDs": [
-                        "talk",
-                        "helldiver_uma",
-                        "greyhound"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1,
-                        1
-                    ],
-                    "Title": "To Speak of Freedom"
-                }
-            },
-            {
-                "ActionKey": {
-                    "ActionName": "Talk",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "helldiver_uma",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "",
-                    "AttributeModifier": 0,
-                    "Duration": 8,
-                    "FlavorText": "I approach supervisor Uma, but I've already asked her about my dream.",
-                    "OutcomeText": "She greets you like she would any of the other scabs, but she does inquire as to whether or not you've moved up in the world.",
-                    "ReturnedCardIDs": [
-                        "talk",
-                        "helldiver_uma"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1
-                    ],
-                    "Title": "Talking to Uma"
-                }
-            }
-        ],
-        "FlavorText": "Shift Supervisor Uma, is as experienced a helldiver as they come. In the Deepmines, she's the person all the scabs look up to.",
+        "FlavorText": "Deepmine East Wing Tunnel 380's overseer, as friendly as Helldivers come.",
         "Habitat": "Deepmine",
         "ID": "helldiver_uma",
         "ImagePath": "helldiver_uma.png",
         "Lifespan": 0,
         "Name": "Helldiver Uma",
-        "Price": 8,
-        "Property": "Dwarven",
-        "System": "Glint",
-        "Type": "Character"
-    },
-    {
-        "Actions": [
-            {
-                "ActionKey": {
-                    "ActionName": "Talk",
-                    "Attribute": "Greyhound Progress",
-                    "AttributeMinimum": 1,
-                    "ID": "greyhound",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "",
-                    "AttributeModifier": 0,
-                    "Duration": 8,
-                    "FlavorText": "Greyhound can take me where I want to go.",
-                    "OutcomeText": "Passage requires payment.",
-                    "ReturnedCardIDs": [
-                        "trade",
-                        "talk",
-                        "greyhound"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1,
-                        1
-                    ],
-                    "Title": "On Greyhound's Fare"
-                }
-            },
-            {
-                "ActionKey": {
-                    "ActionName": "Talk",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "greyhound",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "Greyhound Progress",
-                    "AttributeModifier": 1,
-                    "Duration": 8,
-                    "FlavorText": "I ask Greyhound about Wreckage bay.",
-                    "OutcomeText": "He's willing to take you, holding out a hand for payment before he'll grant passage.",
-                    "ReturnedCardIDs": [
-                        "greyhound",
-                        "talk",
-                        "trade"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1,
-                        1
-                    ],
-                    "Title": "On Greyhound's Fare"
-                }
-            },
-            {
-                "ActionKey": {
-                    "ActionName": "Trade",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "greyhound",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                        [
-                            "gold",
-                            "",
-                            ""
-                        ]
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "",
-                    "AttributeModifier": 0,
-                    "Duration": 8,
-                    "FlavorText": "I drop a coin into his hand.",
-                    "OutcomeText": "He gestures for you to follow. It doesn't take long.",
-                    "ReturnedCardIDs": [
-                        "greyhound",
-                        "travel",
-                        "wreckage_bay",
-                        "trade"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1,
-                        1,
-                        1
-                    ],
-                    "Title": "Paying For Passage"
-                }
-            }
-        ],
-        "FlavorText": "He can take you where you want to go, for a price, of course.",
-        "Habitat": "Deepmine",
-        "ID": "greyhound",
-        "ImagePath": "greyhound.png",
-        "Lifespan": 0,
-        "Name": "Greyhound",
-        "Price": 18,
-        "Property": "Civilian",
-        "System": "Glint",
-        "Type": "Character"
-    },
-    {
-        "Actions": [
-            {
-                "ActionKey": {
-                    "ActionName": "Travel",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "wreckage_bay",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "",
-                    "AttributeModifier": 0,
-                    "Duration": 8,
-                    "FlavorText": "The sheer amount of salvage strewn about space here inspires awe.",
-                    "OutcomeText": "You enter the salvage station.",
-                    "ReturnedCardIDs": [
-                        "travel",
-                        "wreckage_bay",
-                        "dogboy"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1,
-                        1
-                    ],
-                    "Title": "Travel to Wreckage Bay"
-                }
-            },
-            {
-                "ActionKey": {
-                    "ActionName": "Explore",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "wreckage_bay",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "",
-                    "AttributeModifier": 0,
-                    "Duration": 8,
-                    "FlavorText": "I sift through miles of half salvaged ships.",
-                    "OutcomeText": "You find one wreck as of yet untouched, it has something in it's cargo bay.",
-                    "ReturnedCardIDs": [
-                        "explore",
-                        "wreckage_bay",
-                        "cryo_coffin"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1,
-                        1
-                    ],
-                    "Title": "Explore Wreckage Bay"
-                }
-            }
-        ],
-        "FlavorText": "The Buccaneer's bonyard, a veritable asteroid belt except without any asteroids, there's just a whole lot of stolen ships and ship parts floating around.",
-        "Habitat": "Wreckage Bay",
-        "ID": "wreckage_bay",
-        "ImagePath": "wreckage_bay.png",
-        "Lifespan": 0,
-        "Name": "Wreckage Bay",
-        "Price": 0,
-        "Property": "Station",
-        "System": "Nocturne",
-        "Type": "Habitat"
-    },
-    {
-        "Actions": [
-            {
-                "ActionKey": {
-                    "ActionName": "Trade",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "dogboy",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "",
-                    "AttributeModifier": 0,
-                    "Duration": 8,
-                    "FlavorText": "I've have enough, time to continue my journey.",
-                    "OutcomeText": "He unceremoniously dumps a pile of components both mundane and magical on the table in front of you.",
-                    "ReturnedCardIDs": [
-                        "dogboy",
-                        "components",
-                        "research"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        2,
-                        1
-                    ],
-                    "Title": "Buying Ship Parts"
-                }
-            },
-            {
-                "ActionKey": {
-                    "ActionName": "Talk",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "dogboy",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "",
-                    "AttributeModifier": 0,
-                    "Duration": 8,
-                    "FlavorText": "I inquire about ship parts, he gives a sickeningly wet and not quite toothy grin.",
-                    "OutcomeText": "Delighted that you're in search of scraps. He informs you that if you have the gold, he's got the parts. If not, you can work... like a dog to save for what you need.",
-                    "ReturnedCardIDs": [
-                        "dogboy",
-                        "talk",
-                        "salvage_scrap"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1,
-                        1
-                    ],
-                    "Title": "On Table Scraps"
-                }
-            }
-        ],
-        "FlavorText": "A ghoulish servant of greater sires, he takes delight in reminding those who darken his door that they are in search of... scraps.",
-        "Habitat": "Wreckage Bay",
-        "ID": "dogboy",
-        "ImagePath": "dogboy.png",
-        "Lifespan": 0,
-        "Name": "Dogboy",
-        "Price": 5,
-        "Property": "Vampiric",
-        "System": "Nocturne",
-        "Type": "Character"
-    },
-    {
-        "Actions": [
-            {
-                "ActionKey": {
-                    "ActionName": "Work",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "salvage_scrap",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "",
-                    "AttributeModifier": 0,
-                    "Duration": 8,
-                    "FlavorText": "The plasma cutter arcs as you search for whatever might be of value.",
-                    "OutcomeText": "It's not much better then the toil of Deepmine, at least it isn't so damn hot.",
-                    "ReturnedCardIDs": [
-                        "work",
-                        "salvage_scrap",
-                        "gold"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1,
-                        1
-                    ],
-                    "Title": "Slicing Salvage"
-                }
-            }
-        ],
-        "FlavorText": "Compensation can be had, for those willing to scour the ships of the dead.",
-        "Habitat": "Wreckage Bay",
-        "ID": "salvage_scrap",
-        "ImagePath": "salvage_scrap.png",
-        "Lifespan": 0,
-        "Name": "Salvage Scrap",
-        "Price": 0,
-        "Property": "Civilian",
-        "System": "Nocturne",
-        "Type": "Ambition"
-    },
-    {
-        "Actions": [
-            {
-                "ActionKey": {
-                    "ActionName": "Research",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "components",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                        [
-                            "components",
-                            "",
-                            ""
-                        ]
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "Component Research Progress",
-                    "AttributeModifier": 1,
-                    "Duration": 8,
-                    "FlavorText": "Seeking to understand the manipulation of reality's component parts.",
-                    "OutcomeText": "This evokes the memory of our ancient ancestors, banging rocks together to produce flame, thankfully we have manuals.",
-                    "ReturnedCardIDs": [
-                        "research",
-                        "jolt_battery",
-                        "cracked_capacitor",
-                        "microvault",
-                        "spark_jump"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1,
-                        1,
-                        1,
-                        1
-                    ],
-                    "Title": "Praying over Magic Wires"
-                }
-            },
-            {
-                "ActionKey": {
-                    "ActionName": "Research",
-                    "Attribute": "Component Research Progress",
-                    "AttributeMinimum": 1,
-                    "ID": "components",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                        [
-                            "components",
-                            "",
-                            ""
-                        ]
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "",
-                    "AttributeModifier": 0,
-                    "Duration": 8,
-                    "FlavorText": "Seeking to understand the manipulation of reality's component parts.",
-                    "OutcomeText": "This feeling evokes the memory of our ancient ancestors, banging rocks together to produce flame, thankfully we have manuals.",
-                    "ReturnedCardIDs": [
-                        "research",
-                        "rattler",
-                        "glitchray",
-                        "junked_materia_engine",
-                        "sputterjets"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1,
-                        1,
-                        1,
-                        1
-                    ],
-                    "Title": "Praying over Magic Wires"
-                }
-            }
-        ],
-        "FlavorText": "These look like a jumble of wires and witchy arcanery.",
-        "Habitat": "",
-        "ID": "components",
-        "ImagePath": "components.png",
-        "Lifespan": 0,
-        "Name": "Components",
-        "Price": 0,
-        "Property": "Junk",
-        "System": "",
-        "Type": "Object"
-    },
-    {
-        "Actions": [
-            {
-                "ActionKey": {
-                    "ActionName": "Craft",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "cryo_coffin",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                        [
-                            "crypt_key",
-                            "",
-                            ""
-                        ]
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "",
-                    "AttributeModifier": 0,
-                    "Duration": 8,
-                    "FlavorText": "I insert the mechanism into it's place and twist.",
-                    "OutcomeText": "Inside the Cryo Coffin, a man awakens.",
-                    "ReturnedCardIDs": [
-                        "craft",
-                        "alucard"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1
-                    ],
-                    "Title": "Inserting the Crypt Key"
-                }
-            }
-        ],
-        "FlavorText": "Vampiric Nobility make use of cryogenic freezing to both preserve themselves and to pass time without notice. This one is marked with the symbol of Clan Darkstar.",
-        "Habitat": "",
-        "ID": "cryo_coffin",
-        "ImagePath": "cryo_coffin.png",
-        "Lifespan": 0,
-        "Name": "Cryo Coffin",
-        "Price": 0,
-        "Property": "Vampiric",
-        "System": "",
-        "Type": "Object"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "A retro-fitted meso-scaled energy supply, meant to power a demanding household appliance, will barely power a shuttle.",
-        "Habitat": "",
-        "ID": "jolt_battery",
-        "ImagePath": "jolt_battery.png",
-        "Lifespan": 0,
-        "Name": "Jolt Battery",
-        "Price": 1,
-        "Property": "Shuttle",
-        "System": "",
-        "Type": "Power Supply"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "cracked_capacitor",
-        "ImagePath": "cracked_capacitor.png",
-        "Lifespan": 0,
-        "Name": "Cracked Capacitor",
-        "Price": 1,
-        "Property": "Shuttle",
-        "System": "",
-        "Type": "Shield Generator"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "microvault",
-        "ImagePath": "microvault.png",
-        "Lifespan": 0,
-        "Name": "Microvault",
-        "Price": 1,
-        "Property": "Shuttle",
-        "System": "",
-        "Type": "Cargo Hold"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "spark_jump",
-        "ImagePath": "spark_jump.png",
-        "Lifespan": 0,
-        "Name": "Spark Jump",
-        "Price": 1,
-        "Property": "Shuttle",
-        "System": "",
-        "Type": "Portal Drive"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "rattler",
-        "ImagePath": "rattler.png",
-        "Lifespan": 0,
-        "Name": "Rattler",
-        "Price": 1,
-        "Property": "Shuttle",
-        "System": "",
-        "Type": "Kinetic Weapon"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "glitchray",
-        "ImagePath": "glitchray.png",
-        "Lifespan": 0,
-        "Name": "Glitchray",
-        "Price": 1,
-        "Property": "Shuttle",
-        "System": "",
-        "Type": "Energy Weapon"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "junked_materia_engine",
-        "ImagePath": "junked_materia_engine.png",
-        "Lifespan": 0,
-        "Name": "Junked Materia Engine",
-        "Price": 1,
-        "Property": "Shuttle",
-        "System": "",
-        "Type": "Engine"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "sputterjets",
-        "ImagePath": "sputterjets.png",
-        "Lifespan": 0,
-        "Name": "Sputterjets",
-        "Price": 1,
-        "Property": "Shuttle",
-        "System": "",
-        "Type": "Thrusters"
-    },
-    {
-        "Actions": [
-            {
-                "ActionKey": {
-                    "ActionName": "Craft",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "half_built_shuttle",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                        [
-                            "rattler",
-                            "",
-                            ""
-                        ],
-                        [
-                            "glitchray",
-                            "",
-                            ""
-                        ],
-                        [
-                            "junked_materia_engine",
-                            "",
-                            ""
-                        ],
-                        [
-                            "sputterjets",
-                            "",
-                            ""
-                        ]
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "",
-                    "AttributeModifier": 0,
-                    "Duration": 8,
-                    "FlavorText": "I can barely believe it, I'm almost there.",
-                    "OutcomeText": "You acquire you first ship.",
-                    "ReturnedCardIDs": [
-                        "shuttle",
-                        "explore",
-                        "battle"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1,
-                        1
-                    ],
-                    "Title": "Applying Finishing Touches"
-                }
-            }
-        ],
-        "FlavorText": "The Wings of Liberty are halfway finished.",
-        "Habitat": "",
-        "ID": "half_built_shuttle",
-        "ImagePath": "half_built_shuttle.png",
-        "Lifespan": 0,
-        "Name": "Half Built Shuttle",
-        "Price": 0,
-        "Property": "Junk",
-        "System": "",
-        "Type": "Object"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "A basic shuttle capable of carrying one to two passengers on short flights through the emptyness between.",
-        "Habitat": "",
-        "ID": "shuttle",
-        "ImagePath": "shuttle.png",
-        "Lifespan": 0,
-        "Name": "Shuttle",
-        "Price": 8,
-        "Property": "Shuttle",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "quintessence_tubes",
-        "ImagePath": "quintessence_tubes.png",
-        "Lifespan": 0,
-        "Name": "Quintessence Tubes",
-        "Price": 2,
-        "Property": "Frigate",
-        "System": "",
-        "Type": "Power Supply"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "flash_barrier",
-        "ImagePath": "flash_barrier.png",
-        "Lifespan": 0,
-        "Name": "Flash Barrier",
-        "Price": 2,
-        "Property": "Frigate",
-        "System": "",
-        "Type": "Shield Generator"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "storage_lockers",
-        "ImagePath": "storage_lockers.png",
-        "Lifespan": 0,
-        "Name": "Storage Lockers",
-        "Price": 2,
-        "Property": "Frigate",
-        "System": "",
-        "Type": "Cargo Hold"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "blink_drive",
-        "ImagePath": "blink_drive.png",
-        "Lifespan": 0,
-        "Name": "Blink Drive",
-        "Price": 2,
-        "Property": "Frigate",
-        "System": "",
-        "Type": "Portal Drive"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "chaingun",
-        "ImagePath": "chaingun.png",
-        "Lifespan": 0,
-        "Name": "Chaingun",
-        "Price": 2,
-        "Property": "Frigate",
-        "System": "",
-        "Type": "Kinetic Weapon"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "pincer_rockets",
-        "ImagePath": "pincer_rockets.png",
-        "Lifespan": 0,
-        "Name": "Pincer Rockets",
-        "Price": 2,
-        "Property": "Frigate",
-        "System": "",
-        "Type": "Missle Weapon"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "pulse_laser",
-        "ImagePath": "pulse_laser.png",
-        "Lifespan": 0,
-        "Name": "Pulse Laser",
-        "Price": 2,
-        "Property": "Frigate",
-        "System": "",
-        "Type": "Energy Weapon"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "furnace_blaster",
-        "ImagePath": "furnace_blaster.png",
-        "Lifespan": 0,
-        "Name": "Furnace Blaster",
-        "Price": 2,
-        "Property": "Frigate",
-        "System": "",
-        "Type": "Engine"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "dwarven_balancers",
-        "ImagePath": "dwarven_balancers.png",
-        "Lifespan": 0,
-        "Name": "Dwarven Balancers",
-        "Price": 2,
-        "Property": "Frigate",
-        "System": "",
-        "Type": "Thrusters"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "frigate",
-        "ImagePath": "frigate.png",
-        "Lifespan": 0,
-        "Name": "Frigate",
-        "Price": 16,
-        "Property": "Frigate",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "quintessence_sphere",
-        "ImagePath": "quintessence_sphere.png",
-        "Lifespan": 0,
-        "Name": "Quintessence Sphere",
-        "Price": 3,
-        "Property": "Destroyer",
-        "System": "",
-        "Type": "Power Supply"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "mirage_cloak",
-        "ImagePath": "mirage_cloak.png",
-        "Lifespan": 0,
-        "Name": "Mirage Cloak",
-        "Price": 3,
-        "Property": "Destroyer",
-        "System": "",
-        "Type": "Shield Generator"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "storage_vault",
-        "ImagePath": "storage_vault.png",
-        "Lifespan": 0,
-        "Name": "Storage Vault",
-        "Price": 3,
-        "Property": "Destroyer",
-        "System": "",
-        "Type": "Cargo Hold"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "blitz_drive",
-        "ImagePath": "blitz_drive.png",
-        "Lifespan": 0,
-        "Name": "Blitz Drive",
-        "Price": 3,
-        "Property": "Destroyer",
-        "System": "",
-        "Type": "Portal Drive"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "gatling_emplacement",
-        "ImagePath": "gatling_emplacement.png",
-        "Lifespan": 0,
-        "Name": "Gatling Emplacement",
-        "Price": 3,
-        "Property": "Destroyer",
-        "System": "",
-        "Type": "Kinetic Weapon"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "stellar_salvo",
-        "ImagePath": "stellar_salvo.png",
-        "Lifespan": 0,
-        "Name": "Stellar Salvo",
-        "Price": 3,
-        "Property": "Destroyer",
-        "System": "",
-        "Type": "Missle Weapon"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "beam_coils",
-        "ImagePath": "beam_coils.png",
-        "Lifespan": 0,
-        "Name": "Beam Coils",
-        "Price": 3,
-        "Property": "Destroyer",
-        "System": "",
-        "Type": "Energy Weapon"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "bronze_rocket_drive",
-        "ImagePath": "bronze_rocket_drive.png",
-        "Lifespan": 0,
-        "Name": "Bronze Rocket Drive",
-        "Price": 3,
-        "Property": "Destroyer",
-        "System": "",
-        "Type": "Engine"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "runic_flames",
-        "ImagePath": "runic_flames.png",
-        "Lifespan": 0,
-        "Name": "Runic Flames",
-        "Price": 3,
-        "Property": "Destroyer",
-        "System": "",
-        "Type": "Thrusters"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "destroyer",
-        "ImagePath": "destroyer.png",
-        "Lifespan": 0,
-        "Name": "Destroyer",
-        "Price": 24,
-        "Property": "Destroyer",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "quintessence_nexus",
-        "ImagePath": "quintessence_nexus.png",
-        "Lifespan": 0,
-        "Name": "Quintessence Nexus",
-        "Price": 4,
-        "Property": "Cruiser",
-        "System": "",
-        "Type": "Power Supply"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "prism_ward",
-        "ImagePath": "prism_ward.png",
-        "Lifespan": 0,
-        "Name": "Prism Ward",
-        "Price": 4,
-        "Property": "Cruiser",
-        "System": "",
-        "Type": "Shield Generator"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "freight_bay",
-        "ImagePath": "freight_bay.png",
-        "Lifespan": 0,
-        "Name": "Freight Bay",
-        "Price": 4,
-        "Property": "Cruiser",
-        "System": "",
-        "Type": "Cargo Hold"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "galaxy_drive",
-        "ImagePath": "galaxy_drive.png",
-        "Lifespan": 0,
-        "Name": "Galaxy Drive",
-        "Price": 4,
-        "Property": "Cruiser",
-        "System": "",
-        "Type": "Portal Drive"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "heavy_turret",
-        "ImagePath": "heavy_turret.png",
-        "Lifespan": 0,
-        "Name": "Heavy Turret",
-        "Price": 4,
-        "Property": "Cruiser",
-        "System": "",
-        "Type": "Kinetic Weapon"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "lunar_lance",
-        "ImagePath": "lunar_lance.png",
-        "Lifespan": 0,
-        "Name": "Lunar Lance",
-        "Price": 4,
-        "Property": "Cruiser",
-        "System": "",
-        "Type": "Missle Weapon"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "ray_beams",
-        "ImagePath": "ray_beams.png",
-        "Lifespan": 0,
-        "Name": "Ray Beams",
-        "Price": 4,
-        "Property": "Cruiser",
-        "System": "",
-        "Type": "Energy Weapon"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "eclipse_engines",
-        "ImagePath": "eclipse_engines.png",
-        "Lifespan": 0,
-        "Name": "Eclipse Engines",
-        "Price": 4,
-        "Property": "Cruiser",
-        "System": "",
-        "Type": "Engine"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "dragons_breath",
-        "ImagePath": "dragons_breath.png",
-        "Lifespan": 0,
-        "Name": "Dragon's Breath",
-        "Price": 4,
-        "Property": "Cruiser",
-        "System": "",
-        "Type": "Thrusters"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "cruiser",
-        "ImagePath": "cruiser.png",
-        "Lifespan": 0,
-        "Name": "Cruiser",
-        "Price": 32,
-        "Property": "Cruiser",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "quintessence_core",
-        "ImagePath": "quintessence_core.png",
-        "Lifespan": 0,
-        "Name": "Quintessence Core",
-        "Price": 5,
-        "Property": "Battleship",
-        "System": "",
-        "Type": "Power Supply"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "spectral_wall",
-        "ImagePath": "spectral_wall.png",
-        "Lifespan": 0,
-        "Name": "Spectral Wall",
-        "Price": 5,
-        "Property": "Battleship",
-        "System": "",
-        "Type": "Shield Generator"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "storage_complex",
-        "ImagePath": "storage_complex.png",
-        "Lifespan": 0,
-        "Name": "Storage Complex",
-        "Price": 5,
-        "Property": "Battleship",
-        "System": "",
-        "Type": "Cargo Hold"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "flux_drive",
-        "ImagePath": "flux_drive.png",
-        "Lifespan": 0,
-        "Name": "Flux Drive",
-        "Price": 5,
-        "Property": "Battleship",
-        "System": "",
-        "Type": "Portal Drive"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "broadsides",
-        "ImagePath": "broadsides.png",
-        "Lifespan": 0,
-        "Name": "Broadsides",
-        "Price": 5,
-        "Property": "Battleship",
-        "System": "",
-        "Type": "Kinetic Weapon"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "nova_warheads",
-        "ImagePath": "nova_warheads.png",
-        "Lifespan": 0,
-        "Name": "Nova Warheads",
-        "Price": 5,
-        "Property": "Battleship",
-        "System": "",
-        "Type": "Missle Weapon"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "scorching_ray",
-        "ImagePath": "scorching_ray.png",
-        "Lifespan": 0,
-        "Name": "Scorching Ray",
-        "Price": 5,
-        "Property": "Battleship",
-        "System": "",
-        "Type": "Energy Weapon"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "mithril_jets",
-        "ImagePath": "mithril_jets.png",
-        "Lifespan": 0,
-        "Name": "Mithril Jets",
-        "Price": 5,
-        "Property": "Battleship",
-        "System": "",
-        "Type": "Engine"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "leviathan_lift",
-        "ImagePath": "leviathan_lift.png",
-        "Lifespan": 0,
-        "Name": "Leviathan Lift",
-        "Price": 5,
-        "Property": "Battleship",
-        "System": "",
-        "Type": "Thrusters"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "battleship",
-        "ImagePath": "battleship.png",
-        "Lifespan": 0,
-        "Name": "Battleship",
-        "Price": 40,
-        "Property": "Battleship",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "quintessence_cradle",
-        "ImagePath": "quintessence_cradle.png",
-        "Lifespan": 0,
-        "Name": "Quintessence Cradle",
-        "Price": 6,
-        "Property": "Titan",
-        "System": "",
-        "Type": "Power Supply"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "aegis",
-        "ImagePath": "aegis.png",
-        "Lifespan": 0,
-        "Name": "Aegis",
-        "Price": 6,
-        "Property": "Titan",
-        "System": "",
-        "Type": "Shield Generator"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "cargo_deck",
-        "ImagePath": "cargo_deck.png",
-        "Lifespan": 0,
-        "Name": "Cargo Deck",
-        "Price": 6,
-        "Property": "Titan",
-        "System": "",
-        "Type": "Cargo Hold"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "dimensional_ripper",
-        "ImagePath": "dimensional_ripper.png",
-        "Lifespan": 0,
-        "Name": "Dimensional Ripper",
-        "Price": 6,
-        "Property": "Titan",
-        "System": "",
-        "Type": "Portal Drive"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "havoc_array",
-        "ImagePath": "havoc_array.png",
-        "Lifespan": 0,
-        "Name": "Havoc Array",
-        "Price": 6,
-        "Property": "Titan",
-        "System": "",
-        "Type": "Kinetic Weapon"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "titan_hammer",
-        "ImagePath": "titan_hammer.png",
-        "Lifespan": 0,
-        "Name": "Titan Hammer",
-        "Price": 6,
-        "Property": "Titan",
-        "System": "",
-        "Type": "Missle Weapon"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "laser_matrix",
-        "ImagePath": "laser_matrix.png",
-        "Lifespan": 0,
-        "Name": "Laser Matrix",
-        "Price": 6,
-        "Property": "Titan",
-        "System": "",
-        "Type": "Energy Weapon"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "titanic_bellows",
-        "ImagePath": "titanic_bellows.png",
-        "Lifespan": 0,
-        "Name": "Titanic Bellows",
-        "Price": 6,
-        "Property": "Titan",
-        "System": "",
-        "Type": "Engine"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "atlas_stabilizers",
-        "ImagePath": "atlas_stabilizers.png",
-        "Lifespan": 0,
-        "Name": "Atlas Stabilizers",
-        "Price": 6,
-        "Property": "Titan",
-        "System": "",
-        "Type": "Thrusters"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "titan",
-        "ImagePath": "titan.png",
-        "Lifespan": 0,
-        "Name": "Titan",
-        "Price": 48,
-        "Property": "Titan",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "quintessence_reactor",
-        "ImagePath": "quintessence_reactor.png",
-        "Lifespan": 0,
-        "Name": "Quintessence Reactor",
-        "Price": 7,
-        "Property": "Worldship",
-        "System": "",
-        "Type": "Power Supply"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "planetary_dome",
-        "ImagePath": "planetary_dome.png",
-        "Lifespan": 0,
-        "Name": "Planetary Dome",
-        "Price": 7,
-        "Property": "Worldship",
-        "System": "",
-        "Type": "Shield Generator"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "worldvault",
-        "ImagePath": "worldvault.png",
-        "Lifespan": 0,
-        "Name": "Worldvault",
-        "Price": 7,
-        "Property": "Worldship",
-        "System": "",
-        "Type": "Cargo Hold"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "stargate",
-        "ImagePath": "stargate.png",
-        "Lifespan": 0,
-        "Name": "Stargate",
-        "Price": 7,
-        "Property": "Worldship",
-        "System": "",
-        "Type": "Portal Drive"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "skypiercers",
-        "ImagePath": "skypiercers.png",
-        "Lifespan": 0,
-        "Name": "Skypiercers",
-        "Price": 7,
-        "Property": "Worldship",
-        "System": "",
-        "Type": "Kinetic Weapon"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "black_hole_busters",
-        "ImagePath": "black_hole_busters.png",
-        "Lifespan": 0,
-        "Name": "Black Hole Busters",
-        "Price": 7,
-        "Property": "Worldship",
-        "System": "",
-        "Type": "Missle Weapon"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "hyperbeam",
-        "ImagePath": "hyperbeam.png",
-        "Lifespan": 0,
-        "Name": "Hyperbeam",
-        "Price": 7,
-        "Property": "Worldship",
-        "System": "",
-        "Type": "Energy Weapon"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "supermassive_burners",
-        "ImagePath": "supermassive_burners.png",
-        "Lifespan": 0,
-        "Name": "Supermassive Burners",
-        "Price": 7,
-        "Property": "Worldship",
-        "System": "",
-        "Type": "Engine"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "orbit_shifters",
-        "ImagePath": "orbit_shifters.png",
-        "Lifespan": 0,
-        "Name": "Orbit Shifters",
-        "Price": 7,
-        "Property": "Worldship",
-        "System": "",
-        "Type": "Thrusters"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "worldship",
-        "ImagePath": "worldship.png",
-        "Lifespan": 0,
-        "Name": "Worldship",
-        "Price": 56,
-        "Property": "Worldship",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "starborne_dynamo",
-        "ImagePath": "starborne_dynamo.png",
-        "Lifespan": 0,
-        "Name": "Starborne Dynamo",
-        "Price": 8,
-        "Property": "Excalibur",
-        "System": "",
-        "Type": "Power Supply"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "It's arcane matrix was designed after King Arthur's own legendary scabbard, able to protect against even some of the most powerful magical skullduggery.",
-        "Habitat": "",
-        "ID": "pendragon_veil",
-        "ImagePath": "pendragon_veil.png",
-        "Lifespan": 0,
-        "Name": "Pendragon Veil",
-        "Price": 8,
-        "Property": "Excalibur",
-        "System": "",
-        "Type": "Shield Generator"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "dimensional_sheathe",
-        "ImagePath": "dimensional_sheathe.png",
-        "Lifespan": 0,
-        "Name": "Dimensional Sheathe",
-        "Price": 8,
-        "Property": "Excalibur",
-        "System": "",
-        "Type": "Cargo Hold"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "reality_shift",
-        "ImagePath": "reality_shift.png",
-        "Lifespan": 0,
-        "Name": "Reality Shift",
-        "Price": 8,
-        "Property": "Excalibur",
-        "System": "",
-        "Type": "Portal Drive"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "grail_gun",
-        "ImagePath": "grail_gun.png",
-        "Lifespan": 0,
-        "Name": "Grail Gun",
-        "Price": 8,
-        "Property": "Excalibur",
-        "System": "",
-        "Type": "Kinetic Weapon"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "lance_of_longinus",
-        "ImagePath": "lance_of_longinus.png",
-        "Lifespan": 0,
-        "Name": "Lance of Longinus",
-        "Price": 8,
-        "Property": "Excalibur",
-        "System": "",
-        "Type": "Missle Weapon"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "A powerful laser array developed by the best magi of The White Lodge, named after Lancelot's own sword.",
-        "Habitat": "",
-        "ID": "rays_of_arondite",
-        "ImagePath": "rays_of_arondite.png",
-        "Lifespan": 0,
-        "Name": "Rays of Arondite",
-        "Price": 8,
-        "Property": "Excalibur",
-        "System": "",
-        "Type": "Energy Weapon"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "solaris",
-        "ImagePath": "solaris.png",
-        "Lifespan": 0,
-        "Name": "Solaris",
-        "Price": 8,
-        "Property": "Excalibur",
-        "System": "",
-        "Type": "Engine"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "galeforce",
-        "ImagePath": "galeforce.png",
-        "Lifespan": 0,
-        "Name": "Galeforce",
-        "Price": 8,
-        "Property": "Excalibur",
-        "System": "",
-        "Type": "Thrusters"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "The ultimate weapon given to Arthur by the Lady of the Lake, remembered as the hope of mankind. Excalibur.",
-        "Habitat": "",
-        "ID": "excalibur",
-        "ImagePath": "excalibur.png",
-        "Lifespan": 0,
-        "Name": "Excalibur",
-        "Price": 64,
-        "Property": "Excalibur",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "leaf",
-        "ImagePath": "leaf.png",
-        "Lifespan": 0,
-        "Name": "Leaf",
-        "Price": 4,
-        "Property": "",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "lantern",
-        "ImagePath": "lantern.png",
-        "Lifespan": 0,
-        "Name": "Lantern",
-        "Price": 6,
-        "Property": "",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "cutter",
-        "ImagePath": "cutter.png",
-        "Lifespan": 0,
-        "Name": "Cutter",
-        "Price": 8,
-        "Property": "",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "lancer",
-        "ImagePath": "lancer.png",
-        "Lifespan": 0,
-        "Name": "Lancer",
-        "Price": 10,
-        "Property": "",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "caravan",
-        "ImagePath": "caravan.png",
-        "Lifespan": 0,
-        "Name": "Caravan",
-        "Price": 12,
-        "Property": "",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "eagle",
-        "ImagePath": "eagle.png",
-        "Lifespan": 0,
-        "Name": "Eagle",
-        "Price": 14,
-        "Property": "",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "caravel",
-        "ImagePath": "caravel.png",
-        "Lifespan": 0,
-        "Name": "Caravel",
-        "Price": 16,
-        "Property": "",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "voyager",
-        "ImagePath": "voyager.png",
-        "Lifespan": 0,
-        "Name": "Voyager",
-        "Price": 18,
-        "Property": "",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "galleon",
-        "ImagePath": "galleon.png",
-        "Lifespan": 0,
-        "Name": "Galleon",
-        "Price": 20,
-        "Property": "",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "scout_frigate",
-        "ImagePath": "scout_frigate.png",
-        "Lifespan": 0,
-        "Name": "Scout Frigate",
-        "Price": 22,
-        "Property": "",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "vandal_destroyer",
-        "ImagePath": "vandal_destroyer.png",
-        "Lifespan": 0,
-        "Name": "Vandal Destroyer",
-        "Price": 24,
-        "Property": "",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "lead_destroyer",
-        "ImagePath": "lead_destroyer.png",
-        "Lifespan": 0,
-        "Name": "Lead Destroyer",
-        "Price": 26,
-        "Property": "",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "battle_destroyer",
-        "ImagePath": "battle_destroyer.png",
-        "Lifespan": 0,
-        "Name": "Battle Destroyer",
-        "Price": 28,
-        "Property": "",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "light_cruiser",
-        "ImagePath": "light_cruiser.png",
-        "Lifespan": 0,
-        "Name": "Light Cruiser",
-        "Price": 30,
-        "Property": "",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "lance_cruiser",
-        "ImagePath": "lance_cruiser.png",
-        "Lifespan": 0,
-        "Name": "Lance Cruiser",
-        "Price": 32,
-        "Property": "",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "super_cruiser",
-        "ImagePath": "super_cruiser.png",
-        "Lifespan": 0,
-        "Name": "Super Cruiser",
-        "Price": 34,
-        "Property": "",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "battle_cruiser",
-        "ImagePath": "battle_cruiser.png",
-        "Lifespan": 0,
-        "Name": "Battle Cruiser",
-        "Price": 36,
-        "Property": "",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "command_cruiser",
-        "ImagePath": "command_cruiser.png",
-        "Lifespan": 0,
-        "Name": "Command Cruiser",
-        "Price": 38,
-        "Property": "",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "ship_of_the_line",
-        "ImagePath": "ship_of_the_line.png",
-        "Lifespan": 0,
-        "Name": "Ship of the Line",
-        "Price": 40,
-        "Property": "",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "imperium",
-        "ImagePath": "imperium.png",
-        "Lifespan": 0,
-        "Name": "Imperium",
-        "Price": 42,
-        "Property": "",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "carrier",
-        "ImagePath": "carrier.png",
-        "Lifespan": 0,
-        "Name": "Carrier",
-        "Price": 44,
-        "Property": "",
-        "System": "",
-        "Type": ""
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "super_carrier",
-        "ImagePath": "super_carrier.png",
-        "Lifespan": 0,
-        "Name": "Super Carrier",
-        "Price": 46,
-        "Property": "",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "raging_titan",
-        "ImagePath": "raging_titan.png",
-        "Lifespan": 0,
-        "Name": "Raging Titan",
-        "Price": 48,
-        "Property": "",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "covenant",
-        "ImagePath": "covenant.png",
-        "Lifespan": 0,
-        "Name": "Covenant",
-        "Price": 50,
-        "Property": "",
-        "System": "",
-        "Type": ""
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "dreadnaught",
-        "ImagePath": "dreadnaught.png",
-        "Lifespan": 0,
-        "Name": "Dreadnaught",
-        "Price": 52,
-        "Property": "",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "space_station",
-        "ImagePath": "space_station.png",
-        "Lifespan": 0,
-        "Name": "Space Station",
-        "Price": 54,
-        "Property": "",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "rogue_worldship",
-        "ImagePath": "rogue_worldship.png",
-        "Lifespan": 0,
-        "Name": "Rogue Worldship",
-        "Price": 56,
-        "Property": "",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "excaliburr",
-        "ImagePath": "excaliburr.png",
-        "Lifespan": 0,
-        "Name": "Excaliburr",
-        "Price": 64,
-        "Property": "",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-            {
-                "ActionKey": {
-                    "ActionName": "Explore",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "nocturne",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "",
-                    "AttributeModifier": 0,
-                    "Duration": 8,
-                    "FlavorText": "Flavor text...",
-                    "OutcomeText": "Outcome text...",
-                    "ReturnedCardIDs": [
-                        "explore",
-                        "nocturne"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1
-                    ],
-                    "Title": "Explore the Dark Shroud"
-                }
-            }
-        ],
-        "FlavorText": "A dense interstellar cloud obscures this place, making it the place the ideal environment for Aristoratic Vampire Pirates.",
-        "Habitat": "",
-        "ID": "nocturne",
-        "ImagePath": "nocturne.png",
-        "Lifespan": 0,
-        "Name": "Nocturne",
-        "Price": 0,
-        "Property": "",
-        "System": "Nocturne",
-        "Type": "System"
-    },
-    {
-        "Actions": [
-            {
-                "ActionKey": {
-                    "ActionName": "Explore",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "dracule",
-                    "MaxRepetitions": 1,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "Nocturne",
-                    "SecondaryCardSpecifiers": [
-                        [
-                            "",
-                            "Fleet",
-                            ""
-                        ]
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "",
-                    "AttributeModifier": 0,
-                    "Duration": 8,
-                    "FlavorText": "I cautiously explore the space between, where pirates stalk their prey unseen.",
-                    "OutcomeText": "You uncover a handful of notable locations.",
-                    "ReturnedCardIDs": [
-                        "explore",
-                        "dracule",
-                        "crimsontide",
-                        "one_eyed_jacks",
-                        "smugglers_nook"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1,
-                        1,
-                        1,
-                        1
-                    ],
-                    "Title": "Explore the Shadowy Veil"
-                }
-            }
-        ],
-        "FlavorText": "The dark prince's abode, a palatial fortress carved from an isolated asteroid. Tread lightly, for here Antediluvian's dwell.",
-        "Habitat": "Dracule",
-        "ID": "dracule",
-        "ImagePath": "dracule.png",
-        "Lifespan": 0,
-        "Name": "Dracule",
-        "Price": 0,
-        "Property": "Capital",
-        "System": "Nocturne",
-        "Type": "Habitat"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "A Flotilla of Raiders calls this place their rally point. Vampiric Admirals wine and dine upon the unsuspecting.",
-        "Habitat": "Crimsontide",
-        "ID": "crimsontide",
-        "ImagePath": "crimsontide.png",
-        "Lifespan": 0,
-        "Name": "Crimsontide",
-        "Price": 0,
-        "Property": "Pirate",
-        "System": "Nocturne",
-        "Type": "Habitat"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "A haven for the lucky, doom for the unlucky. Jack made sure to found this Oasis far away from the desert authority.",
-        "Habitat": "One-eyed Jacks",
-        "ID": "one_eyed_jacks",
-        "ImagePath": "one_eyed_jacks.png",
-        "Lifespan": 0,
-        "Name": "One Eyed Jacks",
-        "Price": 0,
-        "Property": "Illicit",
-        "System": "Nocturne",
-        "Type": "Habitat"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "An honorable den of thieves if ever there was one. More clink passes between hands here than most would realize.",
-        "Habitat": "Smuggler's Nook",
-        "ID": "smugglers_nook",
-        "ImagePath": "smugglers_nook.png",
-        "Lifespan": 0,
-        "Name": "Smuggler's Nook",
-        "Price": 0,
-        "Property": "Illegal",
-        "System": "Nocturne",
-        "Type": "Habitat"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "Ever mysterious, this shaded and illusive planet seems capable of secreting itself away from lawful enterprise.",
-        "Habitat": "Rakshasa",
-        "ID": "rakshasa",
-        "ImagePath": "rakshasa.png",
-        "Lifespan": 0,
-        "Name": "Rakshasa",
-        "Price": 0,
-        "Property": "Colony",
-        "System": "Nocturne",
-        "Type": "Habitat"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "Classified.",
-        "Habitat": "Black Sun Campaign",
-        "ID": "black_sun_campaign",
-        "ImagePath": "black_sun_campaign.png",
-        "Lifespan": 0,
-        "Name": "Black Sun Campaign",
-        "Price": 0,
-        "Property": "Classified",
-        "System": "Nocturne",
-        "Type": "Habitat"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "The greatest spoils of all hunts for the Vampiric kind are gathered thither here, a sphere of red where sweet nectar overfloweth.",
-        "Habitat": "The Feast",
-        "ID": "the_feast",
-        "ImagePath": "the_feast.png",
-        "Lifespan": 0,
-        "Name": "The Feast",
-        "Price": 0,
-        "Property": "Vampiric",
-        "System": "Nocturne",
-        "Type": "Habitat"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "The dreaded piratess and captain of the Red Cutlass. Current Admiral Commanding of the Crimsontide.",
-        "Habitat": "Crimsontide",
-        "ID": "admiral_sascha",
-        "ImagePath": "admiral_sascha.png",
-        "Lifespan": 0,
-        "Name": "Admiral Sascha",
-        "Price": 42,
-        "Property": "Vampiric",
-        "System": "Nocturne",
-        "Type": "Character"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "Undisputed ruler of Nocturne, founder of The Black and Crimson Courts. Also a licensed clinical therapist.",
-        "Habitat": "Dracule",
-        "ID": "high_prince_vladimir",
-        "ImagePath": "high_prince_vladimir.png",
-        "Lifespan": 0,
-        "Name": "High Prince Vladimir",
-        "Price": 48,
-        "Property": "Vampiric",
-        "System": "Nocturne",
-        "Type": "Character"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "A bauble marked with the symbol of the dark star. Can grant access to a Cryo Coffin bearing the same symbol.",
-        "Habitat": "",
-        "ID": "crypt_key",
-        "ImagePath": "crypt_key.png",
-        "Lifespan": 0,
-        "Name": "Crypt Key",
-        "Price": 0,
-        "Property": "Vampiric",
-        "System": "",
-        "Type": "Object"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "A Vampire Prince, who seems to be of good disposition and humor. Blonde of hair and fair of skin, he is eternally grateful to you for having freed him.",
-        "Habitat": "",
-        "ID": "alucard",
-        "ImagePath": "alucard.png",
-        "Lifespan": 0,
-        "Name": "Alucard",
-        "Price": 0,
-        "Property": "Ally",
-        "System": "",
-        "Type": "Character"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "An eccentric private investigator with a penchant for cherry pie and a \"damn fine\" cup of coffee.",
-        "Habitat": "One-eyed Jacks",
-        "ID": "pi_beaumont",
-        "ImagePath": "pi_beaumont.png",
-        "Lifespan": 0,
-        "Name": "P.I. Beaumont",
-        "Price": 0,
-        "Property": "Civilian",
-        "System": "Nocturne",
-        "Type": "Character"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "A retired gentleman thief whose found his calling helping... well thieves. He makes an absolute fortune fencing contraband and stolen plunder.",
-        "Habitat": "Smuggler's Nook",
-        "ID": "jean",
-        "ImagePath": "jean.png",
-        "Lifespan": 0,
-        "Name": "Jean",
-        "Price": 0,
-        "Property": "Vampiric",
-        "System": "Nocturne",
-        "Type": "Character"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "Rakshasa",
-        "ID": "count_aleister",
-        "ImagePath": "count_aleister.png",
-        "Lifespan": 0,
-        "Name": "Count Aleister",
-        "Price": 0,
-        "Property": "Vampiric",
-        "System": "Nocturne",
-        "Type": "Character"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "The Feast",
-        "ID": "revel_meister",
-        "ImagePath": "revel_meister.png",
-        "Lifespan": 0,
-        "Name": "Revel Meister",
-        "Price": 0,
-        "Property": "Vampiric",
-        "System": "Nocturne",
-        "Type": "Character"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "Black Sun Campaign",
-        "ID": "shade",
-        "ImagePath": "shade.png",
-        "Lifespan": 0,
-        "Name": "Shade",
-        "Price": 0,
-        "Property": "Classified",
-        "System": "Nocturne",
-        "Type": "Character"
-    },
-    {
-        "Actions": [
-            {
-                "ActionKey": {
-                    "ActionName": "Battle",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "pirate_cutter",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                        [
-                            "",
-                            "Fleet",
-                            ""
-                        ]
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "",
-                    "AttributeModifier": 0,
-                    "Duration": 8,
-                    "FlavorText": "Somehow that cacophonous din they call music reaches me through the space between. Fracking fuel sniffers.",
-                    "OutcomeText": "You defeat the vermin.",
-                    "ReturnedCardIDs": [
-                        "battle",
-                        "crimson_mark",
-                        "junked_pattern_a_arms_platform"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1,
-                        1
-                    ],
-                    "Title": "Battle the Pirate Cutter"
-                }
-            }
-        ],
-        "FlavorText": "Such ships are crewed by at most a handful of aspiring ghouls. They fill their purses along with their bellies.",
-        "Habitat": "",
-        "ID": "pirate_cutter",
-        "ImagePath": "pirate_cutter.png",
-        "Lifespan": 0,
-        "Name": "Pirate Cutter",
-        "Price": 8,
-        "Property": "Enemy",
-        "System": "",
-        "Type": "Fleet"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "Mark of the Crimson Fleet, can be exchanged for rewards at the proper authority.",
-        "Habitat": "",
-        "ID": "crimson_mark",
-        "ImagePath": "crimson_mark.png",
-        "Lifespan": 0,
-        "Name": "Crimson Mark",
-        "Price": 0,
-        "Property": "Military",
-        "System": "",
-        "Type": "Currency"
-    },
-    {
-        "Actions": [
-            {
-                "ActionKey": {
-                    "ActionName": "Research",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "junked_pattern_a_arms_platform",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "",
-                    "AttributeModifier": 0,
-                    "Duration": 8,
-                    "FlavorText": "And I'm putting it back together again.",
-                    "OutcomeText": "Oh it's a Chaingun, that's just Christmas.",
-                    "ReturnedCardIDs": [
-                        "research",
-                        "chaingun"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1
-                    ],
-                    "Title": "Taking Weapon Apart"
-                }
-            }
-        ],
-        "FlavorText": "A battered weapons package.",
-        "Habitat": "",
-        "ID": "junked_pattern_a_arms_platform",
-        "ImagePath": "junked_pattern_a_arms_platform.png",
-        "Lifespan": 0,
-        "Name": "Junked Pattern A Arms Platform",
-        "Price": 0,
-        "Property": "Junk",
-        "System": "",
-        "Type": "Object"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "Home of the dwarves, ale flows like rivers and slave chains bind the cosmos; here, wealth is forged in the furnaces of tyranny.",
-        "Habitat": "",
-        "ID": "glint",
-        "ImagePath": "glint.png",
-        "Lifespan": 0,
-        "Name": "Glint",
         "Price": 0,
         "Property": "Dwarven",
         "System": "Glint",
-        "Type": "System"
+        "Type": "Character"
     }
 ]

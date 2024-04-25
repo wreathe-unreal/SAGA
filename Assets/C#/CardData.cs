@@ -21,17 +21,25 @@ public class CardData
     public List<ActionData> Actions;
     public string DeckType;
     
-    public ActionData FindActionData(string actionName, List<CardData> cardData)
+    public List<ActionData> FindActionData(string actionName, List<CardData> cardData)
     {
+        List<ActionData> MatchHint = new List<ActionData>();
+        MatchHint.Add(null);  // Match
+        MatchHint.Add(null);  // Hint
+        
         foreach (ActionData ad in Actions)
         {
-            if (ad.ActionKey.HasKeyMatch(actionName, cardData, PlayerState.Instance.GetPlayerState(), ad))
+            if (ad.ActionKey.HasKeyMatch(actionName, cardData, Player.State, ad))
             {
-                return ad;
+                MatchHint[0] = ad;
+            }
+            else if(ad.ActionKey.IsKeyHint(actionName, cardData, Player.State, ad))
+            {
+                    MatchHint[1] = ad;
             }
         }
-        
-        return null;
+
+        return MatchHint;
     }
     
     
@@ -49,6 +57,10 @@ public class CardData
         Type = rcd.Type;
         Property = rcd.Property;
         Actions = rcd.Actions;
+        Actions.Sort((x, y) => y.ActionKey.AttributeMinimum.CompareTo(x.ActionKey.AttributeMinimum));  // Sorting by age in ascending order
+        
+        
+        
         
         foreach (ActionData a in rcd.Actions)
         {
@@ -63,35 +75,15 @@ public class CardData
         switch (this.Type)
         {
             case "Engine":
-                return "Spaceship";
             case "Power Supply":
-                return "Spaceship";
             case "Portal Drive":
-                return "Spaceship";
             case "Cargo Hold":
-                return "Spaceship";
-            case "Thermal Weapon":
-                return "Spaceship";
-            case "Laser Weapon":
-                return "Spaceship";
-            case "Psychic Weapon":
-                return "Spaceship";
-            case "Arcane Weapon":
-                return "Spaceship";
-            case "Ramming Weapon":
-                return "Spaceship";
+            case "Energy Weapon":
             case "Kinetic Weapon":
-                return "Spaceship";
             case "Shield Generator":
-                return "Spaceship";
-            case "Engine Coolant":
-                return "Spaceship";
-            case "Armor Plating":
-                return "Spaceship";
-            case "Magical Ward":
-                return "Spaceship";
             case "Hull":
-                return "Spaceship";
+            case "Thrusters":
+                return "Starship";
             default:
                 return this.Type;
         }

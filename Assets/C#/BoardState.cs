@@ -27,7 +27,12 @@ public class BoardState : MonoBehaviour
         {
             if (SearchDeck.Cards[i].ID == CardToDestroy.ID)
             {
+                print(SearchDeck.Cards[i].ID + " Qty Before Modify: " + SearchDeck.Cards[i].Quantity );
+                
                 SearchDeck.Cards[i].ModifyQuantity(-1);
+                
+                print(SearchDeck.Cards[i].ID + " Qty Before Modify: " + SearchDeck.Cards[i].Quantity );
+
 
                 if (SearchDeck.Cards[i].Quantity == 0)
                 {
@@ -121,11 +126,13 @@ public class BoardState : MonoBehaviour
         Decks["Action"] = new Deck("Action");
         Decks["Ambition"] = new Deck("Ambition");
         Decks["Currency"] = new Deck("Currency");
+        Decks["Quest"] = new Deck("Quest");
+        Decks["Enemy"] = new Deck("Enemy");
     }
 
     private void AddStartingCards()
     {
-        List<string> InitialCards = new List<string> { "work", "glint", "toil_the_deep", "deepmine" };
+        List<string> InitialCards = new List<string> { "work", "glint", "toil_in_the_depths", "deepmine", "gold"};
 
         foreach (string s in InitialCards)
         {

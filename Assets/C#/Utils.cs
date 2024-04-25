@@ -18,4 +18,12 @@ public static class TransformExtensions
 
         return currentTransform;
     }
+    public static void SetLocalTransform(GameObject target, Vector3 localPosition, Vector3 localRotation, Vector3 localScale)
+    {
+        target.transform.position = Vector3.zero;
+        target.transform.rotation = Quaternion.identity;
+        target.transform.localPosition = localPosition;
+        target.transform.localRotation = Quaternion.Euler(localRotation.x, localRotation.y, localRotation.z);
+        target.transform.localScale = localScale;
+    }
 }
