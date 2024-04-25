@@ -18,7 +18,7 @@ public class BoardState : MonoBehaviour
         return Instance;
     }
 
-    public void DestroyCard(Card CardToDestroy)
+    public static void DestroyCard(Card CardToDestroy)
     {
         Deck SearchDeck = Decks[CardToDestroy.DeckType];
 
@@ -27,12 +27,7 @@ public class BoardState : MonoBehaviour
         {
             if (SearchDeck.Cards[i].ID == CardToDestroy.ID)
             {
-                print(SearchDeck.Cards[i].ID + " Qty Before Modify: " + SearchDeck.Cards[i].Quantity );
-                
                 SearchDeck.Cards[i].ModifyQuantity(-1);
-                
-                print(SearchDeck.Cards[i].ID + " Qty Before Modify: " + SearchDeck.Cards[i].Quantity );
-
 
                 if (SearchDeck.Cards[i].Quantity == 0)
                 {
@@ -132,7 +127,7 @@ public class BoardState : MonoBehaviour
 
     private void AddStartingCards()
     {
-        List<string> InitialCards = new List<string> { "work", "glint", "toil_in_the_depths", "deepmine", "gold"};
+        List<string> InitialCards = new List<string> { "work", "glint", "toil_in_the_depths", "deepmine", "gold", "dream"};
 
         foreach (string s in InitialCards)
         {

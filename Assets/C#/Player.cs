@@ -30,45 +30,86 @@ public class Player : MonoBehaviour
     private Starship Starship;
     public string Location;
     public Dictionary<string, float> AttributeMap = new Dictionary<string, float>();
-    private Dictionary<ActionData, int> ActionRepetitionsMap;
+    private Dictionary<string, int> ActionRepetitionsMap;
     private static Player _State;
 
     private void Start()
     {
-        ActionRepetitionsMap = new Dictionary<ActionData, int>();
-        SetLocation("Glint");
+        ActionRepetitionsMap = new Dictionary<string, int>();
+        SetLocation("Deepmine");
         NullActionCard();;
         InputCards = new List<Card>();
         ReturnedCards = new List<Card>();
         ReturnedQuantities = new List<int>();
 
     }
-
-    public int GetActionRepetition(ActionData actionData)
+    
+        
+    public void ExecuteAction()
     {
-        if (!ActionRepetitionsMap.ContainsKey(actionData))
+        
+
+        print("Action Card Is Null?" + (Player.State.GetActionCard() == null).ToString());
+        
+        print(ActionCard.Name);
+        AttributeMap[ActionCard.CurrentActionData.ActionResult.AttributeModified] += ActionCard.CurrentActionData.ActionResult.AttributeModifier;
+        
+        print(ActionCard.CurrentActionData.ActionResult.Title);
+        
+        IncrementActionRepetition(ActionCard.Name, InputCards[0].Data);
+
+        ActionCard.CookActionResult();
+        ActionCard.transform.SetParent(null);
+        NullActionCard();
+
+        ActionGUI.SetPanelActive(false);
+
+        List<Card> cardsToRemove = new List<Card>();
+        
+        foreach (Card c in InputCards)
         {
-            ActionRepetitionsMap[actionData] = 0;
+            cardsToRemove.Add(c);
         }
 
-        return ActionRepetitionsMap[actionData];
+        foreach (Card c in cardsToRemove)
+        {
+            BoardState.DestroyCard(c);
+            InputCards.Remove(c);
+        }
+        
+        InputCards = new List<Card>(); // Clear other cards
+    
+    }
+
+    
+
+    public int GetActionRepetition(string ActionName, CardData FirstCard)
+    {
+        string Key = ActionName + FirstCard.ID;
+        if (!ActionRepetitionsMap.ContainsKey(Key))
+        {
+            ActionRepetitionsMap[Key] = 0;
+        }
+
+        return ActionRepetitionsMap[Key];
 
     }
 
-    public void IncrementActionRepetition(ActionData actionData)
+    public void IncrementActionRepetition(string ActionName, CardData FirstCard)
     {
-        if (!ActionRepetitionsMap.ContainsKey(actionData))
+        string Key = ActionName + FirstCard.ID;
+        if (!ActionRepetitionsMap.ContainsKey(Key))
         {
-            ActionRepetitionsMap[actionData] = 1;
+            ActionRepetitionsMap[Key] = 1;
         }
 
-        ActionRepetitionsMap[actionData]++;
+        ActionRepetitionsMap[Key]++;
     }
     
-    public void DecrementActionRepetition(ActionData actionData)
+    public void DecrementActionRepetition(string ActionName, CardData FirstCard)
     {
-
-        ActionRepetitionsMap[actionData]--;
+        string Key = ActionName + FirstCard.ID;
+        ActionRepetitionsMap[Key]--;
     }
     
     // Property to access the instance
@@ -125,13 +166,18 @@ public class Player : MonoBehaviour
         {
             Debug.Log("WARNING: ActionCard has not been nulled.");
         }
+        Debug.Log("Setting ActionCard To: " + CurrentActionCard.Name);
+
         
         ActionCard = CurrentActionCard;
     }
 
     public void NullActionCard()
     {
-        Debug.Log("Nulling ActionCard: " + ActionCard.ID);
+        if (GetActionCard() != null)
+        {
+            Debug.Log("Nulling ActionCard: " + ActionCard.ID);
+        }
 
         ActionCard = null;
     }

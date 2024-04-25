@@ -18,6 +18,7 @@ public class Timer : MonoBehaviour
         timeRemaining = Duration;
         duration = timeRemaining;
         timerActive = true;
+        
     }
 
     public void StopTimer()
@@ -29,6 +30,7 @@ public class Timer : MonoBehaviour
     {
         StopTimer();
         timerText.text = FormatTime(Duration);
+        
     }
 
     void Update()

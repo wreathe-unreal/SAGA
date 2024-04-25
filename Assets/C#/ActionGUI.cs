@@ -67,13 +67,24 @@ public class ActionGUI : MonoBehaviour
         }
         else
         {
-            StartInputCoroutine();
+            StartCoroutine(HandleUserInput());
         }
     }
     
 
     public void StartInputCoroutine()
      {
+         Ray ray = MainCamera.ScreenPointToRay(Input.mousePosition);
+         RaycastHit hit;
+
+         if (Physics.Raycast(ray, out hit))
+         {
+             if (hit.transform.GetComponent<Card>() != null)  // Check if the hit object is this GameObject
+             {
+                 return;
+             }
+         }
+         
          StartCoroutine(HandleUserInput());
          bFirstCoro = false; //no cooldown for first enter coro
 
@@ -91,26 +102,9 @@ public class ActionGUI : MonoBehaviour
 
          // Update the last action time immediately
          LastActionTime = Time.realtimeSinceStartup;
-
-         if (IsHintPanelOpen())
-         {
-             CloseHintPanel();
-             Terminal.SetText("> Action + Card", true);
-             yield break;
-         }
-         if(IsActionPanelOpen())
-         {
-             ExecuteActionPanel();
-             Terminal.SetText("> Action + Card", true);
-             yield break;
-         }
          
-         if(IsReturnPanelOpen())
-         {
-             ExecuteReturnPanel();
-             Terminal.SetText("> Action + Card", true);
-             yield break;
-         }
+         CloseAndExecutePanels();
+         
          
          TextInput.interactable = false;
          
@@ -123,46 +117,53 @@ public class ActionGUI : MonoBehaviour
          }
 
          Card NewAction = BoardState.Decks["Action"].FirstOrDefault(c => c.Name.ToLower() == Terminal.ParsedText[0]);
-         Player.State.SetActionCard(NewAction);
 
-        if (Player.State.GetActionCard() != null)
-        {
-             // Check if the first word matches an action card
-             if (Terminal.ParsedText.Length == 1 && Player.State.GetActionCard().Timer.timeRemaining <= 0)
-             {
-                 Player.State.GetActionCard().OpenAction(); //early exit if just a action and we open the action
-                 yield break;
-             }
+         if (NewAction != null)
+         {
+             Player.State.SetActionCard(NewAction);
 
-             if (Player.State.GetActionCard().CurrentActionData == null)
-             {
-                 Player.State.GetActionCard().CurrentActionData = FindAction(Terminal.ParsedText);
-             
-                 if (Player.State.GetActionCard().CurrentActionData != null)
-                 {
-                     DisplayActionPanel();
-                     yield break;
-                 }
-                 if (Player.State.GetActionCard().CurrentActionHint != null)
-                 {
-                     print("displaying hints");
-                     DisplayHintPanel();
-                     yield break;
-                 }
-                 
-                 Terminal.SetText("IMPOSSIBLE.", true); // Get the current ColorBlock from the TextInput
-                 
-                     
-             }
-             else
-             {
-                 Terminal.SetText("ACTION NOT READY.", true);
-             }
-        }
-        else
-        {
-            Terminal.SetText("NO ACTION FOUND.", true);
-        }
+         }
+
+         if (Player.State.GetActionCard() == null)
+         {
+             Terminal.SetText("NO ACTION FOUND.", true);
+             yield break;
+         }
+
+         
+         
+         //Check if the first word matches an action card
+         if (Terminal.ParsedText.Length == 1 && Player.State.GetActionCard().bActionFinished)
+         {
+             Player.State.GetActionCard().OpenAction(); //early exit if just a action and we open the action
+             yield break;
+         }
+         
+         if (Player.State.GetActionCard().CurrentActionData != null)
+         {
+             Terminal.SetText("ACTION NOT READY.", true);
+             yield break;
+         }
+         
+         //TRY TO FIND AN ACTION
+         Player.State.GetActionCard().CurrentActionData = FindAction(Terminal.ParsedText);
+         //TRY TO FIND AN ACTION
+         
+         if (Player.State.GetActionCard().CurrentActionData != null)
+         {
+             DisplayActionPanel();
+             yield break;
+         }
+
+         if (Player.State.GetActionCard().CurrentActionHint != null)
+         {
+             print("displaying hints");
+             DisplayHintPanel();
+             yield break;
+         }
+
+         Terminal.SetText("IMPOSSIBLE.", true);
+         yield break;
      }
     
     public static void CancelActionPanel()
@@ -313,9 +314,11 @@ public class ActionGUI : MonoBehaviour
 
     public static void DisplayReturnPanel(Card OpenedActionCard)
     {
+        OpenedActionCard.bActionFinished = false;
+
         if (OpenedActionCard.ID == "battle" && !Player.State.GetStarship().GetBattleResults(Player.State.GetBattleOpponent().Data.Price)) //if the action is a battle and the player loses
         {
-            Player.State.DecrementActionRepetition(OpenedActionCard.CurrentActionData);
+            Player.State.DecrementActionRepetition(OpenedActionCard.Name, Player.State.GetBattleOpponent().Data);
             Player.State.ReturnedCards.Add(BoardState.GetInstance().AddCard(OpenedActionCard.ID, 1, false));
             Player.State.ReturnedCards.Add(BoardState.GetInstance().AddCard(Player.State.GetBattleOpponent().ID, 1, false));
         }
@@ -389,38 +392,7 @@ public class ActionGUI : MonoBehaviour
 
         }
     }
-    
-    public void ExecuteActionPanel()
-    {
-        
-        DisableAllBeginButtons();
-        
-        Player.State.AttributeMap[Player.State.GetActionCard().CurrentActionData.ActionResult.AttributeModified] += Player.State.GetActionCard().CurrentActionData.ActionResult.AttributeModifier;
-        Player.State.IncrementActionRepetition(Player.State.GetActionCard().CurrentActionData);
 
-        Player.State.GetActionCard().CookActionResult();
-        Player.State.GetActionCard().transform.SetParent(null);
-        Player.State.NullActionCard();
-
-        SetPanelActive(false);
-
-        List<Card> cardsToRemove = new List<Card>();
-        
-        foreach (Card c in Player.State.InputCards)
-        {
-            cardsToRemove.Add(c);
-        }
-
-        foreach (Card c in cardsToRemove)
-        {
-            BoardState.DestroyCard(c);
-            Player.State.InputCards.Remove(c);
-        }
-        
-        Player.State.InputCards = new List<Card>(); // Clear other cards
-    
-    }
-    
     public static void SetPanelActive(bool bActive)
     {
         if (This == null)
@@ -496,39 +468,41 @@ public class ActionGUI : MonoBehaviour
     
     public static void SetInputCards(string[] words)
     {
-        if (Player.State.GetActionCard() != null && words.Length >= 2)
+        Player.State.InputCards = new List<Card>();
+
+        if (Player.State.GetActionCard() == null || words.Length < 2)
         {
-            Player.State.InputCards = new List<Card>();
-            
-            // Check all other words
-            for (int i = 1; i < words.Length; i++)
+            return;
+        }
+        
+        // Check all other words
+        for (int i = 1; i < words.Length; i++)
+        {
+            string currentWord = words[i];
+            bool matchFound = false;
+
+            foreach (KeyValuePair<string, Deck> kvp in BoardState.Decks)
             {
-                string currentWord = words[i];
-                bool matchFound = false;
-
-                foreach (KeyValuePair<string, Deck> kvp in BoardState.Decks)
+                // Skip the Action deck for these checks
+                if (kvp.Key == "Action")
                 {
-                    // Skip the Action deck for these checks
-                    if (kvp.Key == "Action")
-                    {
-                        continue;
-                    }
-                    
-                    Card card = kvp.Value.Cards.FirstOrDefault(c => c.Name.ToLower() == currentWord);
-                    
-                    if (card != null)
-                    {
-                        matchFound = true;
-                        Player.State.InputCards.Add(card);
-                        break;
-                    }
+                    continue;
                 }
-
-                if (!matchFound)
+                    
+                Card card = kvp.Value.Cards.FirstOrDefault(c => c.Name.ToLower() == currentWord);
+                    
+                if (card != null)
                 {
-                    Player.State.InputCards = new List<Card>();
+                    matchFound = true;
+                    Player.State.InputCards.Add(card);
                     break;
                 }
+            }
+
+            if (!matchFound)
+            {
+                Player.State.InputCards = new List<Card>();
+                break;
             }
         }
     }
@@ -536,37 +510,40 @@ public class ActionGUI : MonoBehaviour
     public static ActionData FindAction(string[] words)
     {
          SetInputCards(words);
-         
-         if (Player.State.InputCards.Count > 0 && words.Length > 1)
+
+         if (Player.State.InputCards.Count <= 0 || words.Length <= 1)
          {
-             List<CardSpecifier> cardSpecifiers = new List<CardSpecifier>();
-             for (int i = 1; i < Player.State.InputCards.Count; i++)
-             {
-                 CardData cd = CardDB.CardDataLookup[Player.State.InputCards[i].ID];
-                 CardSpecifier cs = new CardSpecifier(cd.ID, cd.Type, cd.Property);
-                 cardSpecifiers.Add(cs);
-             }
+             return null;
+         }
+         
+         List<CardSpecifier> cardSpecifiers = new List<CardSpecifier>();
+         for (int i = 1; i < Player.State.InputCards.Count; i++)
+         {
+             CardData cd = CardDB.CardDataLookup[Player.State.InputCards[i].ID];
+             CardSpecifier cs = new CardSpecifier(cd.ID, cd.Type, cd.Property);
+             cardSpecifiers.Add(cs);
+         }
              
-             ActionKey actionKeyToFind = new ActionKey(Player.State.GetActionCard().Name, Player.State.InputCards[0].ID, Player.State.GetLocation(), cardSpecifiers);
+         ActionKey actionKeyToFind = new ActionKey(Player.State.GetActionCard().Name, Player.State.InputCards[0].ID, Player.State.GetLocation(), cardSpecifiers);
              
-             CardData mainCardData = CardDB.CardDataLookup[Player.State.InputCards[0].ID];
+         CardData mainCardData = CardDB.CardDataLookup[Player.State.InputCards[0].ID];
 
-             List<CardData> cdList = new List<CardData>();
-             foreach (Card c in Player.State.InputCards)
-             {
-                 cdList.Add(CardDB.CardDataLookup[c.ID]);
-             }
+         List<CardData> cdList = new List<CardData>();
+         foreach (Card c in Player.State.InputCards)
+         {
+             cdList.Add(CardDB.CardDataLookup[c.ID]);
+         }
 
-             List<ActionData> MatchHint = mainCardData.FindActionData(Player.State.GetActionCard().Name, cdList);
+         List<ActionData> MatchHint = mainCardData.FindActionData(Player.State.GetActionCard().Name, cdList);
 
-             if (MatchHint[0] != null)
-             {
-                 return MatchHint[0];
-             }
-             if(MatchHint[1] != null)
-             {
-                 Player.State.GetActionCard().CurrentActionHint = MatchHint[1];
-             }
+         if (MatchHint[0] != null)
+         {
+             return MatchHint[0];
+         }
+         
+         if(MatchHint[1] != null)
+         {
+             Player.State.GetActionCard().CurrentActionHint = MatchHint[1];
          }
 
          return null;
@@ -700,5 +677,32 @@ public class ActionGUI : MonoBehaviour
         This.transform.FindDeepChild("3Panel/Canvas/ActionButton").gameObject.SetActive(false);
         This.transform.FindDeepChild("4Panel/Canvas/ActionButton").gameObject.SetActive(false);
         This.transform.FindDeepChild("5Panel/Canvas/ActionButton").gameObject.SetActive(false);
+    }
+
+
+    private static void CloseAndExecutePanels()
+    {
+        if (IsHintPanelOpen())
+        {
+            CloseHintPanel();
+            Terminal.SetText("> Action + Card", true);
+            return;
+        }
+        
+        if(IsActionPanelOpen())
+        {
+            Player.State.ExecuteAction();
+            ActionGUI.DisableAllBeginButtons();
+            Terminal.SetText("> Action + Card", true);
+            return;
+        }
+         
+        if(IsReturnPanelOpen())
+        {
+            ExecuteReturnPanel();
+            Terminal.SetText("> Action + Card", true);
+            return;
+
+        }
     }
 }

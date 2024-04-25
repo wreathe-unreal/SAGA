@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 public class CardData
@@ -29,6 +31,7 @@ public class CardData
         
         foreach (ActionData ad in Actions)
         {
+            //Debug.Log(ad.ActionResult.Title + " Card Specifiers Count: " + ad.ActionKey.SecondaryCardSpecifiersReal.Count);
             if (ad.ActionKey.HasKeyMatch(actionName, cardData, Player.State, ad))
             {
                 MatchHint[0] = ad;
@@ -62,11 +65,17 @@ public class CardData
         
         
         
-        foreach (ActionData a in rcd.Actions)
+        foreach (ActionData a in Actions)
         {
             a.ActionKey.ConvertSecondaryCardSpecifiers(); //converts all of the list of list of strings to a list of CardSpecifier objects
         }
 
+        // foreach (ActionData a in Actions)
+        // {
+        //     Debug.Log(a.ActionResult.Title + " Card Specifiers Count: " + a.ActionKey.SecondaryCardSpecifiersReal.Count);
+        //
+        // }
+        
         DeckType = GetDeckType();
     }
     
@@ -89,7 +98,6 @@ public class CardData
         }
     }
 }
-
 
 public class RawCardData
 {

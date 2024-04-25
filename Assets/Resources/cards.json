@@ -122,8 +122,8 @@
             {
                 "ActionKey": {
                     "ActionName": "Work",
-                    "Attribute": "DeepmineToil",
-                    "AttributeMinimum": 2,
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
                     "ID": "toil_in_the_depths",
                     "MaxRepetitions": 0,
                     "MinRepetitions": 0,
@@ -161,6 +161,40 @@
                         1
                     ],
                     "Title": "Action Hint Test"
+                }
+            },
+            {
+                "ActionKey": {
+                    "ActionName": "Dream",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "toil_in_the_depths",
+                    "MaxRepetitions": 2,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                        [
+                            "",
+                            "Currency",
+                            ""
+                        ]
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 8,
+                    "FlavorText": "First Time (0th Time)",
+                    "OutcomeText": "Outcome text...",
+                    "ReturnedCardIDs": [
+                        "dream",
+                        "toil_in_the_depths"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1
+                    ],
+                    "Title": "DreamFor4Gold"
                 }
             }
         ],

@@ -40,8 +40,8 @@ public class Card : MonoBehaviour
     public MeshRenderer RightSmoke;
     public MeshRenderer BottomSmoke;
     public Camera MainCamera;
-
     public Vector3 OriginalPosition;
+    public bool bActionFinished;
     
     void Awake()
     {
@@ -53,12 +53,14 @@ public class Card : MonoBehaviour
         DeckType = GetDeckType();
         Rigidbody RigidBody = gameObject.GetComponent<Rigidbody>();
         MainCamera = FindObjectOfType<Camera>();
+        bActionFinished = false;
+
 
     }
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && !ActionGUI.IsActionPanelOpen() && !ActionGUI.IsReturnPanelOpen())  // 0 is the left mouse button
+        if (Input.GetMouseButtonDown(0) && !ActionGUI.IsActionPanelOpen() && !ActionGUI.IsReturnPanelOpen() &&!ActionGUI.IsHintPanelOpen())  // 0 is the left mouse button
         {
             Ray ray = MainCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -67,10 +69,6 @@ public class Card : MonoBehaviour
             {
                 if (hit.transform == transform)  // Check if the hit object is this GameObject
                 {
-                    if (hit.transform.gameObject.name.Contains("Quad"))
-                    {
-                        return; 
-                    }
                     OnClicked(hit.transform.gameObject.GetComponent<Card>());
                 }
             }
@@ -230,24 +228,24 @@ public class Card : MonoBehaviour
         gameObject.transform.localScale = new Vector3(5, 5, 1);
         StartCoroutine(ScaleToSize(new Vector3(1, 1, 1), .40f));
         BoardState.Decks["Action"].SetCardPositions();
+        
         Timer.StartTimer(CurrentActionData.ActionResult.Duration);
-        Timer.OnTimerComplete += UpdateTimerText;
         Timer.OnTimerUpdate += UpdateTimerBar;
+        Timer.OnTimerComplete += ActionFinished;
 
+    }
+
+    private void ActionFinished()
+    {
+        TMP_Name.color = new Color(191/255, 1, 0);
+        Timer.timerText.text = "";
+        bActionFinished = true;
     }
 
     private void UpdateTimerBar()
     {
         PieTimer.fillAmount = 1 - (Timer.timeRemaining / Timer.duration);
 
-    }
-    
-    private void UpdateTimerText()
-    {
-        TMP_Name.color = new Color(191/255, 1, 0);
-        Timer.timerText.text = "";
-        // Timer.timerText.faceColor = new Color32(153, 255, 51, 255);
-        // Timer.timerText.text = "*";
     }
 
     public void OpenAction()

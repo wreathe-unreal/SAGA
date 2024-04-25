@@ -71,7 +71,7 @@ public class Terminal : MonoBehaviour
      public static void SetText(string newText, bool bIsStatusText)
      {
          TextInput.text = newText;
-         if (bStatusText)
+         if (bIsStatusText)
          {
              TextInput.interactable = true;
              Player.State.NullActionCard();

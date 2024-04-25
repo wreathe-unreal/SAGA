@@ -97,13 +97,17 @@ public class ActionKey
         {
             SecondaryCardSpecifiersReal.Add(new CardSpecifier(sl[0], sl[1], sl[2]));
         }
-
         SecondaryCardSpecifiers = new List<List<string>>(); //clear the string placeholders now that they are deserialized
     }
 
     public bool HasKeyMatch(string actionName, List<CardData> cardData, Player player, ActionData ad)
     {
-        if (actionName != ActionName && player.Location != this.ReqLocation)
+         if (actionName != ActionName)
+         {
+             return false;
+         }
+        
+        if (this.ReqLocation != "" && player.Location != this.ReqLocation)
         {
             return false;
         }
@@ -118,16 +122,26 @@ public class ActionKey
         {
             return false;
         }
-        
-        if ( player.GetActionRepetition(ad) < RepetitionsMinimum || player.GetActionRepetition(ad) > RepetitionsMaximum) 
+
+        Debug.Log(player.GetActionRepetition(actionName, cardData[0]) + "<" + RepetitionsMinimum + ">" +
+                  RepetitionsMaximum);
+        if ( player.GetActionRepetition(actionName, cardData[0]) < RepetitionsMinimum && player.GetActionRepetition(actionName, cardData[0]) > RepetitionsMaximum)
         {
             return false;
         }
         
-        for (int i = 1; i < SecondaryCardSpecifiersReal.Count; i++)
+        if(SecondaryCardSpecifiersReal.Count != (cardData.Count - 1))
         {
-            if (!SecondaryCardSpecifiersReal[i].MatchCard(cardData[i]))
-            {
+            return false;
+        }
+        
+        for (int i = 1; i <= SecondaryCardSpecifiersReal.Count; i++)
+        {
+            Debug.Log(SecondaryCardSpecifiersReal[i - 1].GetSpecifierText() + " vs " + new CardSpecifier(cardData[i].ID, cardData[i].Type, cardData[i].Property).GetSpecifierText());
+            Debug.Log(SecondaryCardSpecifiersReal[i-1].MatchCard(cardData[i]));
+            if (!SecondaryCardSpecifiersReal[i-1].MatchCard(cardData[i]))
+            { 
+                
                 return false;
             }
         }
@@ -137,12 +151,17 @@ public class ActionKey
     
     public bool IsKeyHint(string actionName, List<CardData> cardData, Player player, ActionData ad)
     {
+        
         if (actionName != ActionName && player.Location != this.ReqLocation)
         {
             return false;
         }
-                
-                                                   
+
+        if (SecondaryCardSpecifiers.Count <= 0)
+        {
+            return false;
+        }
+        
         if (player.AttributeMap[Attribute] < this.AttributeMinimum)
         {
             return false;
@@ -154,7 +173,7 @@ public class ActionKey
             return false;
         }
         
-        if ( player.GetActionRepetition(ad) < RepetitionsMinimum || player.GetActionRepetition(ad) > RepetitionsMaximum)
+        if ( player.GetActionRepetition(actionName, cardData[0]) < RepetitionsMinimum || player.GetActionRepetition(actionName, cardData[0]) > RepetitionsMaximum)
         {
             return false;
         }
@@ -166,6 +185,7 @@ public class ActionKey
     //constructor for making actionkeys to check for matches
     public ActionKey(string ActionName, string ID, string ReqLocation, List<CardSpecifier> SecondaryCardSpecifiers)
     {
+        
         this.ActionName = ActionName;
         this.ID = ID;
         this.ReqLocation = ReqLocation;
@@ -201,6 +221,7 @@ public class ActionResult
     {
         Player.State.AttributeMap[AttributeModified] += AttributeModifier;
         Dictionary<string, int> ReturnedCards = new Dictionary<string, int>();
+        
         for(int i =0; i < ReturnedCardIDs.Count; i++)
         {
             ReturnedCards[ReturnedCardIDs[i]] = ReturnedQuantities[i];

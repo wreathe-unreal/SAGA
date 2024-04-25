@@ -19,7 +19,12 @@ public class CardDB
         {
             
             Database.Add(new CardData(rcd));
-            CardDataLookup[rcd.ID] = new CardData(rcd);
+            
+
+            foreach (CardData cd in Database)
+            {
+                CardDataLookup[rcd.ID] = cd;
+            }
         }
         
         FindMissingCardArt();
