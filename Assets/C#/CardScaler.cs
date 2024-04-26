@@ -54,7 +54,7 @@ public class CardScaler : MonoBehaviour
             return;
         }
 
-        Vector3 targetScale = new Vector3(2.0f, 2.0f, -1f);
+        Vector3 targetScale = new Vector3(2.0f, 2.0f, 1f);
         //start scaling coroutine
         CardBeingScaled.StartScaling(targetScale, .15f);
 
