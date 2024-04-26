@@ -652,6 +652,7 @@ public class ActionGUI : MonoBehaviour
         questionMark.transform.localPosition = new Vector3(-0.1f, 2.7f, -1f);
         questionMark.transform.localRotation = Quaternion.identity;
         questionMark.transform.localScale = new Vector3(4.68f, 4.79f, 5.168f);
+        questionMark.gameObject.layer = 3;
 
         return questionMark;
     }

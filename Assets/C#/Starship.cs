@@ -98,8 +98,14 @@ public class Starship : MonoBehaviour
     {
         EComponentType ect = GetCardECT(c);
         Board.Decks["Starship"].Cards[(int)ect - 1] = c; //our ECT are 1 based but deck list is 0 based
+        UpdateFleetCard();
     }
 
+    public void UpdateFleetCard()
+    {
+            
+    }
+    
     public static EComponentType GetCardECT(Card c)
     {
         EComponentType ect = EComponentTypeLookup[CardDB.CardDataLookup[c.ID].Type];
