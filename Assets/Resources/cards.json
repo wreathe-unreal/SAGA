@@ -29,6 +29,71 @@
     },
     {
         "Actions": [
+            {
+                "ActionKey": {
+                    "ActionName": "Dream",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "gold",
+                    "MaxRepetitions": 0,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                        [
+                            "",
+                            "Currency",
+                            ""
+                        ]
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 8,
+                    "FlavorText": "Flavor text...",
+                    "OutcomeText": "Outcome text...",
+                    "ReturnedCardIDs": [
+                        "dream",
+                        "toil_in_the_depths",
+                        "gold"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1,
+                        2
+                    ],
+                    "Title": "Action Title"
+                }
+            },
+            {
+                "ActionKey": {
+                    "ActionName": "Dream",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "gold",
+                    "MaxRepetitions": 0,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 8,
+                    "FlavorText": "Flavor text...",
+                    "OutcomeText": "Outcome text...",
+                    "ReturnedCardIDs": [
+                        "dream",
+                        "gold"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        2
+                    ],
+                    "Title": "Double Action Test "
+                }
+            }
         ],
         "FlavorText": "Gleaming gold, each piece stamped with the seal of Glint—coveted, hoarded, bound in blood.",
         "Habitat": "",

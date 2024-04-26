@@ -53,10 +53,10 @@ public class CardScaler : MonoBehaviour
         {
             return;
         }
-        
+
+        Vector3 targetScale = new Vector3(2.0f, 2.0f, -1f);
         //start scaling coroutine
-        Vector3 targetScale = new Vector3(2.0f, 2.0f, 1f);
-        CardBeingScaled.StartScaling(new Vector3(2.0f, 2.0f, -1f), .15f);
+        CardBeingScaled.StartScaling(targetScale, .15f);
 
         //adjust scaling based on camera zoom level
         CardBeingScaled.transform.localScale = Vector3.Lerp(CardBeingScaled.transform.localScale, targetScale * (MainCamera.orthographicSize / 157), Time.deltaTime * 10);
@@ -69,7 +69,7 @@ public class CardScaler : MonoBehaviour
         viewportPosition = MainCamera.ViewportToWorldPoint(viewportPosition);
         viewportPosition.z = CardBeingScaled.transform.position.z;
         CardBeingScaled.transform.position = viewportPosition;
-        
+
         
         //display left or right depending on deck type
         if (LeftMouseoverDeckTypes.Contains(CardBeingScaled.GetDeckType()))

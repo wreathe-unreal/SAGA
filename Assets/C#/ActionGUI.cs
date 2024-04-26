@@ -6,6 +6,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+enum PanelState
+{
+    Inactive,
+    Action,
+    Return,
+    Hint
+}
 
 public class ActionGUI : MonoBehaviour
 {
@@ -16,7 +23,7 @@ public class ActionGUI : MonoBehaviour
     private static bool bFirstCoro;
     
     //instance
-    public static ActionGUI This; // Singleton instance
+    public static ActionGUI Instance; // Singleton instance
     public static Camera MainCamera;
     public static MeshRenderer MeshRenderer;
     public static TMP_Text FlavorText;
@@ -25,22 +32,47 @@ public class ActionGUI : MonoBehaviour
     private static TMP_Text TitleText;
     private static Transform OriginalTransform;
     private static Transform DisplayedPanel;
-    private static List<Transform> OnePanelTransforms;
-    private static List<Transform> TwoPanelTransforms;
-    private static List<Transform> ThreePanelTransforms;
-    private static List<Transform> FourPanelTransforms;
-    private static List<Transform> FivePanelTransforms;
     private static List<Transform> BeginActionButtons;
+    private static PanelState PanelState;
+
+
+    //inspector values
+    public Transform OnePanel;
+    public Transform OnePanel_OnlyCard;
+    public Transform TwoPanel;
+    public Transform TwoPanel_LeftCard;
+    public Transform TwoPanel_RightCard;
+    public Transform ThreePanel;
+    public Transform ThreePanel_LeftCard;
+    public Transform ThreePanel_MiddleCard;
+    public Transform ThreePanel_RightCard;
+    public TMP_Text ThreePanel_RightHint;
+    public Transform FourPanel;
+    public Transform FourPanel_TopCard;
+    public Transform FourPanel_LeftCard;
+    public Transform FourPanel_RightCard;
+    public Transform FourPanel_BottomCard;
+    public TMP_Text FourPanel_RightHint;
+    public TMP_Text FourPanel_BottomHint;
+    public Transform FivePanel;
+    public Transform FivePanel_TopCard;
+    public Transform FivePanel_LeftCard;
+    public Transform FivePanel_RightCard;
+    public Transform FivePanel_BottomLeftCard;
+    public Transform FivePanel_BottomRightCard;
+    public TMP_Text FivePanel_RightHint;
+    public TMP_Text FivePanel_BottomLeftHint;
+    public TMP_Text FivePanel_BottomRightHint;
 
 
     void Awake()
     {
-        if (This == null)
+        if (Instance == null)
         {
-            This = this;
+            Instance = this;
             DontDestroyOnLoad(gameObject);
         }
-        else if (This != this)
+        else if (Instance != this)
         {
             Destroy(gameObject);
             return;
@@ -49,37 +81,18 @@ public class ActionGUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        PanelState = PanelState.Inactive;
         CooldownDuration = .5f;
         bFirstCoro = true;
         MainCamera = FindObjectOfType<Camera>();;
         TextInput = FindObjectOfType<TMP_InputField>();
         _board = FindObjectOfType<Board>();
-
-        OnePanelTransforms = new List<Transform>();
-        OnePanelTransforms.Add(This.transform.FindDeepChild("1Panel/OnlyCard"));
-        TwoPanelTransforms = new List<Transform>();
-        TwoPanelTransforms.Add(This.transform.FindDeepChild("2Panel/LeftCard"));
-        TwoPanelTransforms.Add(This.transform.FindDeepChild("2Panel/RightCard"));
-        ThreePanelTransforms = new List<Transform>();
-        ThreePanelTransforms.Add(This.transform.FindDeepChild("3Panel/LeftCard"));
-        ThreePanelTransforms.Add(This.transform.FindDeepChild("3Panel/MiddleCard"));
-        ThreePanelTransforms.Add(This.transform.FindDeepChild("3Panel/RightCard"));
-        FourPanelTransforms = new List<Transform>();
-        FourPanelTransforms.Add(This.transform.FindDeepChild("4Panel/TopCard"));
-        FourPanelTransforms.Add(This.transform.FindDeepChild("4Panel/LeftCard"));
-        FourPanelTransforms.Add(This.transform.FindDeepChild("4Panel/RightCard"));
-        FourPanelTransforms.Add(This.transform.FindDeepChild("4Panel/BottomCard"));
-        FivePanelTransforms = new List<Transform>();
-        FivePanelTransforms.Add(This.transform.FindDeepChild("5Panel/TopCard"));
-        FivePanelTransforms.Add(This.transform.FindDeepChild("5Panel/LeftCard"));
-        FivePanelTransforms.Add(This.transform.FindDeepChild("5Panel/RightCard"));
-        FivePanelTransforms.Add(This.transform.FindDeepChild("5Panel/BottomLeftCard"));
-        FivePanelTransforms.Add(This.transform.FindDeepChild("5Panel/BottomRightCard"));
+        
         BeginActionButtons = new List<Transform>();
-        BeginActionButtons.Add(This.transform.FindDeepChild("2Panel/Canvas/ActionButton"));
-        BeginActionButtons.Add(This.transform.FindDeepChild("3Panel/Canvas/ActionButton"));
-        BeginActionButtons.Add(This.transform.FindDeepChild("4Panel/Canvas/ActionButton"));
-        BeginActionButtons.Add(This.transform.FindDeepChild("5Panel/Canvas/ActionButton"));
+        BeginActionButtons.Add(Instance.transform.FindDeepChild("2Panel/Canvas/ActionButton"));
+        BeginActionButtons.Add(Instance.transform.FindDeepChild("3Panel/Canvas/ActionButton"));
+        BeginActionButtons.Add(Instance.transform.FindDeepChild("4Panel/Canvas/ActionButton"));
+        BeginActionButtons.Add(Instance.transform.FindDeepChild("5Panel/Canvas/ActionButton"));
     }
     
     // Update is called once per frame
@@ -92,19 +105,27 @@ public class ActionGUI : MonoBehaviour
      
     public void xButtonClicked()
     {
-        if (IsActionPanelOpen())
+        switch (PanelState)
         {
-            CancelActionPanel();
+            case PanelState.Action:
+                CancelActionPanel();
+                break;
+            case PanelState.Return:
+                ExecuteReturnPanel();
+                break;
+            case PanelState.Hint:
+                CloseHintPanel();
+                break;
+            default:
+                StartCoroutine(HandleUserInput());
+                break;
         }
-        else
-        {
-            StartCoroutine(HandleUserInput());
-        }
+        Terminal.SetText("> Action + Data", true);
     }
     
 
     public void StartInputCoroutine()
-     {
+    {
          Ray ray = MainCamera.ScreenPointToRay(Input.mousePosition);
          RaycastHit hit;
 
@@ -133,8 +154,12 @@ public class ActionGUI : MonoBehaviour
 
          // Update the last action time immediately
          LastActionTime = Time.realtimeSinceStartup;
+
+         if (CloseAndExecutePanels()) //if we close a panel we leave
+         {
+             yield break;
+         }
          
-         CloseAndExecutePanels();
          
          TextInput.interactable = false;
          Terminal.ParseText();
@@ -187,8 +212,7 @@ public class ActionGUI : MonoBehaviour
          }
 
          if (Player.State.GetActionCard().CurrentActionHint != null)
-         {
-             print("displaying hints");
+         { 
              DisplayHintPanel();
              yield break;
          }
@@ -197,26 +221,11 @@ public class ActionGUI : MonoBehaviour
          yield break;
      }
     
-    public static void CancelActionPanel()
+    public void CancelActionPanel()
     {
         DisableAllBeginButtons();
 
-        List<Card> PanelCards = Player.State.GetInputCards();
-        
-        if (PanelCards.Count > 0)
-        {
-            foreach (Card c in PanelCards)
-            {
-                c.transform.SetParent(null);
-                c.transform.localScale = new Vector3(1, 1, 1);
-            }
-
-            foreach (Deck d in Board.Decks.Values)
-            {
-                d.SetCardPositions();
-            }
-                
-        }
+        Board.State.ResetCardPositionAndList(Player.State.InputCards);
         
         Player.State.GetActionCard().transform.SetParent(null);
         Player.State.GetActionCard().CurrentActionData = null;
@@ -229,90 +238,62 @@ public class ActionGUI : MonoBehaviour
         Terminal.SetText("> Action + Data", true);
     }
     
-    public static void ExecuteReturnPanel()
+    public void ExecuteReturnPanel()
     { 
-        if (Player.State.ReturnedCards.Count > 0)
-        {
-            foreach (Card c in Player.State.ReturnedCards)
-            {
-                c.transform.SetParent(null);
-                c.transform.localScale = new Vector3(1, 1, 1);
-            }
-
-            foreach (Deck d in Board.Decks.Values)
-            {
-                d.SetCardPositions();
-            }
-                
-        }
+        Board.State.ResetCardPositionAndList(Player.State.ReturnedCards);
         SetPanelActive(false);
-        Player.State.ReturnedCards = new List<Card>();
-
     }
 
     public static bool IsActionPanelOpen()
     {
-        return (Player.State.InputCards.Count > 0 && Player.State.GetActionCard() != null);
+        return PanelState == PanelState.Action;
 
     }
     
     public static bool IsHintPanelOpen()
     {
-        
-        // Find all SpriteRenderer components in the scene
-        SpriteRenderer[] allSprites = FindObjectsOfType<SpriteRenderer>();
-
-        foreach (SpriteRenderer spriteRenderer in allSprites)
-        {
-            // Check if the sprite is the "questionMark" sprite
-            if (spriteRenderer.sprite != null && spriteRenderer.sprite == Resources.Load<Sprite>("Images/QuestionMark"))
-            {
-                // Return true as soon as one is found
-                return true;
-            }
-        }
-        // Return false if no such sprite is found
-        return false;
-
+        return PanelState == PanelState.Hint;
     }
     
     public static bool IsReturnPanelOpen()
     {
-        return (Player.State.ReturnedCards.Count > 0);
+        return PanelState == PanelState.Return;
 
     }
     
-    public static void DisplayActionPanel()
+    public void DisplayActionPanel()
     {
+        PanelState = PanelState.Action;
+        
         SetPanelActive(true);
         
         switch (Player.State.InputCards.Count)
         {
             case 1:
-                Player.State.GetActionCard().transform.SetParent(TwoPanelTransforms[0]);
-                Player.State.InputCards[0].transform.SetParent(TwoPanelTransforms[1]);
-                This.transform.FindDeepChild("2Panel/Canvas/ActionButton").gameObject.SetActive(true);
+                Player.State.GetActionCard().transform.SetParent(TwoPanel_LeftCard);
+                Player.State.InputCards[0].transform.SetParent(TwoPanel_RightCard);
+                Instance.transform.FindDeepChild("2Panel/Canvas/ActionButton").gameObject.SetActive(true);
                 break;
             case 2:
-                Player.State.GetActionCard().transform.SetParent(ThreePanelTransforms[0]);
-                Player.State.InputCards[0].transform.SetParent(ThreePanelTransforms[1]);
-                Player.State.InputCards[1].transform.SetParent(ThreePanelTransforms[2]);
-                This.transform.FindDeepChild("3Panel/Canvas/ActionButton").gameObject.SetActive(true);
+                Player.State.GetActionCard().transform.SetParent(ThreePanel_LeftCard);
+                Player.State.InputCards[0].transform.SetParent(ThreePanel_MiddleCard);
+                Player.State.InputCards[1].transform.SetParent(ThreePanel_RightCard);
+                Instance.transform.FindDeepChild("3Panel/Canvas/ActionButton").gameObject.SetActive(true);
                 break;
             case 3:
-                Player.State.GetActionCard().transform.SetParent(FourPanelTransforms[0]);
-                Player.State.InputCards[0].transform.SetParent(FourPanelTransforms[1]);
-                Player.State.InputCards[1].transform.SetParent(FourPanelTransforms[2]);
-                Player.State.InputCards[2].transform.SetParent(FourPanelTransforms[3]);
-                This.transform.FindDeepChild("4Panel/Canvas/ActionButton").gameObject.SetActive(true);
+                Player.State.GetActionCard().transform.SetParent(FourPanel_TopCard);
+                Player.State.InputCards[0].transform.SetParent(FourPanel_LeftCard);
+                Player.State.InputCards[1].transform.SetParent(FourPanel_RightCard);
+                Player.State.InputCards[2].transform.SetParent(FourPanel_BottomCard);
+                Instance.transform.FindDeepChild("4Panel/Canvas/ActionButton").gameObject.SetActive(true);
                 break;
             case 4:
-                Player.State.GetActionCard().transform.SetParent(FivePanelTransforms[0]);
-                Player.State.InputCards[0].transform.SetParent(FivePanelTransforms[1]);
-                Player.State.InputCards[1].transform.SetParent(FivePanelTransforms[2]);
-                Player.State.InputCards[2].transform.SetParent(FivePanelTransforms[3]);
-                Player.State.InputCards[3].transform.SetParent(FivePanelTransforms[4]);
-                This.transform.FindDeepChild("5Panel/Canvas/ActionButton").gameObject.SetActive(true);
+                Player.State.GetActionCard().transform.SetParent(FivePanel_TopCard);
+                Player.State.InputCards[0].transform.SetParent(FivePanel_LeftCard);
+                Player.State.InputCards[1].transform.SetParent(FivePanel_RightCard);
+                Player.State.InputCards[2].transform.SetParent(FivePanel_BottomLeftCard);
+                Player.State.InputCards[3].transform.SetParent(FivePanel_BottomRightCard);
+                Instance.transform.FindDeepChild("5Panel/Canvas/ActionButton").gameObject.SetActive(true);
                 break;
         }
          
@@ -335,8 +316,10 @@ public class ActionGUI : MonoBehaviour
          
     }
 
-    public static void DisplayReturnPanel(Card OpenedActionCard)
+    public void DisplayReturnPanel(Card OpenedActionCard)
     {
+        PanelState = PanelState.Return;
+        
         OpenedActionCard.bActionFinished = false;
 
         if (OpenedActionCard.ID == "battle" && !Player.State.GetStarship().GetBattleResults(Player.State.GetBattleOpponent().Data.Price)) //if the action is a battle and the player loses
@@ -358,35 +341,45 @@ public class ActionGUI : MonoBehaviour
 
         List<Card> Returned = Player.State.GetReturnedCards();
 
+
+        foreach (Card c in Returned)
+        {
+            if (c.Data.Type == "EndState")
+            {
+                DisplayEndGame(c);
+            }
+                
+        }
+
         SetPanelActive(true);
 
         switch (Returned.Count)
         {
             case 1:
-                Returned[0].transform.SetParent(OnePanelTransforms[0]);
+                Returned[0].transform.SetParent(OnePanel_OnlyCard);
                 
                 break;
             case 2:
-                Returned[0].transform.SetParent(TwoPanelTransforms[0]);
-                Returned[1].transform.SetParent(TwoPanelTransforms[1]);
+                Returned[0].transform.SetParent(TwoPanel_LeftCard);
+                Returned[1].transform.SetParent(TwoPanel_RightCard);
                 break;
             case 3:
-                Returned[0].transform.SetParent(ThreePanelTransforms[0]);
-                Returned[1].transform.SetParent(ThreePanelTransforms[1]);
-                Returned[2].transform.SetParent(ThreePanelTransforms[2]);
+                Returned[0].transform.SetParent(ThreePanel_LeftCard);
+                Returned[1].transform.SetParent(ThreePanel_MiddleCard);
+                Returned[2].transform.SetParent(ThreePanel_RightCard);
                 break;
             case 4:
-                Returned[0].transform.SetParent(FourPanelTransforms[0]);
-                Returned[1].transform.SetParent(FourPanelTransforms[1]);
-                Returned[2].transform.SetParent(FourPanelTransforms[2]);
-                Returned[3].transform.SetParent(FourPanelTransforms[3]);
+                Returned[0].transform.SetParent(FourPanel_TopCard);
+                Returned[1].transform.SetParent(FourPanel_LeftCard);
+                Returned[2].transform.SetParent(FourPanel_RightCard);
+                Returned[3].transform.SetParent(FourPanel_BottomCard);
                 break;
             case 5:
-                Returned[0].transform.SetParent(FivePanelTransforms[0]);
-                Returned[1].transform.SetParent(FivePanelTransforms[1]);
-                Returned[2].transform.SetParent(FivePanelTransforms[2]);
-                Returned[3].transform.SetParent(FivePanelTransforms[3]);
-                Returned[4].transform.SetParent(FivePanelTransforms[4]);
+                Returned[0].transform.SetParent(FivePanel_TopCard);
+                Returned[1].transform.SetParent(FivePanel_LeftCard);
+                Returned[2].transform.SetParent(FivePanel_RightCard);
+                Returned[3].transform.SetParent(FivePanel_BottomLeftCard);
+                Returned[4].transform.SetParent(FivePanel_BottomRightCard);
                 break;
         }
          
@@ -402,9 +395,18 @@ public class ActionGUI : MonoBehaviour
         }
     }
 
-    public static void SetPanelActive(bool bActive)
+    private void DisplayEndGame(Card card)
     {
-        if (This == null)
+
+
+        
+        Time.timeScale = 0.0f;
+        //freeze camera movement
+    }
+
+    public void SetPanelActive(bool bActive)
+    {
+        if (Instance == null)
         {
             Debug.LogError("Panel or ActionManager instance is not initialized!");
             return;
@@ -412,6 +414,7 @@ public class ActionGUI : MonoBehaviour
 
         if (!bActive)
         {
+            PanelState = PanelState.Inactive;
             TextInput.interactable = true;
             DisplayedPanel.gameObject.SetActive(false);
             Time.timeScale = 1.0f; //return to real time when panel is closed
@@ -430,42 +433,118 @@ public class ActionGUI : MonoBehaviour
         Time.timeScale = 0.0f; //pause game time when panel is active
         TextInput.interactable = false;
     }
+    
+    public void SetPanelActive(bool bActive, int PanelSize)
+    {
+        if (Instance == null)
+        {
+            Debug.LogError("Panel or ActionManager instance is not initialized!");
+            return;
+        }
 
-    public static Transform SetDisplayedPanel()
+        if (!bActive)
+        {
+            PanelState = PanelState.Inactive;
+            TextInput.interactable = true;
+            DisplayedPanel.gameObject.SetActive(false);
+            Time.timeScale = 1.0f; //return to real time when panel is closed
+            return;
+        }
+
+        SetDisplayedPanel(PanelSize);
+
+        if (DisplayedPanel == null)
+        {
+            return;
+        }
+
+        DisplayedPanel = NormalizePanel(DisplayedPanel);
+        DisplayedPanel.gameObject.SetActive(true);
+        Time.timeScale = 0.0f; //pause game time when panel is active
+        TextInput.interactable = false;
+    }
+
+
+    public Transform SetDisplayedPanel()
     {
         int cardsToDisplay = Player.State.InputCards.Count > 0 ? Player.State.InputCards.Count + 1  : Player.State.ReturnedCards.Count;
         
         switch(cardsToDisplay)
         {
             case 1:
-                DisplayedPanel = This.gameObject.transform.Find("1Panel");
-                TitleText = This.transform.FindDeepChild("1Panel/TitleText").GetComponent<TMP_Text>();
-                FlavorText = This.transform.FindDeepChild("1Panel/FlavorText").GetComponent<TMP_Text>();
-                AudioSource = This.transform.Find("1Panel").GetComponent<AudioSource>();
+                DisplayedPanel = OnePanel;
+                TitleText = Instance.transform.FindDeepChild("1Panel/TitleText").GetComponent<TMP_Text>();
+                FlavorText = Instance.transform.FindDeepChild("1Panel/FlavorText").GetComponent<TMP_Text>();
+                AudioSource = Instance.transform.Find("1Panel").GetComponent<AudioSource>();
                 break;
             case 2:
-                DisplayedPanel = This.gameObject.transform.Find("2Panel");
-                TitleText = This.transform.FindDeepChild("2Panel/TitleText").GetComponent<TMP_Text>();
-                FlavorText = This.transform.FindDeepChild("2Panel/FlavorText").GetComponent<TMP_Text>();
-                AudioSource = This.transform.Find("2Panel").GetComponent<AudioSource>();
+                DisplayedPanel = TwoPanel;
+                TitleText = Instance.transform.FindDeepChild("2Panel/TitleText").GetComponent<TMP_Text>();
+                FlavorText = Instance.transform.FindDeepChild("2Panel/FlavorText").GetComponent<TMP_Text>();
+                AudioSource = Instance.transform.Find("2Panel").GetComponent<AudioSource>();
                 break;
             case 3:
-                DisplayedPanel = This.gameObject.transform.Find("3Panel");
-                TitleText = This.transform.FindDeepChild("3Panel/TitleText").GetComponent<TMP_Text>();
-                FlavorText = This.transform.FindDeepChild("3Panel/FlavorText").GetComponent<TMP_Text>();
-                AudioSource = This.transform.Find("3Panel").GetComponent<AudioSource>();
+                DisplayedPanel = ThreePanel;
+                TitleText = Instance.transform.FindDeepChild("3Panel/TitleText").GetComponent<TMP_Text>();
+                FlavorText = Instance.transform.FindDeepChild("3Panel/FlavorText").GetComponent<TMP_Text>();
+                AudioSource = Instance.transform.Find("3Panel").GetComponent<AudioSource>();
                 break;
             case 4:
-                DisplayedPanel = This.gameObject.transform.Find("4Panel");
-                TitleText = This.transform.FindDeepChild("4Panel/TitleText").GetComponent<TMP_Text>();
-                FlavorText = This.transform.FindDeepChild("4Panel/FlavorText").GetComponent<TMP_Text>();
-                AudioSource = This.transform.Find("4Panel").GetComponent<AudioSource>();
+                DisplayedPanel = FourPanel;
+                TitleText = Instance.transform.FindDeepChild("4Panel/TitleText").GetComponent<TMP_Text>();
+                FlavorText = Instance.transform.FindDeepChild("4Panel/FlavorText").GetComponent<TMP_Text>();
+                AudioSource = Instance.transform.Find("4Panel").GetComponent<AudioSource>();
                 break;
             case 5:
-                DisplayedPanel = This.gameObject.transform.Find("5Panel");
-                TitleText = This.transform.FindDeepChild("5Panel/TitleText").GetComponent<TMP_Text>();
-                FlavorText = This.transform.FindDeepChild("5Panel/FlavorText").GetComponent<TMP_Text>();
-                AudioSource = This.transform.Find("5Panel").GetComponent<AudioSource>();
+                DisplayedPanel = FivePanel;
+                TitleText = Instance.transform.FindDeepChild("5Panel/TitleText").GetComponent<TMP_Text>();
+                FlavorText = Instance.transform.FindDeepChild("5Panel/FlavorText").GetComponent<TMP_Text>();
+                AudioSource = Instance.transform.Find("5Panel").GetComponent<AudioSource>();
+                break;
+            default:
+                DisplayedPanel = null;
+                TitleText = null;
+                FlavorText = null;
+                AudioSource = null;
+                break;
+        }
+
+        return DisplayedPanel;
+    }
+    
+    public Transform SetDisplayedPanel(int DisplayNumber)
+    {
+        switch(DisplayNumber)
+        {
+            case 1:
+                DisplayedPanel = OnePanel;
+                TitleText = Instance.transform.FindDeepChild("1Panel/TitleText").GetComponent<TMP_Text>();
+                FlavorText = Instance.transform.FindDeepChild("1Panel/FlavorText").GetComponent<TMP_Text>();
+                AudioSource = Instance.transform.Find("1Panel").GetComponent<AudioSource>();
+                break;
+            case 2:
+                DisplayedPanel = TwoPanel;
+                TitleText = Instance.transform.FindDeepChild("2Panel/TitleText").GetComponent<TMP_Text>();
+                FlavorText = Instance.transform.FindDeepChild("2Panel/FlavorText").GetComponent<TMP_Text>();
+                AudioSource = Instance.transform.Find("2Panel").GetComponent<AudioSource>();
+                break;
+            case 3:
+                DisplayedPanel = ThreePanel;
+                TitleText = Instance.transform.FindDeepChild("3Panel/TitleText").GetComponent<TMP_Text>();
+                FlavorText = Instance.transform.FindDeepChild("3Panel/FlavorText").GetComponent<TMP_Text>();
+                AudioSource = Instance.transform.Find("3Panel").GetComponent<AudioSource>();
+                break;
+            case 4:
+                DisplayedPanel = FourPanel;
+                TitleText = Instance.transform.FindDeepChild("4Panel/TitleText").GetComponent<TMP_Text>();
+                FlavorText = Instance.transform.FindDeepChild("4Panel/FlavorText").GetComponent<TMP_Text>();
+                AudioSource = Instance.transform.Find("4Panel").GetComponent<AudioSource>();
+                break;
+            case 5:
+                DisplayedPanel = FivePanel;
+                TitleText = Instance.transform.FindDeepChild("5Panel/TitleText").GetComponent<TMP_Text>();
+                FlavorText = Instance.transform.FindDeepChild("5Panel/FlavorText").GetComponent<TMP_Text>();
+                AudioSource = Instance.transform.Find("5Panel").GetComponent<AudioSource>();
                 break;
             default:
                 DisplayedPanel = null;
@@ -498,7 +577,7 @@ public class ActionGUI : MonoBehaviour
     
     
 
-    public static void ExecuteActionPanel()
+    public void ExecuteActionPanel()
     {
         Player.State.ExecuteAction();
         SetPanelActive(false);
@@ -506,8 +585,9 @@ public class ActionGUI : MonoBehaviour
     
     
 
-    public static void CloseHintPanel()
+    public void CloseHintPanel()
     {
+        
         // Find all SpriteRenderer components in the scene
         SpriteRenderer[] allSprites = FindObjectsOfType<SpriteRenderer>();
 
@@ -521,93 +601,200 @@ public class ActionGUI : MonoBehaviour
             }
         }
         
+        
         foreach (Card c in Player.State.InputCards)
         {
-            c.transform.SetParent(null);
-            c.transform.localScale = new Vector3(1, 1, 1);
+            c.transform.localScale = new Vector3(.95f, .89f, 1f);
+            c.transform.localPosition = new Vector3(0f, 0f, 0f);
+            c.OriginalPosition = c.transform.position;
         }
+        Board.State.ResetCardPositionAndList(Player.State.InputCards);
+
+        
+        Player.State.GetActionCard().RevertPosition();
+        Player.State.GetActionCard().RevertScaling();
+        Player.State.GetActionCard().transform.SetParent(null);
+        Player.State.GetActionCard().CurrentActionData = null;
+        Player.State.GetActionCard().CurrentActionHint = null;
+        Player.State.NullActionCard();
+        
+        
+        SetPanelActive(false);
+    }
+
+    public static SpriteRenderer CreateQuestionMark(Transform targetParent)
+    {
+        // Check if the targetParent is not null
+        if (targetParent == null)
+        {
+            Debug.LogError("Target parent is null.");
+            return null;
+        }
+
+        // Create a new GameObject to hold the SpriteRenderer
+        GameObject questionMarkObject = new GameObject("QuestionMark");
+        // Add a SpriteRenderer component to the new GameObject
+        SpriteRenderer questionMark = questionMarkObject.AddComponent<SpriteRenderer>();
+
+        // Load the sprite from resources
+        Sprite questionMarkSprite = Resources.Load<Sprite>("Images/QuestionMark");
+        if (questionMarkSprite == null)
+        {
+            Debug.LogError("Failed to load QuestionMark sprite.");
+            return null; // Exit early if the sprite couldn't be loaded.
+        }
+
+        // Set the sprite to the SpriteRenderer
+        questionMark.sprite = questionMarkSprite;
+
+        // Set the parent of the GameObject
+        questionMark.transform.SetParent(targetParent, false);
+        questionMark.transform.localPosition = new Vector3(-0.1f, 2.7f, -1f);
+        questionMark.transform.localRotation = Quaternion.identity;
+        questionMark.transform.localScale = new Vector3(4.68f, 4.79f, 5.168f);
+
+        return questionMark;
+    }
+    public void DisplayHintPanel()
+    {
+
+        PanelState = PanelState.Hint;
+
+        List<Card> InputCards = Player.State.GetInputCards();
+
+        List<CardSpecifier> SecondaryCardSpecifiers = Player.State.GetActionCard().CurrentActionHint.ActionKey.SecondaryCardSpecifiersReal;
 
         foreach (Deck d in Board.Decks.Values)
         {
             d.SetCardPositions();
         }
-        Player.State.InputCards = new List<Card>(); // Clear other cards
-    }
-
-    public static SpriteRenderer CreateQuestionMark(Transform targetParent)
-    {
-        SpriteRenderer questionMark = new SpriteRenderer();
-        questionMark.sprite = Resources.Load<Sprite>("Images/QuestionMark");
-        questionMark.gameObject.transform.SetParent(targetParent);
-        questionMark.transform.localPosition = new Vector3(-0.1f, 0.94f, -1f);
-        questionMark.transform.localRotation = Quaternion.identity;
-        questionMark.transform.localScale = new Vector3(5.75f, 5.8936f, 6.3468f);
-        return questionMark;
-    }
-    
-    public static void DisplayHintPanel()
-    {
-        List<Card> InputCards = Player.State.GetInputCards();
         
-        int firstIncorrectIndex = 0;
-        List<CardSpecifier> Hints = Player.State.GetActionCard().CurrentActionHint.ActionKey.SecondaryCardSpecifiersReal;
         
-        for(int i = 0; i < Hints.Count; i++)
+        List<string> SecondaryCardHints = new List<string>();
+        
+        for (int i = 1; i <= SecondaryCardSpecifiers.Count; i++)
         {
-            if (InputCards[i + 1] != null)
+            //Debug.Log(SecondaryCardSpecifiersReal[i - 1].GetSpecifierText() + " vs " + new CardSpecifier(cardData[i].ID, cardData[i].Type, cardData[i].Property).GetSpecifierText());
+            //Debug.Log(SecondaryCardSpecifiersReal[i-1].MatchCard(cardData[i]));
+
+            if (i < InputCards.Count && SecondaryCardSpecifiers[i - 1].MatchCard(InputCards[i].Data))
             {
-                if (!Hints[i].MatchCard(InputCards[i + 1].Data))
-                {   
-                    firstIncorrectIndex = i + 1;
-                    break;
-                }
+                SecondaryCardHints.Add("correct");
+            }
+            else
+            {
+                SecondaryCardHints.Add(SecondaryCardSpecifiers[i-1].GetSpecifierText());
             }
         }
         
-        switch (Hints.Count)
+        switch (SecondaryCardSpecifiers.Count)
         {
             case 1:
-                DisplayedPanel = This.gameObject.transform.Find("3Panel");
-                Player.State.GetActionCard().transform.SetParent(ThreePanelTransforms[0]);
-                InputCards[0].transform.SetParent(ThreePanelTransforms[1]);
-                CreateQuestionMark(ThreePanelTransforms[2]);
+                DisplayedPanel = ThreePanel;
+                Player.State.GetActionCard().transform.SetParent(ThreePanel_LeftCard);
+                InputCards[0].transform.SetParent(ThreePanel_MiddleCard);
+                if (SecondaryCardHints[0] != "correct")
+                {
+                    CreateQuestionMark(ThreePanel_RightCard); ThreePanel_RightHint.gameObject.SetActive(true);
+                    ActivateSetHintText(ThreePanel_RightHint.gameObject.GetComponent<TMP_Text>(), SecondaryCardHints[0]);
+
+                }
+                else
+                {
+                    InputCards[1].transform.SetParent(ThreePanel_RightCard);
+                }
                 break;
             case 2:
-                DisplayedPanel = This.gameObject.transform.Find("4Panel");
-                Player.State.GetActionCard().transform.SetParent(FourPanelTransforms[0]);
-                InputCards[0].transform.SetParent(FourPanelTransforms[1]);
-                if(firstIncorrectIndex == 1) { InputCards[1].transform.SetParent(FourPanelTransforms[2]); } else { CreateQuestionMark(FourPanelTransforms[2]); }
-                if(firstIncorrectIndex <= 2) { InputCards[2].transform.SetParent(FourPanelTransforms[3]); } else { CreateQuestionMark(FourPanelTransforms[3]); }
+                DisplayedPanel  = FourPanel;
+                Player.State.GetActionCard().transform.SetParent(FourPanel_TopCard);
+                InputCards[0].transform.SetParent(FourPanel_LeftCard);
+                if (SecondaryCardHints[0] != "correct")
+                {
+                    CreateQuestionMark(FourPanel_RightCard); 
+                    ThreePanel_RightHint.gameObject.SetActive(true);
+                    ActivateSetHintText(FourPanel_RightHint.gameObject.GetComponent<TMP_Text>(), SecondaryCardHints[0]);
+
+                }
+                else
+                {
+                    InputCards[1].transform.SetParent(FourPanel_RightCard);
+                }
+
+                if (SecondaryCardHints[1] != "correct")
+                {
+                    CreateQuestionMark(FourPanel_BottomCard); 
+                    FourPanel_BottomHint.gameObject.SetActive(true);
+                    ActivateSetHintText(FourPanel_BottomHint.gameObject.GetComponent<TMP_Text>(), SecondaryCardHints[1]);
+                }
+                else
+                {
+                    InputCards[2].transform.SetParent(FourPanel_BottomCard);
+                }
                 
                 break;
             case 3:
-                DisplayedPanel = This.gameObject.transform.Find("5Panel");
-                Player.State.GetActionCard().transform.SetParent(FivePanelTransforms[0]);
-                InputCards[0].transform.SetParent(FivePanelTransforms[1]);
-                if(firstIncorrectIndex == 1) { InputCards[1].transform.SetParent(FivePanelTransforms[2]); } else { CreateQuestionMark(FivePanelTransforms[2]); }
-                if(firstIncorrectIndex <= 2) { InputCards[2].transform.SetParent(FivePanelTransforms[3]); } else { CreateQuestionMark(FivePanelTransforms[3]); }
-                if(firstIncorrectIndex <= 3) { InputCards[3].transform.SetParent(FivePanelTransforms[4]); } else { CreateQuestionMark(FivePanelTransforms[4]); }
+                DisplayedPanel  = FivePanel;
+                Player.State.GetActionCard().transform.SetParent(FivePanel_TopCard);
+                InputCards[0].transform.SetParent(FivePanel_LeftCard);
+                if (SecondaryCardHints[0] != "correct")
+                {
+                    CreateQuestionMark(FivePanel_RightCard); 
+                    FivePanel_RightHint.gameObject.SetActive(true); 
+                    ActivateSetHintText(FivePanel_RightHint.gameObject.GetComponent<TMP_Text>(), SecondaryCardHints[0]);
+                }
+                else
+                {
+                    InputCards[1].transform.SetParent(FivePanel_RightCard);
+                }
+
+                if (SecondaryCardHints[1] != "correct")
+                {
+                    CreateQuestionMark(FivePanel_BottomLeftCard); 
+                    FivePanel_BottomLeftHint.gameObject.SetActive(true);
+                    ActivateSetHintText(FivePanel_BottomLeftHint.gameObject.GetComponent<TMP_Text>(), SecondaryCardHints[1]);
+                }
+                else
+                {
+                    InputCards[2].transform.SetParent(FivePanel_BottomLeftCard);
+                }
+                if (SecondaryCardHints[2] != "correct")
+                {
+                    CreateQuestionMark(FivePanel_BottomRightCard);
+                    FivePanel_BottomRightHint.gameObject.SetActive(true);
+                    ActivateSetHintText(FivePanel_BottomRightHint.gameObject.GetComponent<TMP_Text>(), SecondaryCardHints[2]);
+                }
+                else
+                {
+                    InputCards[3].transform.SetParent(FivePanel_BottomRightCard);
+                }
                 break;
         }
-        
-        DisplayedPanel = NormalizePanel(DisplayedPanel);
-        DisplayedPanel.gameObject.SetActive(true); 
-        TitleText.text = Player.State.GetActionCard().CurrentActionData.ActionResult.Title;
-        FlavorText.text = Player.State.GetActionCard().CurrentActionData.ActionResult.FlavorText;
+
+        DisableAllBeginButtons();
+        SetPanelActive(true, SecondaryCardSpecifiers.Count+2);
+        TitleText.text = Player.State.GetActionCard().CurrentActionHint.ActionResult.Title;
+        FlavorText.text = Player.State.GetActionCard().CurrentActionHint.ActionResult.FlavorText;
         
         Player.State.GetActionCard().transform.localScale = new Vector3(.95f, .89f, 1f);
         Player.State.GetActionCard().transform.localPosition = new Vector3(0f, 0f, 0f);
         Player.State.GetActionCard().OriginalPosition = Player.State.GetActionCard().transform.position;
-        
+        Player.State.GetActionCard().SetFaceUpState(true);
         foreach (Card c in Player.State.InputCards)
         {
             if (c.transform.parent.name.Contains("Card"))
             {
+                c.SetFaceUpState(true);
                 c.transform.localScale = new Vector3(.95f, .89f, 1f);
                 c.transform.localPosition = new Vector3(0f, 0f, 0f);
                 c.OriginalPosition = c.transform.position;
             }
         }
+    }
+
+    private static void ActivateSetHintText(TMP_Text textObject, string newText)
+    {
+        textObject.text = newText;
+        textObject.gameObject.SetActive(true);
     }
 
     private static void DisableAllBeginButtons()
@@ -619,26 +806,34 @@ public class ActionGUI : MonoBehaviour
     }
 
 
-    private static void CloseAndExecutePanels()
+    private bool CloseAndExecutePanels()
     {
         if (IsHintPanelOpen())
         {
             CloseHintPanel();
-            return;
+            ActionGUI.DisableAllBeginButtons();
+            return true;
         }
         
         if(IsActionPanelOpen())
         {
             ExecuteActionPanel();
             ActionGUI.DisableAllBeginButtons();
-            return;
+            return true;
         }
          
         if(IsReturnPanelOpen())
         {
             ExecuteReturnPanel();
-            return;
+            return true;
 
         }
+
+        return false;
+    }
+
+    private static bool AllPanelsAreClosed()
+    {
+        return !IsHintPanelOpen() && !IsActionPanelOpen() && !IsReturnPanelOpen();
     }
 }

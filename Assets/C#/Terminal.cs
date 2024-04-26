@@ -33,7 +33,7 @@ public class Terminal : MonoBehaviour
 
          if (Input.GetKeyDown(KeyCode.Escape) && ActionGUI.IsActionPanelOpen())
          {
-             ActionGUI.CancelActionPanel();
+             ActionGUI.Instance.CancelActionPanel();
              TextInput.interactable = true;
          }
      }

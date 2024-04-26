@@ -135,6 +135,24 @@ public class Board : MonoBehaviour
             c.SetFaceUpState(true);
         }
     }
+    
+    
+
+    public void ResetCardPositionAndList(List<Card> Cards)
+    {
+        foreach (Card c in Cards)
+        {
+            c.transform.SetParent(null);
+            c.transform.localScale = new Vector3(1, 1, 1);
+        }
+
+        foreach (Deck d in Board.Decks.Values)
+        {
+            d.SetCardPositions();
+        }
+
+        Cards.Clear();
+    }
 
     
 }

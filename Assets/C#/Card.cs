@@ -96,18 +96,13 @@ public class Card : MonoBehaviour
             case "Power Supply":
             case "Portal Drive":
             case "Cargo Hold":
-            case "Thermal Weapon":
-            case "Laser Weapon":
-            case "Psychic Weapon":
-            case "Arcane Weapon":
-            case "Ramming Weapon":
+            case "Energy Weapon":
+            case "Thrusters":
             case "Kinetic Weapon":
             case "Shield Generator":
-            case "Engine Coolant":
-            case "Armor Plating":
-            case "Magical Ward":
-            case "Hull":
                 return "Starship";
+            case "Hull":
+                return "Fleet";
             default:
                 return Data.Type;
         }
@@ -192,6 +187,9 @@ public class Card : MonoBehaviour
             case "Enemy":
                 TypeColor = new Color(255/255f, 0, 0);
                 break;
+            case "EndState":
+                TypeColor = new Color(1f, 1f, 1f);     
+                break;
             default:
                 TypeColor = new Color(255 / 255f, 255 / 255f, 255 / 255f);
                 break;
@@ -250,9 +248,11 @@ public class Card : MonoBehaviour
 
     public void OpenAction()
     {
+        print("before");
         if (IsTimerFinished() && CurrentActionData.ActionResult != null)
         {
-            ActionGUI.DisplayReturnPanel(this);
+            ActionGUI.Instance.DisplayReturnPanel(this);
+            print("after display");
             Timer.timerText.faceColor = new Color32(255, 255, 255, 255);
             TMP_Name.color = TypeColor;
             PieTimer.fillAmount = 0;
@@ -260,6 +260,7 @@ public class Card : MonoBehaviour
             Player.State.NullActionCard();
             //handle quantity xd
         }
+        print("after");
     }
 
 

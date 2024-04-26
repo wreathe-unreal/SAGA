@@ -135,8 +135,8 @@ public class ActionKey
         
         for (int i = 1; i <= SecondaryCardSpecifiersReal.Count; i++)
         {
-            Debug.Log(SecondaryCardSpecifiersReal[i - 1].GetSpecifierText() + " vs " + new CardSpecifier(cardData[i].ID, cardData[i].Type, cardData[i].Property).GetSpecifierText());
-            Debug.Log(SecondaryCardSpecifiersReal[i-1].MatchCard(cardData[i]));
+            //Debug.Log(SecondaryCardSpecifiersReal[i - 1].GetSpecifierText() + " vs " + new CardSpecifier(cardData[i].ID, cardData[i].Type, cardData[i].Property).GetSpecifierText());
+            //Debug.Log(SecondaryCardSpecifiersReal[i-1].MatchCard(cardData[i]));
             if (!SecondaryCardSpecifiersReal[i-1].MatchCard(cardData[i]))
             { 
                 
@@ -149,13 +149,12 @@ public class ActionKey
     
     public bool IsKeyHint(string actionName, List<CardData> cardData, Player player, ActionData ad)
     {
-        
-        if (actionName != ActionName && player.Location != this.ReqLocation)
+        if (actionName != ActionName)
         {
             return false;
         }
-
-        if (SecondaryCardSpecifiers.Count <= 0)
+        
+        if (this.ReqLocation != "" && player.Location != this.ReqLocation)
         {
             return false;
         }
@@ -165,13 +164,17 @@ public class ActionKey
             return false;
         }
 
-
         if (cardData[0].ID != ID)
         {
             return false;
         }
+
+        if ( player.GetActionRepetition(actionName, cardData[0]) < RepetitionsMinimum && player.GetActionRepetition(actionName, cardData[0]) > RepetitionsMaximum)
+        {
+            return false;
+        }
         
-        if ( player.GetActionRepetition(actionName, cardData[0]) < RepetitionsMinimum || player.GetActionRepetition(actionName, cardData[0]) > RepetitionsMaximum)
+        if(SecondaryCardSpecifiersReal.Count == 0 || SecondaryCardSpecifiersReal.Count <= cardData.Count - 1)
         {
             return false;
         }
