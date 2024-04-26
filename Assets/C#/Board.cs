@@ -6,16 +6,16 @@ using UnityEngine;
 using UnityEngine.UI;  // Needed for UI elements like Panels
 
 
-public class BoardState : MonoBehaviour
+public class Board : MonoBehaviour
 {
-    static public BoardState Instance;
+    static public Board State;
     static public CardDB Database;
     static public Dictionary<string, Deck> Decks;
     public Card CardToAdd;
 
-    public static BoardState GetInstance()
+    public static Board GetInstance()
     {
-        return Instance;
+        return State;
     }
 
     public static void DestroyCard(Card CardToDestroy)
@@ -48,7 +48,7 @@ public class BoardState : MonoBehaviour
     void Start()
     {
         Physics.queriesHitTriggers = true;
-        Instance = gameObject.GetComponent<BoardState>();
+        State = gameObject.GetComponent<Board>();
         Database = new CardDB();
         InitializeDecks();
         AddStartingCards();

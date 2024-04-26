@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Attribute
@@ -44,25 +45,61 @@ public class Player : MonoBehaviour
 
     }
     
+    public ActionData FindAction(string[] words)
+    {
+        SetInputCards(words);
+
+        if (InputCards.Count <= 0 || words.Length <= 1)
+        {
+            return null;
+        }
+         
+        List<CardSpecifier> cardSpecifiers = new List<CardSpecifier>();
+        for (int i = 1; i < InputCards.Count; i++)
+        {
+            CardData cd = CardDB.CardDataLookup[InputCards[i].ID];
+            CardSpecifier cs = new CardSpecifier(cd.ID, cd.Type, cd.Property);
+            cardSpecifiers.Add(cs);
+        }
+             
+        ActionKey actionKeyToFind = new ActionKey(ActionCard.Name, InputCards[0].ID, Location, cardSpecifiers);
+             
+        CardData mainCardData = CardDB.CardDataLookup[InputCards[0].ID];
+
+        List<CardData> cdList = new List<CardData>();
+        foreach (Card c in InputCards)
+        {
+            cdList.Add(CardDB.CardDataLookup[c.ID]);
+        }
+
+        List<ActionData> MatchHint = mainCardData.FindActionData(ActionCard.Name, cdList);
+
+        if (MatchHint[0] != null)
+        {
+            GetActionCard().CurrentActionData = MatchHint[0];
+            return MatchHint[0];
+        }
+         
+        if(MatchHint[1] != null)
+        {
+            GetActionCard().CurrentActionHint = MatchHint[1];
+            return MatchHint[1];
+        }
+
+        return null;
+    }
         
     public void ExecuteAction()
     {
-        
-
-        print("Action Card Is Null?" + (Player.State.GetActionCard() == null).ToString());
-        
         print(ActionCard.Name);
-        AttributeMap[ActionCard.CurrentActionData.ActionResult.AttributeModified] += ActionCard.CurrentActionData.ActionResult.AttributeModifier;
-        
         print(ActionCard.CurrentActionData.ActionResult.Title);
+        AttributeMap[ActionCard.CurrentActionData.ActionResult.AttributeModified] += ActionCard.CurrentActionData.ActionResult.AttributeModifier;
         
         IncrementActionRepetition(ActionCard.Name, InputCards[0].Data);
 
         ActionCard.CookActionResult();
         ActionCard.transform.SetParent(null);
         NullActionCard();
-
-        ActionGUI.SetPanelActive(false);
 
         List<Card> cardsToRemove = new List<Card>();
         
@@ -73,7 +110,7 @@ public class Player : MonoBehaviour
 
         foreach (Card c in cardsToRemove)
         {
-            BoardState.DestroyCard(c);
+            Board.DestroyCard(c);
             InputCards.Remove(c);
         }
         
@@ -81,6 +118,61 @@ public class Player : MonoBehaviour
     
     }
 
+    public void SetInputCards(string[] words)
+    {
+        InputCards = new List<Card>();
+
+        if (ActionCard == null || words.Length < 2)
+        {
+            return;
+        }
+        
+        // Check all other words
+        for (int i = 1; i < words.Length; i++)
+        {
+            string currentWord = words[i];
+            bool matchFound = false;
+
+            foreach (KeyValuePair<string, Deck> kvp in Board.Decks)
+            {
+                // Skip the Action deck for these checks
+                if (kvp.Key == "Action")
+                {
+                    continue;
+                }
+                    
+                Card card = kvp.Value.Cards.FirstOrDefault(c => c.Name.ToLower() == currentWord);
+                    
+                if (card != null)
+                {
+                    matchFound = true;
+                    InputCards.Add(card);
+                    break;
+                }
+            }
+
+            if (!matchFound)
+            {
+                InputCards = new List<Card>();
+                break;
+            }
+        }
+    }
+
+    public List<Card> GetInputCards()
+    {
+        return InputCards;
+    }
+
+    public List<Card> GetReturnedCards()
+    {
+        return ReturnedCards;
+    }
+
+    public List<int> GetReturnedQtys()
+    {
+        return ReturnedQuantities;
+    }
     
 
     public int GetActionRepetition(string ActionName, CardData FirstCard)

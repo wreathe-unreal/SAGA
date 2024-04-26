@@ -123,8 +123,6 @@ public class ActionKey
             return false;
         }
 
-        Debug.Log(player.GetActionRepetition(actionName, cardData[0]) + "<" + RepetitionsMinimum + ">" +
-                  RepetitionsMaximum);
         if ( player.GetActionRepetition(actionName, cardData[0]) < RepetitionsMinimum && player.GetActionRepetition(actionName, cardData[0]) > RepetitionsMaximum)
         {
             return false;

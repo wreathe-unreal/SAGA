@@ -31,6 +31,7 @@ public class CameraController : MonoBehaviour
     public float PitchAngle = 7f; 
     public float PitchReturnSpeed = 10f;
     public float ZoomMovementSpeed = 40f;
+    public float SkyBoxRotationSpeed = -.4f;
 
     private Camera cam;
     private Vector3 newPosition;
@@ -59,6 +60,8 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
+        RenderSettings.skybox.SetFloat("_Rotation", Time.time * SkyBoxRotationSpeed);
+        
         if(cam.orthographic == false)
         {
             AnimTimer += Time.deltaTime * AnimSpeed; 

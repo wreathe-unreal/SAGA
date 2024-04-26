@@ -97,7 +97,7 @@ public class Starship : MonoBehaviour
     public void ReplaceCard(Card c)
     {
         EComponentType ect = GetCardECT(c);
-        BoardState.Decks["Starship"].Cards[(int)ect - 1] = c; //our ECT are 1 based but deck list is 0 based
+        Board.Decks["Starship"].Cards[(int)ect - 1] = c; //our ECT are 1 based but deck list is 0 based
     }
 
     public static EComponentType GetCardECT(Card c)
