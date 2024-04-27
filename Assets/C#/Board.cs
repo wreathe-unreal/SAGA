@@ -11,7 +11,8 @@ public class Board : MonoBehaviour
 {
     private Starship Starship;
     static public Board State;
-    public TMP_Text HealthText;
+    public TMP_Text CurrentHealthText;
+    public TMP_Text MaxHealthText;
     public Image HealthBar;
     static public CardDB Database;
     static public Dictionary<string, Deck> Decks;
@@ -64,7 +65,15 @@ public class Board : MonoBehaviour
     void Update()
     {
         HealthBar.fillAmount = GetStarship().CurrentHealth / GetStarship().GetMaxHealth();
-        HealthText.text = $"{GetStarship().CurrentHealth} / {GetStarship().GetMaxHealth()}";
+        if (GetStarship().CurrentHealth != GetStarship().GetMaxHealth())
+        {
+            CurrentHealthText.text = $"{GetStarship().CurrentHealth}";
+        }
+        else
+        {
+            CurrentHealthText.text = "";
+        }
+        MaxHealthText.text = $"{GetStarship().GetMaxHealth()}";
         GetStarship().UpdateFleetCard();
 
         if (Board.Decks["Fleet"].Cards.Count > 0 && ActionGUI.AllPanelsAreClosed()) 
@@ -227,10 +236,6 @@ public class Deck : IEnumerable<Card>
             foreach (Transform child in groupTransform)
             {
                 positions.Add(child.position);
-                if (groupName == "Fleet")
-                {
-                    Debug.Log(child.transform.name);
-                }
             }
         }
         return positions;

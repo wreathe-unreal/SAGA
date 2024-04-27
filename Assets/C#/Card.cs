@@ -77,6 +77,7 @@ public class Card : MonoBehaviour
 
     private void OnClicked(Card c)
     {
+        Sound.Manager.PlayClickCard();
         if (c.Timer.timeRemaining <= 0 && (c.CurrentActionData != null || c.CurrentActionHint != null))
         {
             Player.State.SetActionCard(c);
@@ -225,6 +226,7 @@ public class Card : MonoBehaviour
         gameObject.transform.SetParent(null);
         gameObject.transform.localScale = new Vector3(5, 5, 1);
         StartCoroutine(ScaleToSize(new Vector3(1, 1, 1), .40f));
+        
         Board.Decks["Action"].SetCardPositions();
         
         Timer.StartTimer(CurrentActionData.ActionResult.Duration);
@@ -248,11 +250,9 @@ public class Card : MonoBehaviour
 
     public void OpenAction()
     {
-        print("before");
         if (IsTimerFinished() && CurrentActionData.ActionResult != null)
         {
             ActionGUI.Instance.DisplayReturnPanel(this);
-            print("after display");
             Timer.timerText.faceColor = new Color32(255, 255, 255, 255);
             TMP_Name.color = TypeColor;
             PieTimer.fillAmount = 0;
@@ -260,7 +260,6 @@ public class Card : MonoBehaviour
             Player.State.NullActionCard();
             //handle quantity xd
         }
-        print("after");
     }
 
 

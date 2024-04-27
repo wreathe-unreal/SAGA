@@ -51,6 +51,7 @@ public class Timer : MonoBehaviour
             timerActive = false; // Stop the timer
             if (OnTimerComplete != null)
             {
+                Sound.Manager.PlaySwordRingReadyTicking();
                 OnTimerComplete.Invoke(); // Invoke the complete event
             }
         }

@@ -112,6 +112,7 @@ public class ActionGUI : MonoBehaviour
                 break;
             case PanelState.Return:
                 ExecuteReturnPanel();
+                
                 break;
             case PanelState.Hint:
                 CloseHintPanel();
@@ -169,6 +170,7 @@ public class ActionGUI : MonoBehaviour
          if (Terminal.ParsedText.Length > 5)
          {
              Terminal.SetText("TOO MANY CARDS.", true);
+             Sound.Manager.PlayError();
              yield break;
          }
 
@@ -182,6 +184,7 @@ public class ActionGUI : MonoBehaviour
          if (Player.State.GetActionCard() == null)
          {
              Terminal.SetText("NO ACTION FOUND.", true);
+             Sound.Manager.PlayError();
              yield break;
          }
 
@@ -197,6 +200,7 @@ public class ActionGUI : MonoBehaviour
          if (Player.State.GetActionCard().CurrentActionData != null)
          {
              Terminal.SetText("ACTION NOT READY.", true);
+             Sound.Manager.PlayError();
              yield break;
          }
          
@@ -208,6 +212,7 @@ public class ActionGUI : MonoBehaviour
          if (Player.State.GetActionCard().CurrentActionData != null)
          {
              DisplayActionPanel();
+             Sound.Manager.PlayPlaceCards();
              yield break;
          }
 
@@ -218,6 +223,7 @@ public class ActionGUI : MonoBehaviour
          }
 
          Terminal.SetText("IMPOSSIBLE.", true);
+         Sound.Manager.PlayError();
          yield break;
      }
     
@@ -225,6 +231,27 @@ public class ActionGUI : MonoBehaviour
     {
         DisableAllBeginButtons();
 
+        Sound.Manager.PlayError();
+        
+        switch (Player.State.InputCards.Count)
+        {
+            case 0:
+                Sound.Manager.Play1Flip();
+                break;
+            case 1:
+                Sound.Manager.Play2Flip();
+                break;
+            case 2:
+                Sound.Manager.Play3Flip();
+                break;
+            case 3:
+                Sound.Manager.Play4Flip();
+                break;
+            case 4:
+                Sound.Manager.Play4Flip();
+                break;
+        }
+        
         Board.State.ResetCardPositionAndList(Player.State.InputCards);
         
         Player.State.GetActionCard().transform.SetParent(null);
@@ -240,6 +267,7 @@ public class ActionGUI : MonoBehaviour
     
     public void ExecuteReturnPanel()
     { 
+        Sound.Manager.PlayPlaceCards();
         Board.State.ResetCardPositionAndList(Player.State.ReturnedCards);
         SetPanelActive(false);
     }
@@ -263,6 +291,9 @@ public class ActionGUI : MonoBehaviour
     
     public void DisplayActionPanel()
     {
+        Sound.Manager.PlayTransmissionSent();
+        Sound.Manager.Play1Flip();
+        
         PanelState = PanelState.Action;
         
         SetPanelActive(true);
@@ -581,12 +612,29 @@ public class ActionGUI : MonoBehaviour
     {
         Player.State.ExecuteAction();
         SetPanelActive(false);
+        Sound.Manager.PlayWhoosh();
     }
     
     
 
     public void CloseHintPanel()
     {
+        
+        switch (Player.State.InputCards.Count)
+        {
+            case 0:
+                Sound.Manager.Play1Flip();
+                break;
+            case 1:
+                Sound.Manager.Play2Flip();
+                break;
+            case 2:
+                Sound.Manager.Play3Flip();
+                break;
+            case 3:
+                Sound.Manager.Play4Flip();
+                break;
+        }
         
         // Find all SpriteRenderer components in the scene
         SpriteRenderer[] allSprites = FindObjectsOfType<SpriteRenderer>();
@@ -658,6 +706,9 @@ public class ActionGUI : MonoBehaviour
     }
     public void DisplayHintPanel()
     {
+        
+        Sound.Manager.PlayError();
+        Sound.Manager.PlayPlaceCards();
 
         PanelState = PanelState.Hint;
 
@@ -773,8 +824,8 @@ public class ActionGUI : MonoBehaviour
 
         DisableAllBeginButtons();
         SetPanelActive(true, SecondaryCardSpecifiers.Count+2);
-        TitleText.text = Player.State.GetActionCard().CurrentActionHint.ActionResult.Title;
-        FlavorText.text = Player.State.GetActionCard().CurrentActionHint.ActionResult.FlavorText;
+        TitleText.text = "";
+        FlavorText.text = "";
         
         Player.State.GetActionCard().transform.localScale = new Vector3(.95f, .89f, 1f);
         Player.State.GetActionCard().transform.localPosition = new Vector3(0f, 0f, 0f);

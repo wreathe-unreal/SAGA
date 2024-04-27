@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -55,31 +56,9 @@ public class CardScaler : MonoBehaviour
         float zComponent = CardBeingScaled.transform.localPosition.z - 1f;
         CardBeingScaled.transform.localPosition += Vector3.back * zComponent;
     }
-    
+
     void MouseOver()
     {
-         
-        //find a normalized position of the mouse in regards to the screen and exit early if it's near the very edges
-        Vector3 mousePosition = MainCamera.ScreenToViewportPoint(Input.mousePosition);
-        if ((mousePosition.x < .05f && mousePosition.x > 95f) || (mousePosition.y > .10f && mousePosition.y > .90f))
-        {
-            return;
-        }
-
-        Vector3 targetScale = new Vector3(2.5f, 2.5f, 1f);
-
-        //adjust scaling based on camera zoom level
-        CardBeingScaled.transform.localScale = Vector3.Lerp(CardBeingScaled.transform.localScale, targetScale * (MainCamera.orthographicSize / 157), Time.deltaTime * 10);
-
-        
-        // Clamp to screen edges
-        Vector3 viewportPosition = MainCamera.WorldToViewportPoint(CardBeingScaled.transform.position);
-        viewportPosition.x = Mathf.Clamp(viewportPosition.x, 0.05f, 0.95f); // Adjust these values based on your needs
-        viewportPosition.y = Mathf.Clamp(viewportPosition.y, 0.10f, 0.90f);
-        viewportPosition = MainCamera.ViewportToWorldPoint(viewportPosition);
-        viewportPosition.z = CardBeingScaled.transform.position.z;
-        CardBeingScaled.transform.position = viewportPosition;
-        
         //display left or right depending on deck type
         if (LeftMouseoverDeckTypes.Contains(CardBeingScaled.GetDeckType()))
         {
@@ -107,12 +86,42 @@ public class CardScaler : MonoBehaviour
         }
 
         CardBeingScaled.BottomSmoke.gameObject.SetActive(true);
-        
+
         cardPropertyTypeText = cardPropertyTypeText.ToLower();
         CardBeingScaled.TMP_MouseOverProperty.text = cardPropertyTypeText;
         CardBeingScaled.TMP_MouseOverProperty.color = CardBeingScaled.TypeColor;
+
+
+        if (!ActionGUI.AllPanelsAreClosed())
+        {
+            return;
+        }
+
+        //find a normalized position of the mouse in regards to the screen and exit early if it's near the very edges
+        Vector3 mousePosition = MainCamera.ScreenToViewportPoint(Input.mousePosition);
+        if ((mousePosition.x < .05f && mousePosition.x > 95f) || (mousePosition.y < .15f && mousePosition.y > .85f))
+        {
+            return;
+        }
+
+        Vector3 targetScale = new Vector3(2.5f, 2.5f, 1f);
+
+        //adjust scaling based on camera zoom level
+        CardBeingScaled.transform.localScale = Vector3.Lerp(CardBeingScaled.transform.localScale,
+            targetScale * (MainCamera.orthographicSize / 157), Time.deltaTime * 10);
+
+
+        // Clamp to screen edges
+        Vector3 viewportPosition = MainCamera.WorldToViewportPoint(CardBeingScaled.transform.position);
+        viewportPosition.x = Mathf.Clamp(viewportPosition.x, 0.05f, 0.95f); // Adjust these values based on your needs
+        viewportPosition.y = Mathf.Clamp(viewportPosition.y, 0.15f, 0.85f);
+        viewportPosition = MainCamera.ViewportToWorldPoint(viewportPosition);
+        viewportPosition.z = CardBeingScaled.transform.position.z;
+        CardBeingScaled.transform.position = viewportPosition;
+
+
     }
-    
+
     void MouseExit()
     {
         CardBeingScaled.LeftSmoke.gameObject.SetActive(false);
