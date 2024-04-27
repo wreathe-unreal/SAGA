@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;  // Needed for UI elements like Panels
@@ -8,7 +9,10 @@ using UnityEngine.UI;  // Needed for UI elements like Panels
 
 public class Board : MonoBehaviour
 {
+    private Starship Starship;
     static public Board State;
+    public TMP_Text HealthText;
+    public Image HealthBar;
     static public CardDB Database;
     static public Dictionary<string, Deck> Decks;
     public Card CardToAdd;
@@ -49,6 +53,7 @@ public class Board : MonoBehaviour
     {
         Physics.queriesHitTriggers = true;
         State = gameObject.GetComponent<Board>();
+        Starship = gameObject.GetComponent<Starship>();
         Database = new CardDB();
         InitializeDecks();
         AddStartingCards();
@@ -58,6 +63,15 @@ public class Board : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        HealthBar.fillAmount = GetStarship().CurrentHealth / GetStarship().GetMaxHealth();
+        HealthText.text = $"{GetStarship().CurrentHealth} / {GetStarship().GetMaxHealth()}";
+        GetStarship().UpdateFleetCard();
+
+        if (Board.Decks["Fleet"].Cards.Count > 0 && ActionGUI.AllPanelsAreClosed()) 
+        {
+            Board.Decks["Fleet"].Cards[0].SetFaceUpState(true);
+        }
+
         
     }
 
@@ -67,6 +81,23 @@ public class Board : MonoBehaviour
         string deckType = cd.DeckType;
         Card foundCard = null;
 
+        //handle starship comopnents
+        if (deckType == "Starship")
+        {
+            Card newCard = Instantiate<Card>(CardToAdd);
+            newCard.Initialize(cardID);
+            GetStarship().AutoEquip(newCard);
+            // if ()
+            // {
+            //     Decks["Starship"].SetCardPositions();
+            // }
+            // else
+            // {
+            //     Decks["Objects"].SetCardPositions();
+            // }
+            return newCard;
+        }
+        
         bool bExistsInDeckAlready = false;
 
         foreach (Card c in Decks[deckType].Cards)
@@ -81,7 +112,6 @@ public class Board : MonoBehaviour
                 foundCard = c;
             }
         }
-
 
         if (!bExistsInDeckAlready)
         {
@@ -123,6 +153,11 @@ public class Board : MonoBehaviour
         Decks["Currency"] = new Deck("Currency");
         Decks["Quest"] = new Deck("Quest");
         Decks["Enemy"] = new Deck("Enemy");
+
+        for (int i = 0; i < 8; i++)
+        {
+            Decks["Starship"].Cards.Add(null);
+        }
     }
 
     private void AddStartingCards()
@@ -155,6 +190,11 @@ public class Board : MonoBehaviour
     }
 
     
+
+    public Starship GetStarship()
+    {
+        return Starship;
+    }
 }
 
 public class Deck : IEnumerable<Card>
@@ -187,6 +227,10 @@ public class Deck : IEnumerable<Card>
             foreach (Transform child in groupTransform)
             {
                 positions.Add(child.position);
+                if (groupName == "Fleet")
+                {
+                    Debug.Log(child.transform.name);
+                }
             }
         }
         return positions;
@@ -196,9 +240,9 @@ public class Deck : IEnumerable<Card>
     {
         for (int i = 0; i < Positions.Count; i++)
         {
-            if (i < Cards.Count && Cards[i].Position != Positions[i])
+            if (i < Cards.Count && Cards[i] != null && Cards[i].Position != Positions[i])
             {
-                // Assign position to card
+                    // Assign position to card
                 Cards[i].SetPosition(Positions[i]);
             }
         }
@@ -207,7 +251,7 @@ public class Deck : IEnumerable<Card>
     // Implementation of IEnumerable<Card>
     public IEnumerator<Card> GetEnumerator()
     {
-        return Cards.GetEnumerator();
+        return Cards.Where(card => card != null).GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()

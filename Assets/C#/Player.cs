@@ -15,8 +15,6 @@ public class Attribute
 
 public class Player : MonoBehaviour
 {
-    
-    
     //for action return only
     public List<Card> ReturnedCards;
     public List<int> ReturnedQuantities;
@@ -28,7 +26,6 @@ public class Player : MonoBehaviour
 
     private static Card BattleOpponent;
     
-    private Starship Starship;
     public string Location;
     public Dictionary<string, float> AttributeMap = new Dictionary<string, float>();
     private Dictionary<string, int> ActionRepetitionsMap;
@@ -42,7 +39,6 @@ public class Player : MonoBehaviour
         InputCards = new List<Card>();
         ReturnedCards = new List<Card>();
         ReturnedQuantities = new List<int>();
-
     }
     
     public ActionData FindAction(string[] words)
@@ -141,7 +137,8 @@ public class Player : MonoBehaviour
                     continue;
                 }
                     
-                Card card = kvp.Value.Cards.FirstOrDefault(c => c.Name.ToLower() == currentWord);
+                Card card = kvp.Value.Cards
+                    .Where(c => c != null && c.Name.ToLower() == currentWord).FirstOrDefault();
                     
                 if (card != null)
                 {
@@ -292,10 +289,5 @@ public class Player : MonoBehaviour
     public void SetBattleOpponent(Card NewBattleOpponent)
     {
         BattleOpponent = NewBattleOpponent;
-    }
-
-    public Starship GetStarship()
-    {
-        return Starship;
     }
 }

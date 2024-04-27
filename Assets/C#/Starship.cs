@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
@@ -44,8 +45,18 @@ public class StarshipComponent
 
 public class Starship : MonoBehaviour
 {
+    
+    // Start is called before the first frame update
+    void Start()
+    {
+        CurrentHealth = GetMaxHealth();
+    }
 
-    public int MaxHealth;
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
     public int CurrentHealth;
     
     public Dictionary<EComponentType, StarshipComponent> Components = new Dictionary<EComponentType, StarshipComponent>
@@ -71,39 +82,47 @@ public class Starship : MonoBehaviour
         {"Thrusters", EComponentType.Thrusters}
     };
 
-    public bool TryAutoEquip(Card c)
+    public bool AutoEquip(Card c)
     {
-        EComponentType ect = EComponentTypeLookup[CardDB.CardDataLookup[c.ID].Type];
-        
-        if (Components[ect] == null)
+        EComponentType ect = EComponentTypeLookup[c.Data.Type];
+
+        if (Components[ect] == null ||Components[ect].Power < StarshipComponentDB[c.ID].Power)
         {
-            ReplacePart(c);
-            Components[ect] = StarshipComponentDB[c.ID];
-            UpdateMaxHealth();
+            Board.Decks["Starship"].Cards.Insert((int)ect - 1, c); //our ECT are 1 based but deck list is 0 based
+            Components[ect] = StarshipComponentDB[c.Name];
+            ModifyCurrentHealth(((int)Components[ect].Power * 110));
             return true;
         }
-        return false;
+        else
+        {
+            Board.Decks["Object"].Cards[(int)ect - 1] = c; //our ECT are 1 based but deck list is 0 based
+            return false;
+        }
     }
     
-    public void ReplacePart(Card c)
-    {
-        ReplaceCard(c);
-        EComponentType ect = GetCardECT(c);
-        Components[ect] = StarshipComponentDB[c.ID];
-        ModifyCurrentHealth((int)Components[ect].Power);
-        UpdateMaxHealth();
-    }
-
-    public void ReplaceCard(Card c)
-    {
-        EComponentType ect = GetCardECT(c);
-        Board.Decks["Starship"].Cards[(int)ect - 1] = c; //our ECT are 1 based but deck list is 0 based
-        UpdateFleetCard();
-    }
-
     public void UpdateFleetCard()
     {
+        //if we have the 4 core ship components
+        if (Components[EComponentType.PowerSupply] != null && Components[EComponentType.Engine] != null &&
+            Components[EComponentType.Thrusters] != null && Components[EComponentType.PortalDrive] != null)
+        {
+            if (Board.Decks["Fleet"].Cards.Count != 0 && GetShipClass() == Board.Decks["Fleet"].Cards[0].ID)
+            {
+                return;
+            }
+
+            if (Board.Decks["Fleet"].Cards.Count != 0)
+            {
+                Board.DestroyCard(Board.Decks["Fleet"].Cards[0]);
+                return;
+            }
             
+            Board.Decks["Fleet"].Cards = Board.Decks["Fleet"].Cards.Prepend(Board.State.AddCard(GetShipClass(), 1, true)).ToList();
+        }
+        else
+        {
+            return;
+        }
     }
     
     public static EComponentType GetCardECT(Card c)
@@ -112,9 +131,9 @@ public class Starship : MonoBehaviour
         return ect;
     }
     
-    public void UpdateMaxHealth()
+    public int GetMaxHealth()
     {
-        MaxHealth = 110 * (int) GetShipPower();
+        return (int) (110 * (1 + GetShipPower()));
     }
 
     public int ModifyCurrentHealth(int modifier)
@@ -123,7 +142,7 @@ public class Starship : MonoBehaviour
         CurrentHealth += modifier;
 
         // Clamp CurrentHealth between 0 and MaxHealth
-        CurrentHealth = Math.Max(0, Math.Min(CurrentHealth, MaxHealth));
+        CurrentHealth = Math.Max(0, Math.Min(CurrentHealth, (int)GetMaxHealth()));
 
         // Return the modified and clamped CurrentHealth
         return CurrentHealth;
@@ -132,31 +151,16 @@ public class Starship : MonoBehaviour
     public float GetShipPower()
     {
         float powerSum = 0f;
-        int greatest = 0;
-        int least = Int32.MaxValue;
         
         foreach (StarshipComponent ssc in Components.Values)
         {
-            powerSum += (int)ssc.Power;
-
-            if (greatest < (int)ssc.Power)
+            if (ssc != null)
             {
-                greatest = (int)ssc.Power;
-            }
-            if (least > (int)ssc.Power)
-            {
-                least = (int)ssc.Power;
+                powerSum += (int)ssc.Power;
             }
         }
 
-        //ignore the greatest and least values
-        //multiply by 4/3 to get back to a 8 spaceship component basis average
-        powerSum -= greatest;
-        powerSum -= least;
-        powerSum *= 4f / 3f;
-
         return powerSum;
-
     }
 
     public string GetShipClass()
@@ -165,7 +169,7 @@ public class Starship : MonoBehaviour
         
         return power switch
         { 
-            < 4  => "shuttle",
+            <= 4  => "shuttle",
             < 6  => "lantern",
             < 8  => "cutter",
             < 10 => "lancer",
@@ -307,17 +311,6 @@ public class Starship : MonoBehaviour
         return (int)GetShipPower() * 2;
     }
     
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 }
 
 

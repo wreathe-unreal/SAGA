@@ -55,7 +55,8 @@
         "Transposition",
         "Uncommon",
         "Vampiric",
-        "Wealthy"
+        "Wealthy",
+        "Shuttle"
     ],
     "EType": 
     [
@@ -68,6 +69,7 @@
         "Portal Drive",
         "Cargo Hold",
         "Energy Weapon",
+        "Thrusters",
         "Kinetic Weapon",
         "Shield Generator",
         "Quest",

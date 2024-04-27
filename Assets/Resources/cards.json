@@ -234,7 +234,7 @@
                     "Attribute": "",
                     "AttributeMinimum": 0,
                     "ID": "toil_in_the_depths",
-                    "MaxRepetitions": 2,
+                    "MaxRepetitions": 0,
                     "MinRepetitions": 0,
                     "ReqLocation": "",
                     "SecondaryCardSpecifiers": [
@@ -253,9 +253,15 @@
                     "OutcomeText": "Outcome text...",
                     "ReturnedCardIDs": [
                         "dream",
-                        "toil_in_the_depths"
+                        "jolt_battery",
+                        "spark_jump",
+                        "junked_materia_engine",
+                        "sputterjets"
                     ],
                     "ReturnedQuantities": [
+                        1,
+                        1,
+                        1,
                         1,
                         1
                     ],
@@ -440,5 +446,75 @@
         "Property": "Dwarven",
         "System": "Glint",
         "Type": "Character"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "",
+        "Habitat": "",
+        "ID": "jolt_battery",
+        "ImagePath": "jolt_battery.png",
+        "Lifespan": 0,
+        "Name": "Jolt Battery",
+        "Price": 0,
+        "Property": "Shuttle",
+        "System": "",
+        "Type": "Power Supply"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "",
+        "Habitat": "",
+        "ID": "spark_jump",
+        "ImagePath": "spark_jump.png",
+        "Lifespan": 0,
+        "Name": "Spark Jump",
+        "Price": 0,
+        "Property": "Shuttle",
+        "System": "",
+        "Type": "Portal Drive"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "",
+        "Habitat": "",
+        "ID": "junked_materia_engine",
+        "ImagePath": "junked_materia_engine.png",
+        "Lifespan": 0,
+        "Name": "Junked Materia Engine",
+        "Price": 0,
+        "Property": "Shuttle",
+        "System": "",
+        "Type": "Engine"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "",
+        "Habitat": "",
+        "ID": "sputterjets",
+        "ImagePath": "sputterjets.png",
+        "Lifespan": 0,
+        "Name": "Sputterjets",
+        "Price": 0,
+        "Property": "Shuttle",
+        "System": "",
+        "Type": "Thrusters"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "You first ship.",
+        "Habitat": "",
+        "ID": "shuttle",
+        "ImagePath": "shuttle.png",
+        "Lifespan": 0,
+        "Name": "Shuttle",
+        "Price": 0,
+        "Property": "Shuttle",
+        "System": "",
+        "Type": "Hull"
     }
 ]

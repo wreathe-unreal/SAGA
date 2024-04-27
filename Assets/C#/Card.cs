@@ -427,7 +427,7 @@ public class CardData
     private string GetDeckType()
     {
         switch (this.Type)
-        {
+        { 
             case "Engine":
             case "Power Supply":
             case "Portal Drive":
@@ -435,9 +435,11 @@ public class CardData
             case "Energy Weapon":
             case "Kinetic Weapon":
             case "Shield Generator":
-            case "Hull":
             case "Thrusters":
                 return "Starship";
+            case "Hull":
+            case "Ally":
+                return "Fleet";
             default:
                 return this.Type;
         }

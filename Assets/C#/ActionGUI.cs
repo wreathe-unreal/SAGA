@@ -322,7 +322,7 @@ public class ActionGUI : MonoBehaviour
         
         OpenedActionCard.bActionFinished = false;
 
-        if (OpenedActionCard.ID == "battle" && !Player.State.GetStarship().GetBattleResults(Player.State.GetBattleOpponent().Data.Price)) //if the action is a battle and the player loses
+        if (OpenedActionCard.ID == "battle" && !Board.State.GetStarship().GetBattleResults(Player.State.GetBattleOpponent().Data.Price)) //if the action is a battle and the player loses
         {
             Player.State.DecrementActionRepetition(OpenedActionCard.Name, Player.State.GetBattleOpponent().Data);
             Player.State.ReturnedCards.Add(Board.GetInstance().AddCard(OpenedActionCard.ID, 1, false));
@@ -833,7 +833,7 @@ public class ActionGUI : MonoBehaviour
         return false;
     }
 
-    private static bool AllPanelsAreClosed()
+    public static bool AllPanelsAreClosed()
     {
         return !IsHintPanelOpen() && !IsActionPanelOpen() && !IsReturnPanelOpen();
     }
