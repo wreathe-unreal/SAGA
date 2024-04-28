@@ -25,7 +25,9 @@ public class Player : MonoBehaviour
     private static Card ActionCard;
 
     private static Card BattleOpponent;
-    
+
+    public string System;
+    public string Habitat;
     public string Location;
     public Dictionary<string, float> AttributeMap = new Dictionary<string, float>();
     private Dictionary<string, int> ActionRepetitionsMap;
@@ -39,6 +41,8 @@ public class Player : MonoBehaviour
         InputCards = new List<Card>();
         ReturnedCards = new List<Card>();
         ReturnedQuantities = new List<int>();
+        UpdatePlayerSystem();
+        UpdatePlayerHabitat();
     }
     
     public ActionData FindAction(string[] words)
@@ -289,5 +293,175 @@ public class Player : MonoBehaviour
     public void SetBattleOpponent(Card NewBattleOpponent)
     {
         BattleOpponent = NewBattleOpponent;
+    }
+
+    public string UpdatePlayerHabitat()
+    {
+        if (IsPlayerInHabitat())
+        {
+            Habitat = Location;
+            return Location;
+        }
+
+        Habitat = "";
+        return "";
+    }
+
+    public bool IsPlayerInHabitat()
+    {
+        List<string> Systems = new List<string> { "Avalon", "Glint", "Merlin", "Nocturne", "Bane", "Macbeth IV" };
+
+        foreach (string s in Systems)
+        {
+            if (Player.State.Location == s)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public string UpdatePlayerSystem()
+    {
+        switch (Location)
+        {
+            case "Avalon":
+            case "Roundtable Nexus":
+            case "Terminus Est":
+            case "The Citadel":
+            case "The White Lodge":
+            case "Dragonroost":
+            case "Yggdrasil":
+            case "Leviathan Belt":
+            case "Earth":
+                System = "Avalon";
+                return "Avalon";
+            case "Glint":
+            case "Boulderhearth":
+            case "Forge":
+            case "Behemoth":
+            case "The Sledge":
+            case "Brewhalla":
+            case "Deepmine":
+            case "Jormungandr":
+            case "Ben Nevis":
+                System = "Glint";
+                return "Glint";
+            case "Merlin":
+            case "Jenasysz":
+            case "Nostalgia V":
+            case "Undine":
+            case "Reverie":
+            case "Lore":
+            case "Longbow":
+            case "Myst":
+            case "Veil Lookouts":
+                System = "Merlin";
+                return "Merlin";
+            case "Nocturne":
+            case "Dracule":
+            case "Crimsontide":
+            case "One-eyed Jacks":
+            case "Wreckage Bay":
+            case "Smuggler's Nook":
+            case "Rakshasa":
+            case "Black Sun Campaign":
+            case "The Feast":
+                System = "Nocturne";
+                return "Nocturne";
+            case "Bane":
+            case "Bameth":
+            case "Obsidian Conclave":
+            case "Voltage":
+            case "Darkwash":
+            case "Golem":
+            case "Blitzkrieg":
+            case "Zweijager":
+                System = "Bane";
+                return "Bane";
+            case "Macbeth IV":
+            case "Mausoleum":
+            case "Umbressa":
+            case "Sakura":
+            case "Exvulsa":
+            case "Triangula":
+            case "Blame":
+            case "Abyss Abbey":
+            case "The Black Mass":
+                System = "Macbeth IV";
+                return "Macbeth IV";
+
+        }
+
+        return null;
+    }
+    
+    public List<string> GetSystemHabitats(string System)
+    {
+        List<string> Habitats = new List<string>();
+        switch (System)
+        {
+            case "Avalon":
+                Habitats.Add("Roundtable Nexus");
+                Habitats.Add("Terminus Est");
+                Habitats.Add("The Citadel");
+                Habitats.Add("The White Lodge");
+                Habitats.Add("Dragonroost");
+                Habitats.Add("Yggdrasil");
+                Habitats.Add("Leviathan Belt");
+                Habitats.Add("Earth");
+                break;
+            case "Glint":
+                Habitats.Add("Boulderhearth");
+                Habitats.Add("Forge");
+                Habitats.Add("Behemoth");
+                Habitats.Add("The Sledge");
+                Habitats.Add("Brewhalla");
+                Habitats.Add("Deepmine");
+                Habitats.Add("Jormungandr");
+                Habitats.Add("Ben Nevis");
+                break;
+            case "Merlin":
+                Habitats.Add("Jenasysz");
+                Habitats.Add("Nostalgia V");
+                Habitats.Add("Undine");
+                Habitats.Add("Reverie");
+                Habitats.Add("Lore");
+                Habitats.Add("Longbow");
+                Habitats.Add("Myst");
+                Habitats.Add("Veil Lookouts");
+                break;
+            case "Nocturne":
+                Habitats.Add("Dracule");
+                Habitats.Add("Crimsontide");
+                Habitats.Add("One-eyed Jacks");
+                Habitats.Add("Wreckage Bay");
+                Habitats.Add("Smuggler's Nook");
+                Habitats.Add("Rakshasa");
+                Habitats.Add("Black Sun Campaign");
+                Habitats.Add("The Feast");
+                break;
+            case "Bane":
+                Habitats.Add("Bameth");
+                Habitats.Add("Obsidian Conclave");
+                Habitats.Add("Voltage");
+                Habitats.Add("Darkwash");
+                Habitats.Add("Golem");
+                Habitats.Add("Blitzkrieg");
+                Habitats.Add("Zweijager");
+                break;
+            case "Macbeth IV":
+                Habitats.Add("Mausoleum");
+                Habitats.Add("Umbressa");
+                Habitats.Add("Sakura");
+                Habitats.Add("Exvulsa");
+                Habitats.Add("Triangula");
+                Habitats.Add("Blame");
+                Habitats.Add("Abyss Abbey");
+                Habitats.Add("The Black Mass");
+                break;
+        }
+
+        return Habitats;
     }
 }

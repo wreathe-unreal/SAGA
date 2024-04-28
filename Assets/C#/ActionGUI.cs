@@ -63,6 +63,7 @@ public class ActionGUI : MonoBehaviour
     public TMP_Text FivePanel_RightHint;
     public TMP_Text FivePanel_BottomLeftHint;
     public TMP_Text FivePanel_BottomRightHint;
+    public GameObject EndGamePanel;
 
 
     void Awake()
@@ -268,7 +269,10 @@ public class ActionGUI : MonoBehaviour
     public void ExecuteReturnPanel()
     { 
         Sound.Manager.PlayPlaceCards();
-        Board.State.ResetCardPositionAndList(Player.State.ReturnedCards);
+        if (EndGamePanel.activeSelf == false)
+        {
+            Board.State.ResetCardPositionAndList(Player.State.ReturnedCards);
+        }
         SetPanelActive(false);
     }
 
@@ -349,9 +353,34 @@ public class ActionGUI : MonoBehaviour
 
     public void DisplayReturnPanel(Card OpenedActionCard)
     {
+        
         PanelState = PanelState.Return;
         
         OpenedActionCard.bActionFinished = false;
+
+        if (OpenedActionCard.ID == "travel")
+        {
+            string newLocation;
+            if (OpenedActionCard.CurrentActionData.ActionResult.ReturnedCardIDs[0] != "travel")
+            {
+                newLocation = OpenedActionCard.CurrentActionData.ActionResult.ReturnedCardIDs[0];
+
+            }
+            else
+            {
+                newLocation = OpenedActionCard.CurrentActionData.ActionResult.ReturnedCardIDs[1];
+            }
+
+            Player.State.Location = newLocation;
+            Player.State.UpdatePlayerSystem();
+            Player.State.UpdatePlayerHabitat();
+
+            foreach (Deck d in Board.Decks.Values)
+            {
+                if(d.Name == "Habitat")
+                d.SetCardPositions();
+            }
+        }
 
         if (OpenedActionCard.ID == "battle" && !Board.State.GetStarship().GetBattleResults(Player.State.GetBattleOpponent().Data.Price)) //if the action is a battle and the player loses
         {
@@ -371,16 +400,6 @@ public class ActionGUI : MonoBehaviour
         }
 
         List<Card> Returned = Player.State.GetReturnedCards();
-
-
-        foreach (Card c in Returned)
-        {
-            if (c.Data.Type == "EndState")
-            {
-                DisplayEndGame(c);
-            }
-                
-        }
 
         SetPanelActive(true);
 
@@ -426,13 +445,32 @@ public class ActionGUI : MonoBehaviour
         }
     }
 
-    private void DisplayEndGame(Card card)
+    public void DisplayEndGame(Card card)
     {
-
+        foreach (Deck d in Board.Decks.Values)
+        {
+            foreach (Card c in d.Cards)
+            {
+                if (c != card && c != null)
+                {
+                    c.gameObject.SetActive(false);
+                }
+            }
+        }
 
         
+        EndGamePanel.gameObject.SetActive(true);
+        Vector3 screenCenter = new Vector3(Screen.width / 2, Screen.height / 2, MainCamera.nearClipPlane);
+        Vector3 worldCenter = MainCamera.ScreenToWorldPoint(screenCenter);
+        worldCenter.z = -29.6f;
+        card.SetPosition(worldCenter);
+        card.transform.localScale = new Vector3(3.5f, 3.5f, 1f);
         Time.timeScale = 0.0f;
-        //freeze camera movement
+        card.SetFaceUpState(true);
+        MainCamera.GetComponent<CameraController>().enabled = false;
+        GameObject.Find("BGM").GetComponent<AudioSource>().Stop();
+        GameObject.Find("HUD").SetActive(false);
+        Sound.Manager.PlayIchRufZuDir();
     }
 
     public void SetPanelActive(bool bActive)
@@ -619,7 +657,12 @@ public class ActionGUI : MonoBehaviour
 
     public void CloseHintPanel()
     {
-        
+        ThreePanel_RightHint.gameObject.SetActive(false);
+        FourPanel_BottomHint.gameObject.SetActive(false);
+        FourPanel_RightHint.gameObject.SetActive(false);
+        FivePanel_BottomRightHint.gameObject.SetActive(false);
+        FivePanel_BottomLeftHint.gameObject.SetActive(false);
+        FivePanel_RightHint.gameObject.SetActive(false);
         switch (Player.State.InputCards.Count)
         {
             case 0:

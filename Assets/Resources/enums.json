@@ -80,7 +80,8 @@
         "Cargo",
         "Fleet",
         "Habitat",
-        "System"
+        "System",
+        "EndState"
     ],
     "ESystem": 
     [

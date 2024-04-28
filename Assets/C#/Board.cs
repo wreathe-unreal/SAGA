@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using UnityEngine.UI;  // Needed for UI elements like Panels
 
@@ -17,6 +18,7 @@ public class Board : MonoBehaviour
     static public CardDB Database;
     static public Dictionary<string, Deck> Decks;
     public Card CardToAdd;
+    public Transform HiddenParent;
 
     public static Board GetInstance()
     {
@@ -26,7 +28,6 @@ public class Board : MonoBehaviour
     public static void DestroyCard(Card CardToDestroy)
     {
         Deck SearchDeck = Decks[CardToDestroy.DeckType];
-
 
         for (int i = SearchDeck.Cards.Count - 1; i >= 0; i--)
         {
@@ -106,7 +107,7 @@ public class Board : MonoBehaviour
             // }
             return newCard;
         }
-        
+            
         bool bExistsInDeckAlready = false;
 
         foreach (Card c in Decks[deckType].Cards)
@@ -171,7 +172,7 @@ public class Board : MonoBehaviour
 
     private void AddStartingCards()
     {
-        List<string> InitialCards = new List<string> { "work", "glint", "toil_in_the_depths", "deepmine", "gold", "dream"};
+        List<string> InitialCards = new List<string> { "work", "glint", "toil_in_the_depths", "deepmine", "gold", "dream", "boulderhearth", "earth"};
 
         foreach (string s in InitialCards)
         {
@@ -179,8 +180,6 @@ public class Board : MonoBehaviour
             c.SetFaceUpState(true);
         }
     }
-    
-    
 
     public void ResetCardPositionAndList(List<Card> Cards)
     {
@@ -243,6 +242,40 @@ public class Deck : IEnumerable<Card>
 
     public void SetCardPositions() 
     {
+        if (Name == "Habitat")
+        {
+            int positionIndex = 0; // Track the position index
+           Player.State.UpdatePlayerSystem();
+            Player.State.UpdatePlayerHabitat();
+            foreach (var card in Cards)
+            {
+                if (card != null)
+                {
+                    if (card.Data.System == Player.State.System)
+                    {
+
+                        if (positionIndex < Positions.Count)
+                        {
+                            card.gameObject.transform.SetParent(null);
+                            // Assign position to card
+                            card.SetPosition(Positions[positionIndex]);
+                            positionIndex++; // Move to the next position
+                        }
+                        else
+                        {
+                            Debug.Log("Not enough positions for all matching cards.");
+                            break; // Exit if there are no more positions available
+                        }
+                    }
+                    else
+                    {
+                        card.gameObject.transform.SetParent(Board.State.HiddenParent);
+                    }
+                }
+            }
+            return;
+        }
+        
         for (int i = 0; i < Positions.Count; i++)
         {
             if (i < Cards.Count && Cards[i] != null && Cards[i].Position != Positions[i])

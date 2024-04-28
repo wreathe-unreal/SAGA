@@ -29,71 +29,6 @@
     },
     {
         "Actions": [
-            {
-                "ActionKey": {
-                    "ActionName": "Dream",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "gold",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                        [
-                            "",
-                            "Currency",
-                            ""
-                        ]
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "",
-                    "AttributeModifier": 0,
-                    "Duration": 8,
-                    "FlavorText": "Flavor text...",
-                    "OutcomeText": "Outcome text...",
-                    "ReturnedCardIDs": [
-                        "dream",
-                        "toil_in_the_depths",
-                        "gold"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1,
-                        2
-                    ],
-                    "Title": "Action Title"
-                }
-            },
-            {
-                "ActionKey": {
-                    "ActionName": "Dream",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "gold",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "",
-                    "AttributeModifier": 0,
-                    "Duration": 8,
-                    "FlavorText": "Flavor text...",
-                    "OutcomeText": "Outcome text...",
-                    "ReturnedCardIDs": [
-                        "dream",
-                        "gold"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        2
-                    ],
-                    "Title": "Double Action Test "
-                }
-            }
         ],
         "FlavorText": "Gleaming gold, each piece stamped with the seal of Glint—coveted, hoarded, bound in blood.",
         "Habitat": "",
@@ -234,7 +169,7 @@
                     "Attribute": "",
                     "AttributeMinimum": 0,
                     "ID": "toil_in_the_depths",
-                    "MaxRepetitions": 0,
+                    "MaxRepetitions": 2,
                     "MinRepetitions": 0,
                     "ReqLocation": "",
                     "SecondaryCardSpecifiers": [
@@ -253,19 +188,49 @@
                     "OutcomeText": "Outcome text...",
                     "ReturnedCardIDs": [
                         "dream",
-                        "jolt_battery",
-                        "spark_jump",
-                        "junked_materia_engine",
-                        "sputterjets"
+                        "toil_in_the_depths"
                     ],
                     "ReturnedQuantities": [
-                        1,
-                        1,
-                        1,
                         1,
                         1
                     ],
                     "Title": "DreamFor4Gold"
+                }
+            },
+            {
+                "ActionKey": {
+                    "ActionName": "Work",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "toil_in_the_depths",
+                    "MaxRepetitions": 0,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                        [
+                            "boulderhearth",
+                            "",
+                            ""
+                        ]
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 8,
+                    "FlavorText": "Flavor text...",
+                    "OutcomeText": "Outcome text...",
+                    "ReturnedCardIDs": [
+                        "work",
+                        "explore",
+                        "toiled_to_death"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Title": "Continue to Toil..."
                 }
             }
         ],
@@ -451,70 +416,56 @@
         "Actions": [
         ],
         "FlavorText": "",
-        "Habitat": "",
-        "ID": "jolt_battery",
-        "ImagePath": "jolt_battery.png",
+        "Habitat": "Earth",
+        "ID": "earth",
+        "ImagePath": "earth.png",
         "Lifespan": 0,
-        "Name": "Jolt Battery",
+        "Name": "Earth",
         "Price": 0,
-        "Property": "Shuttle",
+        "Property": "Epic",
+        "System": "Avalon",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "",
+        "Habitat": "Boulderhearth",
+        "ID": "boulderhearth",
+        "ImagePath": "boulderhearth.png",
+        "Lifespan": 0,
+        "Name": "boulderhearth",
+        "Price": 0,
+        "Property": "",
+        "System": "Glint",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "You have led a life, neither good nor bad but you toiled and you have learned to find solace in the toiling, so you will continue to toil to the end.",
+        "Habitat": "",
+        "ID": "toiled_to_death",
+        "ImagePath": "toiled_to_death.png",
+        "Lifespan": 0,
+        "Name": "Toiled To Death",
+        "Price": 0,
+        "Property": "",
         "System": "",
-        "Type": "Power Supply"
+        "Type": "EndState"
     },
     {
         "Actions": [
         ],
         "FlavorText": "",
         "Habitat": "",
-        "ID": "spark_jump",
-        "ImagePath": "spark_jump.png",
+        "ID": "explore",
+        "ImagePath": "explore.png",
         "Lifespan": 0,
-        "Name": "Spark Jump",
+        "Name": "Explore",
         "Price": 0,
-        "Property": "Shuttle",
+        "Property": "",
         "System": "",
-        "Type": "Portal Drive"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "junked_materia_engine",
-        "ImagePath": "junked_materia_engine.png",
-        "Lifespan": 0,
-        "Name": "Junked Materia Engine",
-        "Price": 0,
-        "Property": "Shuttle",
-        "System": "",
-        "Type": "Engine"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "",
-        "Habitat": "",
-        "ID": "sputterjets",
-        "ImagePath": "sputterjets.png",
-        "Lifespan": 0,
-        "Name": "Sputterjets",
-        "Price": 0,
-        "Property": "Shuttle",
-        "System": "",
-        "Type": "Thrusters"
-    },
-    {
-        "Actions": [
-        ],
-        "FlavorText": "You first ship.",
-        "Habitat": "",
-        "ID": "shuttle",
-        "ImagePath": "shuttle.png",
-        "Lifespan": 0,
-        "Name": "Shuttle",
-        "Price": 0,
-        "Property": "Shuttle",
-        "System": "",
-        "Type": "Hull"
+        "Type": "Action"
     }
 ]

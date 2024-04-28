@@ -189,7 +189,7 @@ public class Card : MonoBehaviour
                 TypeColor = new Color(255/255f, 0, 0);
                 break;
             case "EndState":
-                TypeColor = new Color(1f, 1f, 1f);     
+                TypeColor = new Color(89/255f, 89/255f, 89/255f);     
                 break;
             default:
                 TypeColor = new Color(255 / 255f, 255 / 255f, 255 / 255f);
@@ -252,6 +252,16 @@ public class Card : MonoBehaviour
     {
         if (IsTimerFinished() && CurrentActionData.ActionResult != null)
         {
+            foreach (string s in CurrentActionData.ActionResult.ReturnedCardIDs)
+            {
+                if (CardDB.CardDataLookup[s].Type == "EndState")
+                {
+                    Card gameOverCard = Instantiate<Card>(Board.State.CardToAdd);
+                    gameOverCard.Initialize(s);
+                    ActionGUI.Instance.DisplayEndGame(gameOverCard);
+                    return;
+                }
+            }
             ActionGUI.Instance.DisplayReturnPanel(this);
             Timer.timerText.faceColor = new Color32(255, 255, 255, 255);
             TMP_Name.color = TypeColor;
@@ -306,7 +316,11 @@ public class Card : MonoBehaviour
         {
             StopCoroutine(this.PositionCoroutine);
         }
-        this.PositionCoroutine = StartCoroutine(this.MoveToPosition(this.OriginalPosition, .15f));  // Lerp position back to original
+
+        if (this.isActiveAndEnabled)
+        {
+            this.PositionCoroutine = StartCoroutine(this.MoveToPosition(this.OriginalPosition, .15f)); // Lerp position back to original
+        }
 
     }
     public void RevertScaling()
@@ -317,7 +331,11 @@ public class Card : MonoBehaviour
             StopCoroutine(this.ScaleCoroutine);
         }
 
-        this.ScaleCoroutine = StartCoroutine(this.ScaleToSize(Vector3.one, .15f));
+        if (this.isActiveAndEnabled)
+        {
+            this.ScaleCoroutine = StartCoroutine(this.ScaleToSize(Vector3.one, .15f));
+
+        }
     }
 
     
