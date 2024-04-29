@@ -127,6 +127,11 @@ public class Sound : MonoBehaviour
     {
         Play("Whoosh");
     }
+    
+    public void PlayChurchBell()
+    {
+        Play("churchbell");
+    }
 
     private void Play(string soundFileName)
     {
@@ -178,5 +183,10 @@ public class Sound : MonoBehaviour
     public void PlayClickCard()
     {
         Play("ClickCard");
+    }
+
+    public void PlayTickTock()
+    {
+        Play("ticktock");
     }
 }

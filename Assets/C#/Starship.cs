@@ -73,6 +73,7 @@ public class Starship : MonoBehaviour
 
     private static Dictionary<string, EComponentType> EComponentTypeLookup = new Dictionary<string, EComponentType>
     {
+        {"Cargo Hold", EComponentType.CargoHold},
         {"Power Supply", EComponentType.PowerSupply},
         {"Shield Generator", EComponentType.ShieldGenerator},
         {"Portal Drive", EComponentType.PortalDrive},

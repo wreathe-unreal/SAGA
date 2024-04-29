@@ -106,7 +106,7 @@ public class Board : MonoBehaviour
         
         if (GoldCard.GoldTimer.fillAmount < 1f)
         {
-            GoldCard.GoldTimer.fillAmount += Time.deltaTime / 30;
+            GoldCard.GoldTimer.fillAmount += Time.deltaTime / 120;
             return;
         }
         if(GoldCard.GoldTimer.fillAmount >= 1f)
@@ -206,7 +206,7 @@ public class Board : MonoBehaviour
 
     private void AddStartingCards()
     {
-        List<string> InitialCards = new List<string> { "work", "glint", "toil_in_the_depths", "deepmine", "gold", "dream", "boulderhearth", "earth", "gold"};
+        List<string> InitialCards = new List<string> { "work", "glint", "deepmine", "toil_the_deep", "gold"};
 
         foreach (string s in InitialCards)
         {
@@ -280,39 +280,37 @@ public class Deck : IEnumerable<Card>
 
     private void SetHabitCardPositions()
     {
-        if (Name == "Habitat")
+        //assuming we are in Habitats deck
+        int positionIndex = 0; // Track the position index
+        foreach (var card in Cards)
         {
-            int positionIndex = 0; // Track the position index
-            foreach (var card in Cards)
+            if (card == null)
             {
-                if (card == null)
-                {
-                    continue;
-                }
-                
-                if (card.Data.System == Player.State.System)
-                {
+                continue;
+            }
+            
+            if (card.Data.System == Player.State.System)
+            {
 
-                    if (positionIndex < Positions.Count)
-                    {
-                        card.Reparent(null);
-                        card.SetPosition(Positions[positionIndex]);
-                        card.SetFaceUpState(true);
-                        positionIndex++; // Move to the next position
-                    }
-                    else
-                    {
-                        Debug.Log("Not enough positions for all matching cards.");
-                        break; // Exit if there are no more positions available
-                    }
+                if (positionIndex < Positions.Count)
+                {
+                    card.Reparent(null);
+                    card.SetPosition(Positions[positionIndex]);
+                    card.SetFaceUpState(true);
+                    positionIndex++; // Move to the next position
                 }
                 else
                 {
-                    card.gameObject.transform.SetParent(Board.State.HiddenParent);
+                    Debug.Log("Not enough positions for all matching cards.");
+                    break; // Exit if there are no more positions available
                 }
             }
-            return;
-        } 
+            else
+            {
+                card.gameObject.transform.SetParent(Board.State.HiddenParent);
+            }
+        }
+        return;
     }
     
     public void SetCardPositions() 

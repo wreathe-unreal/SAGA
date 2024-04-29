@@ -41,6 +41,11 @@ public class Player : MonoBehaviour
         ReturnedCards = new List<Card>();
         ReturnedQuantities = new List<int>();
     }
+
+    private void Update()
+    {
+        
+    }
     
     public ActionData FindAction(string[] words)
     {
@@ -284,26 +289,6 @@ public class Player : MonoBehaviour
             Habitat = "";
 
         }
-
-        foreach (Deck d in Board.Decks.Values)
-        {
-            d.SetCardPositions();
-            
-            if (d.Name == "Habitat")
-            {
-                foreach (Card c in d)
-                {
-                    if (c.Name == Habitat)
-                    {
-                        c.PieTimer.fillAmount = 100;
-                    }
-                    else
-                    {
-                        c.PieTimer.fillAmount = 0;
-                    }
-                }
-            }
-        }
     }
 
     public bool IsPlayerInHabitat()
@@ -312,7 +297,7 @@ public class Player : MonoBehaviour
 
         foreach (string s in Systems)
         {
-            if (Player.State.Location == s)
+            if (Location == s)
             {
                 return false;
             }
@@ -396,24 +381,6 @@ public class Player : MonoBehaviour
 
         System = newSystem;
 
-        foreach (Deck d in Board.Decks.Values)
-        {
-            if (d.Name == "System")
-            {
-                foreach (Card c in d)
-                {
-                    if (c.Name == System)
-                    {
-                        c.PieTimer.fillAmount = 100;
-                    }
-                    else
-                    {
-                        c.PieTimer.fillAmount = 0;
-                    }
-                }
-            }
-        }
-
         return newSystem;
     }
     
@@ -491,16 +458,25 @@ public class Player : MonoBehaviour
         string newLocation;
         if (currentActionData.ActionResult.ReturnedCardIDs[0] != "travel")
         {
-            newLocation = currentActionData.ActionResult.ReturnedCardIDs[0];
+            newLocation = CardDB.CardDataLookup[currentActionData.ActionResult.ReturnedCardIDs[0]].Name;
 
         }
         else
         {
-            newLocation = currentActionData.ActionResult.ReturnedCardIDs[1];
+            newLocation = CardDB.CardDataLookup[currentActionData.ActionResult.ReturnedCardIDs[1]].Name;
         }
 
 
         SetLocation(newLocation);
+        
+        
+    }
+
+    public void SetLocation(string newLocation)
+    {
+        Location = newLocation;
+        UpdatePlayerSystem();
+        UpdatePlayerHabitat();
         
         foreach (Deck d in Board.Decks.Values)
         {
@@ -509,14 +485,29 @@ public class Player : MonoBehaviour
                 d.SetCardPositions();
             }
         }
-    }
-
-    public void SetLocation(string newLocation)
-    {
-        Location = newLocation;
-        UpdatePlayerSystem();
-        UpdatePlayerHabitat();
-
-
+        
+        foreach (Card c in Board.Decks["Habitat"])
+        {
+            if (c != null && c.Name == Habitat)
+            {
+                c.LocationGlow.fillAmount = 100;
+            }
+            else
+            {
+                c.LocationGlow.fillAmount = 0;
+            }
+                
+        }
+        foreach (Card c in Board.Decks["System"])
+        {
+            if (c != null && c.Name == System)
+            {
+                c.LocationGlow.fillAmount = 100;
+            }
+            else
+            {
+                c.LocationGlow.fillAmount = 0;
+            }
+        }
     }
 }

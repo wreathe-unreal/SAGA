@@ -14,6 +14,7 @@ public class Card : MonoBehaviour
 {
     public Image PieTimer;
     public Image GoldTimer;
+    public Image LocationGlow;
     public MeshRenderer BorderMesh;
     public Timer Timer;
     public Color TypeColor;
@@ -128,17 +129,17 @@ public class Card : MonoBehaviour
         
 
         SetCardColor();
-        if (DeckType == "Action")
-        {
-            TMP_Name.text = Name;
-            TMP_TopName.text = "";
-
-        }
-        else
-        {
+        // if (DeckType == "Action")
+        // {
+        //     TMP_Name.text = Name;
+        //     TMP_TopName.text = "";
+        //
+        // }
+        // else
+        // {
             TMP_Name.text = "";
             TMP_TopName.text = Name;
-        }
+        // }
 
         TMP_TopName.color = TypeColor;
         TMP_Name.color = TypeColor;
@@ -230,7 +231,7 @@ public class Card : MonoBehaviour
         
         Board.Decks["Action"].SetCardPositions();
         
-        Timer.StartTimer(CurrentActionData.ActionResult.Duration);
+        Timer.StartTimer(CurrentActionData.ActionResult.Duration * 2);
         Timer.OnTimerUpdate += UpdateTimerBar;
         Timer.OnTimerComplete += ActionFinished;
 
@@ -284,17 +285,20 @@ public class Card : MonoBehaviour
             this.TMP_Quantity.enabled = true;
             this.PieTimer.enabled = true;
             this.GoldTimer.enabled = true;
-            
+            this.LocationGlow.enabled = true;
+
         }
         else
         {
+            this.transform.localPosition = new Vector3(0f, 0f, 0f);
+            this.OriginalPosition = this.transform.position;
             this.SetFaceUpState(true);
             this.TMP_Quantity.enabled = false;
             this.PieTimer.enabled = false;
             this.GoldTimer.enabled = false;
+            this.LocationGlow.enabled = false;
             this.transform.localScale = new Vector3(.95f, .89f, 1f);
-            this.transform.localPosition = new Vector3(0f, 0f, 0f);
-            this.OriginalPosition = this.transform.position;
+           
         }
     }
 

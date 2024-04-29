@@ -209,37 +209,6 @@
             {
                 "ActionKey": {
                     "ActionName": "Work",
-                    "Attribute": "Toil Progress",
-                    "AttributeMinimum": 1,
-                    "ID": "toil_the_deep",
-                    "MaxRepetitions": 20,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "Deepmine",
-                    "SecondaryCardSpecifiers": [
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "",
-                    "AttributeModifier": 0,
-                    "Duration": 8,
-                    "FlavorText": "There is little else to do but bend my back and put the flame to the tunnel.",
-                    "OutcomeText": "You do the day's work, your hands and back sore. One can only endure so much...",
-                    "ReturnedCardIDs": [
-                        "work",
-                        "toil_the_deep",
-                        "gold"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1,
-                        1
-                    ],
-                    "Title": "Toil in the Deepmines"
-                }
-            },
-            {
-                "ActionKey": {
-                    "ActionName": "Work",
                     "Attribute": "",
                     "AttributeMinimum": 0,
                     "ID": "toil_the_deep",
@@ -265,6 +234,37 @@
                     "ReturnedQuantities": [
                         1,
                         1,
+                        1,
+                        1,
+                        1
+                    ],
+                    "Title": "Toil in the Deepmines"
+                }
+            },
+            {
+                "ActionKey": {
+                    "ActionName": "Work",
+                    "Attribute": "Toil Progress",
+                    "AttributeMinimum": 1,
+                    "ID": "toil_the_deep",
+                    "MaxRepetitions": 20,
+                    "MinRepetitions": 1,
+                    "ReqLocation": "Deepmine",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 8,
+                    "FlavorText": "There is little else to do but bend my back and put the flame to the tunnel.",
+                    "OutcomeText": "You do the day's work, your hands and back sore. One can only endure so much...",
+                    "ReturnedCardIDs": [
+                        "work",
+                        "toil_the_deep",
+                        "gold"
+                    ],
+                    "ReturnedQuantities": [
                         1,
                         1,
                         1
@@ -345,37 +345,6 @@
         "Actions": [
             {
                 "ActionKey": {
-                    "ActionName": "Dream",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "shattered_shuttle",
-                    "MaxRepetitions": 1,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "",
-                    "AttributeModifier": 0,
-                    "Duration": 8,
-                    "FlavorText": "When did I stop dreaming? Was it when I entered this Hell? Was it before?",
-                    "OutcomeText": "With your surface time before bed, you gaze into space. Bringing the broken ship back to life and getting out of these mines is all that matters to you now.",
-                    "ReturnedCardIDs": [
-                        "shattered_shuttle",
-                        "talk",
-                        "helldiver_uma"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1,
-                        1
-                    ],
-                    "Title": "Dreaming of Freedom"
-                }
-            },
-            {
-                "ActionKey": {
                     "ActionName": "Craft",
                     "Attribute": "",
                     "AttributeMinimum": 0,
@@ -421,6 +390,39 @@
                         1
                     ],
                     "Title": "Welding her Together"
+                }
+            },
+            {
+                "ActionKey": {
+                    "ActionName": "Dream",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "shattered_shuttle",
+                    "MaxRepetitions": 0,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 8,
+                    "FlavorText": "When did I stop dreaming? Was it when I entered this Hell? Was it before?",
+                    "OutcomeText": "With your surface time before bed, you gaze into space. Bringing the broken ship back to life and getting out of these mines is all that matters to you now.",
+                    "ReturnedCardIDs": [
+                        "dream",
+                        "shattered_shuttle",
+                        "talk",
+                        "helldiver_uma"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    "Title": "Dreaming of Freedom"
                 }
             }
         ],
@@ -485,8 +487,8 @@
             {
                 "ActionKey": {
                     "ActionName": "Talk",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
+                    "Attribute": "Helldiver Uma Progress",
+                    "AttributeMinimum": 1,
                     "ID": "helldiver_uma",
                     "MaxRepetitions": 0,
                     "MinRepetitions": 0,
@@ -501,10 +503,14 @@
                     "FlavorText": "I approach supervisor Uma, but I've already asked her about my dream.",
                     "OutcomeText": "She greets you like she would any of the other scabs, but she does inquire as to whether or not you've moved up in the world.",
                     "ReturnedCardIDs": [
+                        "shattered_shuttle",
+                        "dream",
                         "talk",
                         "helldiver_uma"
                     ],
                     "ReturnedQuantities": [
+                        1,
+                        1,
                         1,
                         1
                     ],
@@ -614,9 +620,11 @@
                         "greyhound",
                         "travel",
                         "wreckage_bay",
-                        "trade"
+                        "trade",
+                        "nocturne"
                     ],
                     "ReturnedQuantities": [
+                        1,
                         1,
                         1,
                         1,
@@ -2619,6 +2627,35 @@
                         1
                     ],
                     "Title": "Explore the Dark Shroud"
+                }
+            },
+            {
+                "ActionKey": {
+                    "ActionName": "Travel",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "nocturne",
+                    "MaxRepetitions": 0,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 8,
+                    "FlavorText": "Flavor text...",
+                    "OutcomeText": "Outcome text...",
+                    "ReturnedCardIDs": [
+                        "travel",
+                        "nocturne"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1
+                    ],
+                    "Title": "Travel to Nocturne"
                 }
             }
         ],

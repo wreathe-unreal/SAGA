@@ -130,13 +130,15 @@ public class ActionGUI : MonoBehaviour
 
     private void CloseTimePassesPanel()
     {
+        Sound.Manager.PlayTickTock();
         SetPanelActive(false);
-        Sound.Manager.PlayWhoosh();
         foreach (Card c in Board.Decks["Currency"])
         {
             if (c.ID == "gold" && c.Quantity > 0)
             {
-                
+
+                c.TMP_Quantity.color = new Color(1f, 1f, 1f);
+                c.TMP_Quantity.text = $"{c.Quantity}";
                 Board.State.ResetCardPositionAndList(new List<Card> { c } );
                 Board.DestroyCard(c);
             }
@@ -184,7 +186,7 @@ public class ActionGUI : MonoBehaviour
          TextInput.interactable = false;
          Terminal.ParseText();
          
-         Terminal.SetText("> Action + Card", true);
+         Terminal.SetText("> Action + Card(s)", true);
 
          if (Terminal.ParsedText.Length > 5)
          {
@@ -871,12 +873,15 @@ public class ActionGUI : MonoBehaviour
     public void DisplayTimePassesPanel(Card goldCard)
     {
         PanelState = EPanelState.TimePasses;
-        Sound.Manager.PlayTransmissionSent();
+        Sound.Manager.PlayChurchBell();
         Sound.Manager.Play1Flip();
         
         SetPanelActive(true);
         
         goldCard.Reparent(OnePanel_OnlyCard);
+        goldCard.TMP_Quantity.enabled = true;
+        goldCard.TMP_Quantity.color = new Color(1f, 0f, 0f);
+        goldCard.TMP_Quantity.text = "-1";
         TitleText.text = "Time Passes";
         FlavorText.text = "Time slips like sand through clenched fists—seasons fade, the toll of life grows heavier, and with each passing year, the burdens carve deeper into the soul's weary map.";
          
