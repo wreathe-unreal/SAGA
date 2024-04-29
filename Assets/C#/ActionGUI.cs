@@ -360,26 +360,7 @@ public class ActionGUI : MonoBehaviour
 
         if (OpenedActionCard.ID == "travel")
         {
-            string newLocation;
-            if (OpenedActionCard.CurrentActionData.ActionResult.ReturnedCardIDs[0] != "travel")
-            {
-                newLocation = OpenedActionCard.CurrentActionData.ActionResult.ReturnedCardIDs[0];
-
-            }
-            else
-            {
-                newLocation = OpenedActionCard.CurrentActionData.ActionResult.ReturnedCardIDs[1];
-            }
-
-            Player.State.Location = newLocation;
-            Player.State.UpdatePlayerSystem();
-            Player.State.UpdatePlayerHabitat();
-
-            foreach (Deck d in Board.Decks.Values)
-            {
-                if(d.Name == "Habitat")
-                d.SetCardPositions();
-            }
+            Player.State.HandleTravel(OpenedActionCard.CurrentActionData);
         }
 
         if (OpenedActionCard.ID == "battle" && !Board.State.GetStarship().GetBattleResults(Player.State.GetBattleOpponent().Data.Price)) //if the action is a battle and the player loses

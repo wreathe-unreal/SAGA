@@ -36,13 +36,10 @@ public class Player : MonoBehaviour
     private void Start()
     {
         ActionRepetitionsMap = new Dictionary<string, int>();
-        SetLocation("Deepmine");
-        NullActionCard();;
+        NullActionCard();
         InputCards = new List<Card>();
         ReturnedCards = new List<Card>();
         ReturnedQuantities = new List<int>();
-        UpdatePlayerSystem();
-        UpdatePlayerHabitat();
     }
     
     public ActionData FindAction(string[] words)
@@ -280,11 +277,6 @@ public class Player : MonoBehaviour
         return Location;
     }
 
-    public void SetLocation(string NewLocation)
-    {
-        Location = NewLocation;
-    }
-
     public Card GetBattleOpponent()
     {
         return BattleOpponent;
@@ -295,16 +287,37 @@ public class Player : MonoBehaviour
         BattleOpponent = NewBattleOpponent;
     }
 
-    public string UpdatePlayerHabitat()
+    public void UpdatePlayerHabitat()
     {
         if (IsPlayerInHabitat())
         {
             Habitat = Location;
-            return Location;
+        }
+        else
+        {
+            Habitat = "";
+
         }
 
-        Habitat = "";
-        return "";
+        foreach (Deck d in Board.Decks.Values)
+        {
+            d.SetCardPositions();
+            
+            if (d.Name == "Habitat")
+            {
+                foreach (Card c in d)
+                {
+                    if (c.Name == Habitat)
+                    {
+                        c.PieTimer.fillAmount = 100;
+                    }
+                    else
+                    {
+                        c.PieTimer.fillAmount = 0;
+                    }
+                }
+            }
+        }
     }
 
     public bool IsPlayerInHabitat()
@@ -323,6 +336,8 @@ public class Player : MonoBehaviour
 
     public string UpdatePlayerSystem()
     {
+        string newSystem = "";
+        
         switch (Location)
         {
             case "Avalon":
@@ -334,8 +349,8 @@ public class Player : MonoBehaviour
             case "Yggdrasil":
             case "Leviathan Belt":
             case "Earth":
-                System = "Avalon";
-                return "Avalon";
+                newSystem = "Avalon";
+                break;
             case "Glint":
             case "Boulderhearth":
             case "Forge":
@@ -345,8 +360,8 @@ public class Player : MonoBehaviour
             case "Deepmine":
             case "Jormungandr":
             case "Ben Nevis":
-                System = "Glint";
-                return "Glint";
+                newSystem = "Glint";
+                break;
             case "Merlin":
             case "Jenasysz":
             case "Nostalgia V":
@@ -356,8 +371,8 @@ public class Player : MonoBehaviour
             case "Longbow":
             case "Myst":
             case "Veil Lookouts":
-                System = "Merlin";
-                return "Merlin";
+                newSystem = "Merlin";
+                break;
             case "Nocturne":
             case "Dracule":
             case "Crimsontide":
@@ -367,8 +382,8 @@ public class Player : MonoBehaviour
             case "Rakshasa":
             case "Black Sun Campaign":
             case "The Feast":
-                System = "Nocturne";
-                return "Nocturne";
+                newSystem = "Nocturne";
+                break;
             case "Bane":
             case "Bameth":
             case "Obsidian Conclave":
@@ -377,8 +392,8 @@ public class Player : MonoBehaviour
             case "Golem":
             case "Blitzkrieg":
             case "Zweijager":
-                System = "Bane";
-                return "Bane";
+                newSystem = "Bane";
+                break;
             case "Macbeth IV":
             case "Mausoleum":
             case "Umbressa":
@@ -388,12 +403,32 @@ public class Player : MonoBehaviour
             case "Blame":
             case "Abyss Abbey":
             case "The Black Mass":
-                System = "Macbeth IV";
-                return "Macbeth IV";
+                newSystem = "Macbeth IV";
+                break;
 
         }
 
-        return null;
+        System = newSystem;
+
+        foreach (Deck d in Board.Decks.Values)
+        {
+            if (d.Name == "System")
+            {
+                foreach (Card c in d)
+                {
+                    if (c.Name == System)
+                    {
+                        c.PieTimer.fillAmount = 100;
+                    }
+                    else
+                    {
+                        c.PieTimer.fillAmount = 0;
+                    }
+                }
+            }
+        }
+
+        return newSystem;
     }
     
     public List<string> GetSystemHabitats(string System)
@@ -463,5 +498,39 @@ public class Player : MonoBehaviour
         }
 
         return Habitats;
+    }
+
+    public void HandleTravel(ActionData currentActionData)
+    {
+        string newLocation;
+        if (currentActionData.ActionResult.ReturnedCardIDs[0] != "travel")
+        {
+            newLocation = currentActionData.ActionResult.ReturnedCardIDs[0];
+
+        }
+        else
+        {
+            newLocation = currentActionData.ActionResult.ReturnedCardIDs[1];
+        }
+
+
+        SetLocation(newLocation);
+        
+        foreach (Deck d in Board.Decks.Values)
+        {
+            if (d.Name == "Habitat")
+            {
+                d.SetCardPositions();
+            }
+        }
+    }
+
+    public void SetLocation(string newLocation)
+    {
+        Location = newLocation;
+        UpdatePlayerSystem();
+        UpdatePlayerHabitat();
+
+
     }
 }

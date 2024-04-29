@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -179,6 +180,9 @@ public class Board : MonoBehaviour
             Card c = AddCard(s, 1, true);
             c.SetFaceUpState(true);
         }
+        
+        Player.State.SetLocation("Deepmine");
+
     }
 
     public void ResetCardPositionAndList(List<Card> Cards)
@@ -242,35 +246,39 @@ public class Deck : IEnumerable<Card>
 
     public void SetCardPositions() 
     {
+        
         if (Name == "Habitat")
         {
             int positionIndex = 0; // Track the position index
-           Player.State.UpdatePlayerSystem();
-            Player.State.UpdatePlayerHabitat();
             foreach (var card in Cards)
             {
-                if (card != null)
+                if (card == null)
                 {
-                    if (card.Data.System == Player.State.System)
-                    {
+                    continue;
+                }
 
-                        if (positionIndex < Positions.Count)
-                        {
-                            card.gameObject.transform.SetParent(null);
-                            // Assign position to card
-                            card.SetPosition(Positions[positionIndex]);
-                            positionIndex++; // Move to the next position
-                        }
-                        else
-                        {
-                            Debug.Log("Not enough positions for all matching cards.");
-                            break; // Exit if there are no more positions available
-                        }
+                Debug.Log("cardSystem: " + card.Data.System);
+                Debug.Log("playerSystem: " + Player.State.System);
+                if (card.Data.System == Player.State.System)
+                {
+
+                    if (positionIndex < Positions.Count)
+                    {
+                        card.gameObject.transform.SetParent(null);
+                        // Assign position to card
+                        card.SetPosition(Positions[positionIndex]);
+                        card.SetFaceUpState(true);
+                        positionIndex++; // Move to the next position
                     }
                     else
                     {
-                        card.gameObject.transform.SetParent(Board.State.HiddenParent);
+                        Debug.Log("Not enough positions for all matching cards.");
+                        break; // Exit if there are no more positions available
                     }
+                }
+                else
+                {
+                    card.gameObject.transform.SetParent(Board.State.HiddenParent);
                 }
             }
             return;
