@@ -11,7 +11,8 @@ enum PanelState
     Inactive,
     Action,
     Return,
-    Hint
+    Hint,
+    TimePasses
 }
 
 public class ActionGUI : MonoBehaviour
@@ -118,13 +119,29 @@ public class ActionGUI : MonoBehaviour
             case PanelState.Hint:
                 CloseHintPanel();
                 break;
+            case PanelState.TimePasses:
+                CloseTimePassesPanel();
+                break;
             default:
                 StartCoroutine(HandleUserInput());
                 break;
         }
         Terminal.SetText("> Action + Data", true);
     }
-    
+
+    private void CloseTimePassesPanel()
+    {
+        SetPanelActive(false);
+        Sound.Manager.PlayWhoosh();
+        foreach (Card c in Board.Decks["Object"])
+        {
+            if (c.ID == "gold" && c.Quantity > 0)
+            {
+                Board.DestroyCard(c);
+            }
+        }
+    }
+
 
     public void StartInputCoroutine()
     {
@@ -884,6 +901,12 @@ public class ActionGUI : MonoBehaviour
 
     private bool CloseAndExecutePanels()
     {
+        if (IsTimePasesPanelOpen())
+        {
+            CloseTimePassesPanel();
+            return true;
+        }
+        
         if (IsHintPanelOpen())
         {
             CloseHintPanel();
@@ -908,8 +931,32 @@ public class ActionGUI : MonoBehaviour
         return false;
     }
 
+    private bool IsTimePasesPanelOpen()
+    {
+        return PanelState == PanelState.TimePasses;
+        
+    }
+
     public static bool AllPanelsAreClosed()
     {
         return !IsHintPanelOpen() && !IsActionPanelOpen() && !IsReturnPanelOpen();
+    }
+
+    public void DisplayTimePassesPanel(Card goldCard)
+    {
+        PanelState = PanelState.TimePasses;
+        Sound.Manager.PlayTransmissionSent();
+        Sound.Manager.Play1Flip();
+        
+        SetPanelActive(true);
+        
+        goldCard.transform.SetParent(OnePanel_OnlyCard);
+        TitleText.text = "Time Passes";
+        FlavorText.text = "Time slips like sand through clenched fists—seasons fade, the toll of life grows heavier, and with each passing year, the burdens carve deeper into the soul's weary map.";
+         
+                 
+        goldCard.transform.localScale = new Vector3(.95f, .89f, 1f);
+        goldCard.transform.localPosition = new Vector3(0f, 0f, 0f);
+        goldCard.OriginalPosition = goldCard.transform.position;
     }
 }

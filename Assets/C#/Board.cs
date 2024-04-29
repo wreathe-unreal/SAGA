@@ -82,30 +82,46 @@ public class Board : MonoBehaviour
         {
             Board.Decks["Fleet"].Cards[0].SetFaceUpState(true);
         }
-
+            
+        
+        int secondsPassed = (int)Time.time;
+        if (secondsPassed % 100 == 0)
+        {
+            TakeGold();
+        }
         
     }
+    
+    public void TakeGold()
+    {
+        bool bHasGold = false;
+        foreach (Card c in Board.Decks["Object"])
+        {
+            if (c.ID == "gold" && c.Quantity > 0)
+            {
+                bHasGold = true;
+                ActionGUI.Instance.DisplayTimePassesPanel(c);
+            }
+        }
 
+        if (!bHasGold)
+        {
+            ActionGUI.Instance.DisplayEndGame(AddCard("bankrupt", 1, false));
+        }
+    }
+    
     public Card AddCard(string cardID, int quantity, bool bSetCardPositionsAfterAdding)
     {
         CardData cd = CardDB.CardDataLookup[cardID];
         string deckType = cd.DeckType;
         Card foundCard = null;
 
-        //handle starship comopnents
+        //handle starship compnents
         if (deckType == "Starship")
         {
             Card newCard = Instantiate<Card>(CardToAdd);
             newCard.Initialize(cardID);
             GetStarship().AutoEquip(newCard);
-            // if ()
-            // {
-            //     Decks["Starship"].SetCardPositions();
-            // }
-            // else
-            // {
-            //     Decks["Objects"].SetCardPositions();
-            // }
             return newCard;
         }
             
@@ -256,16 +272,13 @@ public class Deck : IEnumerable<Card>
                 {
                     continue;
                 }
-
-                Debug.Log("cardSystem: " + card.Data.System);
-                Debug.Log("playerSystem: " + Player.State.System);
+                
                 if (card.Data.System == Player.State.System)
                 {
 
                     if (positionIndex < Positions.Count)
                     {
                         card.gameObject.transform.SetParent(null);
-                        // Assign position to card
                         card.SetPosition(Positions[positionIndex]);
                         card.SetFaceUpState(true);
                         positionIndex++; // Move to the next position
