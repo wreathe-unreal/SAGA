@@ -82,31 +82,47 @@ public class Board : MonoBehaviour
         {
             Board.Decks["Fleet"].Cards[0].SetFaceUpState(true);
         }
-            
         
-        int secondsPassed = (int)Time.time;
-        if (secondsPassed % 100 == 0)
-        {
-            TakeGold();
-        }
+        TakeGold();
         
     }
-    
+
     public void TakeGold()
     {
+        Card goldCard = null;
         bool bHasGold = false;
+
         foreach (Card c in Board.Decks["Object"])
         {
             if (c.ID == "gold" && c.Quantity > 0)
             {
+                goldCard = c;
                 bHasGold = true;
-                ActionGUI.Instance.DisplayTimePassesPanel(c);
             }
+        }
+
+        if (goldCard == null)
+        {
+            return;
         }
 
         if (!bHasGold)
         {
             ActionGUI.Instance.DisplayEndGame(AddCard("bankrupt", 1, false));
+            return;  
+        }
+        if (goldCard.PieTimer.fillAmount >= 100f)
+        {
+            ActionGUI.Instance.DisplayTimePassesPanel(goldCard);
+            goldCard.PieTimer.fillAmount = 0f;
+            return;
+        }
+        else
+        {
+            if (goldCard != null && goldCard.Quantity > 0)
+            {
+                goldCard.PieTimer.fillAmount += Time.deltaTime;
+            }
         }
     }
     
