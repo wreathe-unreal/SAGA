@@ -20,6 +20,7 @@ public class Board : MonoBehaviour
     static public Dictionary<string, Deck> Decks;
     public Card CardToAdd;
     public Transform HiddenParent;
+    private Card GoldCard;
 
     public static Board GetInstance()
     {
@@ -36,7 +37,7 @@ public class Board : MonoBehaviour
             {
                 SearchDeck.Cards[i].ModifyQuantity(-1);
 
-                if (SearchDeck.Cards[i].Quantity == 0)
+                if (SearchDeck.Cards[i].Quantity == 0 && SearchDeck.Cards[i].ID != "gold")
                 {
                     Card cardToBeDestroyed = SearchDeck.Cards[i];
 
@@ -60,69 +61,69 @@ public class Board : MonoBehaviour
         Database = new CardDB();
         InitializeDecks();
         AddStartingCards();
+        
+        foreach (Card c in Board.Decks["Currency"])
+        {
+            if (c.ID == "gold")
+            {
+                GoldCard = c;
+            }
+        }
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        HealthBar.fillAmount = GetStarship().CurrentHealth / GetStarship().GetMaxHealth();
-        if (GetStarship().CurrentHealth != GetStarship().GetMaxHealth())
+        if (ActionGUI.PanelState != EPanelState.EndState)
         {
-            CurrentHealthText.text = $"{GetStarship().CurrentHealth}";
-        }
-        else
-        {
-            CurrentHealthText.text = "";
-        }
-        MaxHealthText.text = $"{GetStarship().GetMaxHealth()}";
-        GetStarship().UpdateFleetCard();
+            HealthBar.fillAmount = GetStarship().CurrentHealth / GetStarship().GetMaxHealth();
+            if (GetStarship().CurrentHealth != GetStarship().GetMaxHealth())
+            {
+                CurrentHealthText.text = $"{GetStarship().CurrentHealth}";
+            }
+            else
+            {
+                CurrentHealthText.text = "";
+            }
+            MaxHealthText.text = $"{GetStarship().GetMaxHealth()}";
+            GetStarship().UpdateFleetCard();
 
-        if (Board.Decks["Fleet"].Cards.Count > 0 && ActionGUI.AllPanelsAreClosed()) 
-        {
-            Board.Decks["Fleet"].Cards[0].SetFaceUpState(true);
+            if (Board.Decks["Fleet"].Cards.Count > 0 && ActionGUI.AllPanelsAreClosed()) 
+            {
+                Board.Decks["Fleet"].Cards[0].SetFaceUpState(true);
+            }
+
+            
+            TimePasses();
         }
-        
-        TakeGold();
         
     }
 
-    public void TakeGold()
+    public void TimePasses()
     {
-        Card goldCard = null;
-        bool bHasGold = false;
-
-        foreach (Card c in Board.Decks["Object"])
+        bool bGameOver = false;
+        
+        if (GoldCard.GoldTimer.fillAmount < 1f)
         {
-            if (c.ID == "gold" && c.Quantity > 0)
-            {
-                goldCard = c;
-                bHasGold = true;
-            }
-        }
-
-        if (goldCard == null)
-        {
+            GoldCard.GoldTimer.fillAmount += Time.deltaTime / 30;
             return;
         }
-
-        if (!bHasGold)
+        if(GoldCard.GoldTimer.fillAmount >= 1f)
         {
-            ActionGUI.Instance.DisplayEndGame(AddCard("bankrupt", 1, false));
-            return;  
-        }
-        if (goldCard.PieTimer.fillAmount >= 100f)
-        {
-            ActionGUI.Instance.DisplayTimePassesPanel(goldCard);
-            goldCard.PieTimer.fillAmount = 0f;
-            return;
-        }
-        else
-        {
-            if (goldCard != null && goldCard.Quantity > 0)
+            if (GoldCard.Quantity <= 0)
             {
-                goldCard.PieTimer.fillAmount += Time.deltaTime;
+                print(GoldCard.ID);
+                print(GoldCard.Quantity);
+                bGameOver = true;
+                Card bankruptCard = Instantiate<Card>(Board.State.CardToAdd);
+                bankruptCard.Initialize("bankrupt");
+                ActionGUI.Instance.DisplayEndGame(bankruptCard);
+                return;
             }
+            ActionGUI.Instance.DisplayTimePassesPanel(GoldCard);
+            GoldCard.GoldTimer.fillAmount = 0f;
+            return;
         }
     }
     
@@ -205,7 +206,7 @@ public class Board : MonoBehaviour
 
     private void AddStartingCards()
     {
-        List<string> InitialCards = new List<string> { "work", "glint", "toil_in_the_depths", "deepmine", "gold", "dream", "boulderhearth", "earth"};
+        List<string> InitialCards = new List<string> { "work", "glint", "toil_in_the_depths", "deepmine", "gold", "dream", "boulderhearth", "earth", "gold"};
 
         foreach (string s in InitialCards)
         {
@@ -221,8 +222,8 @@ public class Board : MonoBehaviour
     {
         foreach (Card c in Cards)
         {
-            c.transform.SetParent(null);
-            c.transform.localScale = new Vector3(1, 1, 1);
+            c.Reparent(null);
+           
         }
 
         foreach (Deck d in Board.Decks.Values)
@@ -276,9 +277,9 @@ public class Deck : IEnumerable<Card>
         return positions;
     }
 
-    public void SetCardPositions() 
+
+    private void SetHabitCardPositions()
     {
-        
         if (Name == "Habitat")
         {
             int positionIndex = 0; // Track the position index
@@ -294,7 +295,7 @@ public class Deck : IEnumerable<Card>
 
                     if (positionIndex < Positions.Count)
                     {
-                        card.gameObject.transform.SetParent(null);
+                        card.Reparent(null);
                         card.SetPosition(Positions[positionIndex]);
                         card.SetFaceUpState(true);
                         positionIndex++; // Move to the next position
@@ -311,8 +312,18 @@ public class Deck : IEnumerable<Card>
                 }
             }
             return;
+        } 
+    }
+    
+    public void SetCardPositions() 
+    {
+        if (Name == "Habitat")
+        {
+            SetHabitCardPositions();
+            return;
         }
-        
+
+
         for (int i = 0; i < Positions.Count; i++)
         {
             if (i < Cards.Count && Cards[i] != null && Cards[i].Position != Positions[i])

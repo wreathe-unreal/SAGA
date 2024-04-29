@@ -60,36 +60,38 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
-        RenderSettings.skybox.SetFloat("_Rotation", Time.time * SkyBoxRotationSpeed);
-        
-        if(cam.orthographic == false)
+        if (ActionGUI.PanelState != EPanelState.EndState)
         {
-            AnimTimer += Time.deltaTime * AnimSpeed; 
-            
-            cam.fieldOfView = Mathf.Lerp(178, 59, AnimTimer);
-
-            if (AnimTimer >= 1)
+            RenderSettings.skybox.SetFloat("_Rotation", Time.time * SkyBoxRotationSpeed);
+        
+            if(cam.orthographic == false)
             {
-                cam.orthographic = true;
+                AnimTimer += Time.deltaTime * AnimSpeed; 
+            
+                cam.fieldOfView = Mathf.Lerp(178, 59, AnimTimer);
+
+                if (AnimTimer >= 1)
+                {
+                    cam.orthographic = true;
+                }
+                else
+                {
+                    return;
+                }
             }
-            else
+
+            if (InputField != null && InputField.isFocused)
             {
                 return;
             }
+
+            HandleMovement();
+            HandleZoom();
+            HandleZoomMovement();
+            UpdateBounds();
+            HandleRoll();
+            HandlePitch();  
         }
-
-        if (InputField != null && InputField.isFocused)
-        {
-            return;
-        }
-
-        HandleMovement();
-        HandleZoom();
-        HandleZoomMovement();
-        UpdateBounds();
-        HandleRoll();
-        HandlePitch();
-
     }
 
     void HandleMovement()

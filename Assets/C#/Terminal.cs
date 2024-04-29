@@ -25,16 +25,20 @@ public class Terminal : MonoBehaviour
      
      void Update()
      {
-         // Listen for key down event only once in Update
-         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+         if (ActionGUI.PanelState != EPanelState.EndState)
          {
-             ActionPanel.StartInputCoroutine();
-         }
+             
+             // Listen for key down event only once in Update
+             if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+             {
+                 ActionPanel.StartInputCoroutine();
+             }
 
-         if (Input.GetKeyDown(KeyCode.Escape) && ActionGUI.IsActionPanelOpen())
-         {
-             ActionGUI.Instance.CancelActionPanel();
-             TextInput.interactable = true;
+             if (Input.GetKeyDown(KeyCode.Escape) && ActionGUI.IsActionPanelOpen())
+             {
+                 ActionGUI.Instance.CancelActionPanel();
+                 TextInput.interactable = true;
+             }
          }
      }
 

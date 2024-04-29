@@ -6,13 +6,14 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-enum PanelState
+public enum EPanelState
 {
     Inactive,
     Action,
     Return,
     Hint,
-    TimePasses
+    TimePasses,
+    EndState
 }
 
 public class ActionGUI : MonoBehaviour
@@ -34,7 +35,7 @@ public class ActionGUI : MonoBehaviour
     private static Transform OriginalTransform;
     private static Transform DisplayedPanel;
     private static List<Transform> BeginActionButtons;
-    private static PanelState PanelState;
+    public static EPanelState PanelState;
 
 
     //inspector values
@@ -83,7 +84,7 @@ public class ActionGUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        PanelState = PanelState.Inactive;
+        PanelState = EPanelState.Inactive;
         CooldownDuration = .5f;
         bFirstCoro = true;
         MainCamera = FindObjectOfType<Camera>();;
@@ -103,23 +104,21 @@ public class ActionGUI : MonoBehaviour
         
     }
     
-         
-     
     public void xButtonClicked()
     {
         switch (PanelState)
         {
-            case PanelState.Action:
+            case EPanelState.Action:
                 CancelActionPanel();
                 break;
-            case PanelState.Return:
+            case EPanelState.Return:
                 ExecuteReturnPanel();
                 
                 break;
-            case PanelState.Hint:
+            case EPanelState.Hint:
                 CloseHintPanel();
                 break;
-            case PanelState.TimePasses:
+            case EPanelState.TimePasses:
                 CloseTimePassesPanel();
                 break;
             default:
@@ -133,10 +132,12 @@ public class ActionGUI : MonoBehaviour
     {
         SetPanelActive(false);
         Sound.Manager.PlayWhoosh();
-        foreach (Card c in Board.Decks["Object"])
+        foreach (Card c in Board.Decks["Currency"])
         {
             if (c.ID == "gold" && c.Quantity > 0)
             {
+                
+                Board.State.ResetCardPositionAndList(new List<Card> { c } );
                 Board.DestroyCard(c);
             }
         }
@@ -295,18 +296,18 @@ public class ActionGUI : MonoBehaviour
 
     public static bool IsActionPanelOpen()
     {
-        return PanelState == PanelState.Action;
+        return PanelState == EPanelState.Action;
 
     }
     
     public static bool IsHintPanelOpen()
     {
-        return PanelState == PanelState.Hint;
+        return PanelState == EPanelState.Hint;
     }
     
     public static bool IsReturnPanelOpen()
     {
-        return PanelState == PanelState.Return;
+        return PanelState == EPanelState.Return;
 
     }
     
@@ -315,36 +316,36 @@ public class ActionGUI : MonoBehaviour
         Sound.Manager.PlayTransmissionSent();
         Sound.Manager.Play1Flip();
         
-        PanelState = PanelState.Action;
+        PanelState = EPanelState.Action;
         
         SetPanelActive(true);
         
         switch (Player.State.InputCards.Count)
         {
             case 1:
-                Player.State.GetActionCard().transform.SetParent(TwoPanel_LeftCard);
-                Player.State.InputCards[0].transform.SetParent(TwoPanel_RightCard);
+                Player.State.GetActionCard().Reparent(TwoPanel_LeftCard);
+                Player.State.InputCards[0].Reparent(TwoPanel_RightCard);
                 Instance.transform.FindDeepChild("2Panel/Canvas/ActionButton").gameObject.SetActive(true);
                 break;
             case 2:
-                Player.State.GetActionCard().transform.SetParent(ThreePanel_LeftCard);
-                Player.State.InputCards[0].transform.SetParent(ThreePanel_MiddleCard);
-                Player.State.InputCards[1].transform.SetParent(ThreePanel_RightCard);
+                Player.State.GetActionCard().Reparent(ThreePanel_LeftCard);
+                Player.State.InputCards[0].Reparent(ThreePanel_MiddleCard);
+                Player.State.InputCards[1].Reparent(ThreePanel_RightCard);
                 Instance.transform.FindDeepChild("3Panel/Canvas/ActionButton").gameObject.SetActive(true);
                 break;
             case 3:
-                Player.State.GetActionCard().transform.SetParent(FourPanel_TopCard);
-                Player.State.InputCards[0].transform.SetParent(FourPanel_LeftCard);
-                Player.State.InputCards[1].transform.SetParent(FourPanel_RightCard);
-                Player.State.InputCards[2].transform.SetParent(FourPanel_BottomCard);
+                Player.State.GetActionCard().Reparent(FourPanel_TopCard);
+                Player.State.InputCards[0].Reparent(FourPanel_LeftCard);
+                Player.State.InputCards[1].Reparent(FourPanel_RightCard);
+                Player.State.InputCards[2].Reparent(FourPanel_BottomCard);
                 Instance.transform.FindDeepChild("4Panel/Canvas/ActionButton").gameObject.SetActive(true);
                 break;
             case 4:
-                Player.State.GetActionCard().transform.SetParent(FivePanel_TopCard);
-                Player.State.InputCards[0].transform.SetParent(FivePanel_LeftCard);
-                Player.State.InputCards[1].transform.SetParent(FivePanel_RightCard);
-                Player.State.InputCards[2].transform.SetParent(FivePanel_BottomLeftCard);
-                Player.State.InputCards[3].transform.SetParent(FivePanel_BottomRightCard);
+                Player.State.GetActionCard().Reparent(FivePanel_TopCard);
+                Player.State.InputCards[0].Reparent(FivePanel_LeftCard);
+                Player.State.InputCards[1].Reparent(FivePanel_RightCard);
+                Player.State.InputCards[2].Reparent(FivePanel_BottomLeftCard);
+                Player.State.InputCards[3].Reparent(FivePanel_BottomRightCard);
                 Instance.transform.FindDeepChild("5Panel/Canvas/ActionButton").gameObject.SetActive(true);
                 break;
         }
@@ -352,26 +353,13 @@ public class ActionGUI : MonoBehaviour
         TitleText.text = Player.State.GetActionCard().CurrentActionData.ActionResult.Title;
         FlavorText.text = Player.State.GetActionCard().CurrentActionData.ActionResult.FlavorText;
          
-                 
-        Player.State.GetActionCard().transform.localScale = new Vector3(.95f, .89f, 1f);
-        Player.State.GetActionCard().transform.localPosition = new Vector3(0f, 0f, 0f);
-        Player.State.GetActionCard().OriginalPosition = Player.State.GetActionCard().transform.position;
-
-        foreach (Card c in Player.State.InputCards)
-        {
-            
-            c.transform.localScale = new Vector3(.95f, .89f, 1f);
-            c.transform.localPosition = new Vector3(0f, 0f, 0f);
-            c.OriginalPosition = c.transform.position;
-        }
-         
          
     }
 
     public void DisplayReturnPanel(Card OpenedActionCard)
     {
         
-        PanelState = PanelState.Return;
+        PanelState = EPanelState.Return;
         
         OpenedActionCard.bActionFinished = false;
 
@@ -404,47 +392,40 @@ public class ActionGUI : MonoBehaviour
         switch (Returned.Count)
         {
             case 1:
-                Returned[0].transform.SetParent(OnePanel_OnlyCard);
+                Returned[0].Reparent(OnePanel_OnlyCard);
                 
                 break;
             case 2:
-                Returned[0].transform.SetParent(TwoPanel_LeftCard);
-                Returned[1].transform.SetParent(TwoPanel_RightCard);
+                Returned[0].Reparent(TwoPanel_LeftCard);
+                Returned[1].Reparent(TwoPanel_RightCard);
                 break;
             case 3:
-                Returned[0].transform.SetParent(ThreePanel_LeftCard);
-                Returned[1].transform.SetParent(ThreePanel_MiddleCard);
-                Returned[2].transform.SetParent(ThreePanel_RightCard);
+                Returned[0].Reparent(ThreePanel_LeftCard);
+                Returned[1].Reparent(ThreePanel_MiddleCard);
+                Returned[2].Reparent(ThreePanel_RightCard);
                 break;
             case 4:
-                Returned[0].transform.SetParent(FourPanel_TopCard);
-                Returned[1].transform.SetParent(FourPanel_LeftCard);
-                Returned[2].transform.SetParent(FourPanel_RightCard);
-                Returned[3].transform.SetParent(FourPanel_BottomCard);
+                Returned[0].Reparent(FourPanel_TopCard);
+                Returned[1].Reparent(FourPanel_LeftCard);
+                Returned[2].Reparent(FourPanel_RightCard);
+                Returned[3].Reparent(FourPanel_BottomCard);
                 break;
             case 5:
-                Returned[0].transform.SetParent(FivePanel_TopCard);
-                Returned[1].transform.SetParent(FivePanel_LeftCard);
-                Returned[2].transform.SetParent(FivePanel_RightCard);
-                Returned[3].transform.SetParent(FivePanel_BottomLeftCard);
-                Returned[4].transform.SetParent(FivePanel_BottomRightCard);
+                Returned[0].Reparent(FivePanel_TopCard);
+                Returned[1].Reparent(FivePanel_LeftCard);
+                Returned[2].Reparent(FivePanel_RightCard);
+                Returned[3].Reparent(FivePanel_BottomLeftCard);
+                Returned[4].Reparent(FivePanel_BottomRightCard);
                 break;
         }
          
         TitleText.text = OpenedActionCard.CurrentActionData.ActionResult.Title;
         FlavorText.text = OpenedActionCard.CurrentActionData.ActionResult.OutcomeText;
-        
-        foreach (Card c in Returned)
-        {
-            c.transform.localScale = new Vector3(.95f, .89f, 1f);
-            c.transform.localPosition = new Vector3(0f, 0f, 0f);
-            c.OriginalPosition = c.transform.position;
-            c.SetFaceUpState(true);
-        }
     }
 
     public void DisplayEndGame(Card card)
     {
+        PanelState = EPanelState.EndState;
         foreach (Deck d in Board.Decks.Values)
         {
             foreach (Card c in d.Cards)
@@ -481,7 +462,7 @@ public class ActionGUI : MonoBehaviour
 
         if (!bActive)
         {
-            PanelState = PanelState.Inactive;
+            PanelState = EPanelState.Inactive;
             TextInput.interactable = true;
             DisplayedPanel.gameObject.SetActive(false);
             Time.timeScale = 1.0f; //return to real time when panel is closed
@@ -500,41 +481,28 @@ public class ActionGUI : MonoBehaviour
         Time.timeScale = 0.0f; //pause game time when panel is active
         TextInput.interactable = false;
     }
-    
-    public void SetPanelActive(bool bActive, int PanelSize)
-    {
-        if (Instance == null)
-        {
-            Debug.LogError("Panel or ActionManager instance is not initialized!");
-            return;
-        }
-
-        if (!bActive)
-        {
-            PanelState = PanelState.Inactive;
-            TextInput.interactable = true;
-            DisplayedPanel.gameObject.SetActive(false);
-            Time.timeScale = 1.0f; //return to real time when panel is closed
-            return;
-        }
-
-        SetDisplayedPanel(PanelSize);
-
-        if (DisplayedPanel == null)
-        {
-            return;
-        }
-
-        DisplayedPanel = NormalizePanel(DisplayedPanel);
-        DisplayedPanel.gameObject.SetActive(true);
-        Time.timeScale = 0.0f; //pause game time when panel is active
-        TextInput.interactable = false;
-    }
-
 
     public Transform SetDisplayedPanel()
     {
-        int cardsToDisplay = Player.State.InputCards.Count > 0 ? Player.State.InputCards.Count + 1  : Player.State.ReturnedCards.Count;
+        int cardsToDisplay;
+        switch (PanelState)
+        {
+            case EPanelState.Action:
+                cardsToDisplay = Player.State.InputCards.Count + 1;
+                break;
+            case EPanelState.Hint :
+                cardsToDisplay = Player.State.GetActionCard().CurrentActionHint.ActionKey.SecondaryCardSpecifiersReal.Count + 2;
+                break;
+            case EPanelState.Return:
+                cardsToDisplay = Player.State.ReturnedCards.Count;
+                break;
+            case EPanelState.TimePasses:
+                cardsToDisplay = 1;
+                break;
+            default:
+                cardsToDisplay = 1;
+                break;
+        }
         
         switch(cardsToDisplay)
         {
@@ -690,21 +658,6 @@ public class ActionGUI : MonoBehaviour
             }
         }
         
-        
-        foreach (Card c in Player.State.InputCards)
-        {
-            c.transform.localScale = new Vector3(.95f, .89f, 1f);
-            c.transform.localPosition = new Vector3(0f, 0f, 0f);
-            c.OriginalPosition = c.transform.position;
-        }
-        Board.State.ResetCardPositionAndList(Player.State.InputCards);
-
-        
-        Player.State.GetActionCard().RevertPosition();
-        Player.State.GetActionCard().RevertScaling();
-        Player.State.GetActionCard().transform.SetParent(null);
-        Player.State.GetActionCard().CurrentActionData = null;
-        Player.State.GetActionCard().CurrentActionHint = null;
         Player.State.NullActionCard();
         
         
@@ -713,19 +666,8 @@ public class ActionGUI : MonoBehaviour
 
     public static SpriteRenderer CreateQuestionMark(Transform targetParent)
     {
-        // Check if the targetParent is not null
-        if (targetParent == null)
-        {
-            Debug.LogError("Target parent is null.");
-            return null;
-        }
-
-        // Create a new GameObject to hold the SpriteRenderer
         GameObject questionMarkObject = new GameObject("QuestionMark");
-        // Add a SpriteRenderer component to the new GameObject
         SpriteRenderer questionMark = questionMarkObject.AddComponent<SpriteRenderer>();
-
-        // Load the sprite from resources
         Sprite questionMarkSprite = Resources.Load<Sprite>("Images/QuestionMark");
         if (questionMarkSprite == null)
         {
@@ -733,10 +675,8 @@ public class ActionGUI : MonoBehaviour
             return null; // Exit early if the sprite couldn't be loaded.
         }
 
-        // Set the sprite to the SpriteRenderer
         questionMark.sprite = questionMarkSprite;
 
-        // Set the parent of the GameObject
         questionMark.transform.SetParent(targetParent, false);
         questionMark.transform.localPosition = new Vector3(-0.1f, 2.7f, -1f);
         questionMark.transform.localRotation = Quaternion.identity;
@@ -751,7 +691,7 @@ public class ActionGUI : MonoBehaviour
         Sound.Manager.PlayError();
         Sound.Manager.PlayPlaceCards();
 
-        PanelState = PanelState.Hint;
+        PanelState = EPanelState.Hint;
 
         List<Card> InputCards = Player.State.GetInputCards();
 
@@ -784,8 +724,8 @@ public class ActionGUI : MonoBehaviour
         {
             case 1:
                 DisplayedPanel = ThreePanel;
-                Player.State.GetActionCard().transform.SetParent(ThreePanel_LeftCard);
-                InputCards[0].transform.SetParent(ThreePanel_MiddleCard);
+                Player.State.GetActionCard().Reparent(ThreePanel_LeftCard);
+                InputCards[0].Reparent(ThreePanel_MiddleCard);
                 if (SecondaryCardHints[0] != "correct")
                 {
                     CreateQuestionMark(ThreePanel_RightCard); ThreePanel_RightHint.gameObject.SetActive(true);
@@ -794,13 +734,13 @@ public class ActionGUI : MonoBehaviour
                 }
                 else
                 {
-                    InputCards[1].transform.SetParent(ThreePanel_RightCard);
+                    InputCards[1].Reparent(ThreePanel_RightCard);
                 }
                 break;
             case 2:
                 DisplayedPanel  = FourPanel;
-                Player.State.GetActionCard().transform.SetParent(FourPanel_TopCard);
-                InputCards[0].transform.SetParent(FourPanel_LeftCard);
+                Player.State.GetActionCard().Reparent(FourPanel_TopCard);
+                InputCards[0].Reparent(FourPanel_LeftCard);
                 if (SecondaryCardHints[0] != "correct")
                 {
                     CreateQuestionMark(FourPanel_RightCard); 
@@ -810,7 +750,7 @@ public class ActionGUI : MonoBehaviour
                 }
                 else
                 {
-                    InputCards[1].transform.SetParent(FourPanel_RightCard);
+                    InputCards[1].Reparent(FourPanel_RightCard);
                 }
 
                 if (SecondaryCardHints[1] != "correct")
@@ -821,14 +761,14 @@ public class ActionGUI : MonoBehaviour
                 }
                 else
                 {
-                    InputCards[2].transform.SetParent(FourPanel_BottomCard);
+                    InputCards[2].Reparent(FourPanel_BottomCard);
                 }
                 
                 break;
             case 3:
                 DisplayedPanel  = FivePanel;
                 Player.State.GetActionCard().transform.SetParent(FivePanel_TopCard);
-                InputCards[0].transform.SetParent(FivePanel_LeftCard);
+                InputCards[0].Reparent(FivePanel_LeftCard);
                 if (SecondaryCardHints[0] != "correct")
                 {
                     CreateQuestionMark(FivePanel_RightCard); 
@@ -837,7 +777,7 @@ public class ActionGUI : MonoBehaviour
                 }
                 else
                 {
-                    InputCards[1].transform.SetParent(FivePanel_RightCard);
+                    InputCards[1].Reparent(FivePanel_RightCard);
                 }
 
                 if (SecondaryCardHints[1] != "correct")
@@ -848,7 +788,7 @@ public class ActionGUI : MonoBehaviour
                 }
                 else
                 {
-                    InputCards[2].transform.SetParent(FivePanel_BottomLeftCard);
+                    InputCards[2].Reparent(FivePanel_BottomLeftCard);
                 }
                 if (SecondaryCardHints[2] != "correct")
                 {
@@ -858,30 +798,16 @@ public class ActionGUI : MonoBehaviour
                 }
                 else
                 {
-                    InputCards[3].transform.SetParent(FivePanel_BottomRightCard);
+                    InputCards[3].Reparent(FivePanel_BottomRightCard);
                 }
                 break;
         }
 
         DisableAllBeginButtons();
-        SetPanelActive(true, SecondaryCardSpecifiers.Count+2);
+        SetPanelActive(true);
         TitleText.text = "";
         FlavorText.text = "";
         
-        Player.State.GetActionCard().transform.localScale = new Vector3(.95f, .89f, 1f);
-        Player.State.GetActionCard().transform.localPosition = new Vector3(0f, 0f, 0f);
-        Player.State.GetActionCard().OriginalPosition = Player.State.GetActionCard().transform.position;
-        Player.State.GetActionCard().SetFaceUpState(true);
-        foreach (Card c in Player.State.InputCards)
-        {
-            if (c.transform.parent.name.Contains("Card"))
-            {
-                c.SetFaceUpState(true);
-                c.transform.localScale = new Vector3(.95f, .89f, 1f);
-                c.transform.localPosition = new Vector3(0f, 0f, 0f);
-                c.OriginalPosition = c.transform.position;
-            }
-        }
     }
 
     private static void ActivateSetHintText(TMP_Text textObject, string newText)
@@ -931,9 +857,9 @@ public class ActionGUI : MonoBehaviour
         return false;
     }
 
-    private bool IsTimePasesPanelOpen()
+    public bool IsTimePasesPanelOpen()
     {
-        return PanelState == PanelState.TimePasses;
+        return PanelState == EPanelState.TimePasses;
         
     }
 
@@ -944,19 +870,16 @@ public class ActionGUI : MonoBehaviour
 
     public void DisplayTimePassesPanel(Card goldCard)
     {
-        PanelState = PanelState.TimePasses;
+        PanelState = EPanelState.TimePasses;
         Sound.Manager.PlayTransmissionSent();
         Sound.Manager.Play1Flip();
         
         SetPanelActive(true);
         
-        goldCard.transform.SetParent(OnePanel_OnlyCard);
+        goldCard.Reparent(OnePanel_OnlyCard);
         TitleText.text = "Time Passes";
         FlavorText.text = "Time slips like sand through clenched fists—seasons fade, the toll of life grows heavier, and with each passing year, the burdens carve deeper into the soul's weary map.";
          
                  
-        goldCard.transform.localScale = new Vector3(.95f, .89f, 1f);
-        goldCard.transform.localPosition = new Vector3(0f, 0f, 0f);
-        goldCard.OriginalPosition = goldCard.transform.position;
     }
 }

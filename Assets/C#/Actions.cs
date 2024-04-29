@@ -81,8 +81,8 @@ public class ActionKey
     public string ActionName;
     public string Attribute;
     public int AttributeMinimum;
-    public int RepetitionsMinimum;
-    public int RepetitionsMaximum;
+    public int MinRepetitions;
+    public int MaxRepetitions;
     public string ID;
     public string ReqLocation;
     public List<List<string>> SecondaryCardSpecifiers;
@@ -123,7 +123,7 @@ public class ActionKey
             return false;
         }
 
-        if ( player.GetActionRepetition(actionName, cardData[0]) < RepetitionsMinimum && player.GetActionRepetition(actionName, cardData[0]) > RepetitionsMaximum)
+        if ( player.GetActionRepetition(actionName, cardData[0]) < MinRepetitions || player.GetActionRepetition(actionName, cardData[0]) > MaxRepetitions)
         {
             return false;
         }
@@ -169,7 +169,7 @@ public class ActionKey
             return false;
         }
 
-        if ( player.GetActionRepetition(actionName, cardData[0]) < RepetitionsMinimum && player.GetActionRepetition(actionName, cardData[0]) > RepetitionsMaximum)
+        if ( player.GetActionRepetition(actionName, cardData[0]) < MinRepetitions || player.GetActionRepetition(actionName, cardData[0]) > MaxRepetitions)
         {
             return false;
         }

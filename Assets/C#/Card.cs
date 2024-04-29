@@ -13,6 +13,7 @@ using Image = UnityEngine.UI.Image;
 public class Card : MonoBehaviour
 {
     public Image PieTimer;
+    public Image GoldTimer;
     public MeshRenderer BorderMesh;
     public Timer Timer;
     public Color TypeColor;
@@ -213,7 +214,7 @@ public class Card : MonoBehaviour
             TMP_Quantity.enabled = true;
         }
 
-        if (Quantity == 0)
+        if (Quantity == 0 && ID != "gold")
         {
             TMP_Quantity.enabled = false;
         }
@@ -223,7 +224,7 @@ public class Card : MonoBehaviour
 
     public void CookActionResult()
     {
-        gameObject.transform.SetParent(null);
+        this.Reparent(null);
         gameObject.transform.localScale = new Vector3(5, 5, 1);
         StartCoroutine(ScaleToSize(new Vector3(1, 1, 1), .40f));
         
@@ -272,6 +273,30 @@ public class Card : MonoBehaviour
         }
     }
 
+
+    public void Reparent(Transform t)
+    {
+        this.transform.SetParent(t);
+        if (t == null)
+        {
+            this.SetFaceUpState(true);
+            this.transform.localScale = new Vector3(1, 1, 1);
+            this.TMP_Quantity.enabled = true;
+            this.PieTimer.enabled = true;
+            this.GoldTimer.enabled = true;
+            
+        }
+        else
+        {
+            this.SetFaceUpState(true);
+            this.TMP_Quantity.enabled = false;
+            this.PieTimer.enabled = false;
+            this.GoldTimer.enabled = false;
+            this.transform.localScale = new Vector3(.95f, .89f, 1f);
+            this.transform.localPosition = new Vector3(0f, 0f, 0f);
+            this.OriginalPosition = this.transform.position;
+        }
+    }
 
 
     public bool IsTimerFinished()
@@ -431,12 +456,6 @@ public class CardData
         {
             a.ActionKey.ConvertSecondaryCardSpecifiers(); //converts all of the list of list of strings to a list of CardSpecifier objects
         }
-
-        // foreach (ActionData a in Actions)
-        // {
-        //     Debug.Log(a.ActionResult.Title + " Card Specifiers Count: " + a.ActionKey.SecondaryCardSpecifiersReal.Count);
-        //
-        // }
         
         DeckType = GetDeckType();
     }

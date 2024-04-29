@@ -88,15 +88,11 @@ public class Player : MonoBehaviour
         
     public void ExecuteAction()
     {
-        print(ActionCard.Name);
-        print(ActionCard.CurrentActionData.ActionResult.Title);
         AttributeMap[ActionCard.CurrentActionData.ActionResult.AttributeModified] += ActionCard.CurrentActionData.ActionResult.AttributeModifier;
         
         IncrementActionRepetition(ActionCard.Name, InputCards[0].Data);
 
         ActionCard.CookActionResult();
-        ActionCard.transform.SetParent(null);
-        NullActionCard();
 
         List<Card> cardsToRemove = new List<Card>();
         
@@ -112,6 +108,7 @@ public class Player : MonoBehaviour
         }
         
         InputCards = new List<Card>(); // Clear other cards
+        Player.State.NullActionCard();
     
     }
 
@@ -252,22 +249,11 @@ public class Player : MonoBehaviour
 
     public void SetActionCard(Card CurrentActionCard)
     {
-        if (ActionCard != null)
-        {
-            Debug.Log("WARNING: ActionCard has not been nulled.");
-        }
-        Debug.Log("Setting ActionCard To: " + CurrentActionCard.Name);
-
-        
         ActionCard = CurrentActionCard;
     }
 
     public void NullActionCard()
     {
-        if (GetActionCard() != null)
-        {
-            Debug.Log("Nulling ActionCard: " + ActionCard.ID);
-        }
 
         ActionCard = null;
     }
