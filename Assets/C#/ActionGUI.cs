@@ -143,6 +143,8 @@ public class ActionGUI : MonoBehaviour
                 Board.DestroyCard(c);
             }
         }
+
+        PanelState = EPanelState.Inactive;
     }
 
 
@@ -548,51 +550,6 @@ public class ActionGUI : MonoBehaviour
 
         return DisplayedPanel;
     }
-    
-    public Transform SetDisplayedPanel(int DisplayNumber)
-    {
-        switch(DisplayNumber)
-        {
-            case 1:
-                DisplayedPanel = OnePanel;
-                TitleText = Instance.transform.FindDeepChild("1Panel/TitleText").GetComponent<TMP_Text>();
-                FlavorText = Instance.transform.FindDeepChild("1Panel/FlavorText").GetComponent<TMP_Text>();
-                AudioSource = Instance.transform.Find("1Panel").GetComponent<AudioSource>();
-                break;
-            case 2:
-                DisplayedPanel = TwoPanel;
-                TitleText = Instance.transform.FindDeepChild("2Panel/TitleText").GetComponent<TMP_Text>();
-                FlavorText = Instance.transform.FindDeepChild("2Panel/FlavorText").GetComponent<TMP_Text>();
-                AudioSource = Instance.transform.Find("2Panel").GetComponent<AudioSource>();
-                break;
-            case 3:
-                DisplayedPanel = ThreePanel;
-                TitleText = Instance.transform.FindDeepChild("3Panel/TitleText").GetComponent<TMP_Text>();
-                FlavorText = Instance.transform.FindDeepChild("3Panel/FlavorText").GetComponent<TMP_Text>();
-                AudioSource = Instance.transform.Find("3Panel").GetComponent<AudioSource>();
-                break;
-            case 4:
-                DisplayedPanel = FourPanel;
-                TitleText = Instance.transform.FindDeepChild("4Panel/TitleText").GetComponent<TMP_Text>();
-                FlavorText = Instance.transform.FindDeepChild("4Panel/FlavorText").GetComponent<TMP_Text>();
-                AudioSource = Instance.transform.Find("4Panel").GetComponent<AudioSource>();
-                break;
-            case 5:
-                DisplayedPanel = FivePanel;
-                TitleText = Instance.transform.FindDeepChild("5Panel/TitleText").GetComponent<TMP_Text>();
-                FlavorText = Instance.transform.FindDeepChild("5Panel/FlavorText").GetComponent<TMP_Text>();
-                AudioSource = Instance.transform.Find("5Panel").GetComponent<AudioSource>();
-                break;
-            default:
-                DisplayedPanel = null;
-                TitleText = null;
-                FlavorText = null;
-                AudioSource = null;
-                break;
-        }
-
-        return DisplayedPanel;
-    }
 
     public static Transform NormalizePanel(Transform transform)
     {
@@ -625,12 +582,23 @@ public class ActionGUI : MonoBehaviour
 
     public void CloseHintPanel()
     {
+        Player.State.GetActionCard().Reparent(null);
+        Player.State.GetActionCard().CurrentActionData = null;
+        Player.State.GetActionCard().CurrentActionHint = null;
+        Player.State.NullActionCard();
+
+        foreach (Card c in Player.State.InputCards)
+        {
+            c.Reparent(null);
+        }
+        
         ThreePanel_RightHint.gameObject.SetActive(false);
         FourPanel_BottomHint.gameObject.SetActive(false);
         FourPanel_RightHint.gameObject.SetActive(false);
         FivePanel_BottomRightHint.gameObject.SetActive(false);
         FivePanel_BottomLeftHint.gameObject.SetActive(false);
         FivePanel_RightHint.gameObject.SetActive(false);
+        
         switch (Player.State.InputCards.Count)
         {
             case 0:
@@ -660,10 +628,14 @@ public class ActionGUI : MonoBehaviour
             }
         }
         
-        Player.State.NullActionCard();
-        
-        
         SetPanelActive(false);
+
+        foreach (Deck d in Board.Decks.Values)
+        {
+            d.SetCardPositions();
+        }
+
+        PanelState = EPanelState.Inactive;
     }
 
     public static SpriteRenderer CreateQuestionMark(Transform targetParent)
@@ -699,11 +671,13 @@ public class ActionGUI : MonoBehaviour
 
         List<CardSpecifier> SecondaryCardSpecifiers = Player.State.GetActionCard().CurrentActionHint.ActionKey.SecondaryCardSpecifiersReal;
 
-        foreach (Deck d in Board.Decks.Values)
-        {
-            d.SetCardPositions();
-        }
-        
+        // foreach (Deck d in Board.Decks.Values)
+        // {
+        //     d.SetCardPositions();
+        // }
+
+
+        SetPanelActive(true);
         
         List<string> SecondaryCardHints = new List<string>();
         
@@ -721,6 +695,7 @@ public class ActionGUI : MonoBehaviour
                 SecondaryCardHints.Add(SecondaryCardSpecifiers[i-1].GetSpecifierText());
             }
         }
+        
         
         switch (SecondaryCardSpecifiers.Count)
         {
@@ -745,8 +720,7 @@ public class ActionGUI : MonoBehaviour
                 InputCards[0].Reparent(FourPanel_LeftCard);
                 if (SecondaryCardHints[0] != "correct")
                 {
-                    CreateQuestionMark(FourPanel_RightCard); 
-                    ThreePanel_RightHint.gameObject.SetActive(true);
+                    CreateQuestionMark(FourPanel_RightCard); FourPanel_RightHint.gameObject.SetActive(true);
                     ActivateSetHintText(FourPanel_RightHint.gameObject.GetComponent<TMP_Text>(), SecondaryCardHints[0]);
 
                 }
@@ -805,8 +779,15 @@ public class ActionGUI : MonoBehaviour
                 break;
         }
 
+       
+        
+
+        foreach (Card c in InputCards)
+        {
+            c.transform.localPosition.Set(0f, 0f, 0f);
+        }
+        
         DisableAllBeginButtons();
-        SetPanelActive(true);
         TitleText.text = "";
         FlavorText.text = "";
         
@@ -829,7 +810,7 @@ public class ActionGUI : MonoBehaviour
 
     private bool CloseAndExecutePanels()
     {
-        if (IsTimePasesPanelOpen())
+        if (IsTimePassesPanelOpen())
         {
             CloseTimePassesPanel();
             return true;
@@ -859,7 +840,7 @@ public class ActionGUI : MonoBehaviour
         return false;
     }
 
-    public bool IsTimePasesPanelOpen()
+    public static bool IsTimePassesPanelOpen()
     {
         return PanelState == EPanelState.TimePasses;
         
@@ -867,7 +848,12 @@ public class ActionGUI : MonoBehaviour
 
     public static bool AllPanelsAreClosed()
     {
-        return !IsHintPanelOpen() && !IsActionPanelOpen() && !IsReturnPanelOpen();
+        return !IsHintPanelOpen() && !IsActionPanelOpen() && !IsReturnPanelOpen() && !IsTimePassesPanelOpen() && !IsEndScreenPanelOpen();
+    }
+
+    private static bool IsEndScreenPanelOpen()
+    {
+        return PanelState == EPanelState.EndState;
     }
 
     public void DisplayTimePassesPanel(Card goldCard)

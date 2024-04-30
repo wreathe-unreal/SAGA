@@ -116,6 +116,11 @@ public class Card : MonoBehaviour
             AnimController.SetBool("bIsFaceUp", bIsFaceUp);
     }
 
+    public bool GetFaceUpState()
+    {
+        return AnimController.GetBool("bIsFaceUp");
+    }
+    
     public void Initialize(string cardID)
     {
         Data = CardDB.CardDataLookup[cardID];
@@ -278,7 +283,8 @@ public class Card : MonoBehaviour
     public void Reparent(Transform t)
     {
         this.transform.SetParent(t);
-        if (t == null)
+        
+        if (t == null) //if we are setting the card back to the board
         {
             this.SetFaceUpState(true);
             this.transform.localScale = new Vector3(1, 1, 1);
@@ -288,16 +294,21 @@ public class Card : MonoBehaviour
             this.LocationGlow.enabled = true;
 
         }
-        else
+        else //if we are parenting the card to a panel
         {
             this.transform.localPosition = new Vector3(0f, 0f, 0f);
             this.OriginalPosition = this.transform.position;
-            this.SetFaceUpState(true);
+            if (!ActionGUI.IsActionPanelOpen())
+            {
+                AnimController.Play("FaceDown");
+                this.SetFaceUpState(true);
+            }
             this.TMP_Quantity.enabled = false;
             this.PieTimer.enabled = false;
             this.GoldTimer.enabled = false;
             this.LocationGlow.enabled = false;
             this.transform.localScale = new Vector3(.95f, .89f, 1f);
+
            
         }
     }
@@ -306,15 +317,6 @@ public class Card : MonoBehaviour
     public bool IsTimerFinished()
     {
         return Timer.timeRemaining <= 0;
-    }
-
-    void OnMouseOver()
-    {
-    }
-
-    void OnMouseExit()
-    {
-
     }
 
     public void StartMoving(Vector3 newPos, float Duration)

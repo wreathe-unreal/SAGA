@@ -53,12 +53,19 @@ public class CardScaler : MonoBehaviour
 
     void MouseEnter()
     {
-        float zComponent = CardBeingScaled.transform.localPosition.z - 1f;
-        CardBeingScaled.transform.localPosition += Vector3.back * zComponent;
+        if (ActionGUI.PanelState == EPanelState.Inactive)
+        {
+            float zComponent = CardBeingScaled.transform.localPosition.z - 1f;
+            CardBeingScaled.transform.localPosition += Vector3.back * zComponent;
+        }
     }
 
     void MouseOver()
     {
+        if (!CardBeingScaled.AnimController.GetCurrentAnimatorStateInfo(0).IsName("FaceUp"))
+        {
+            return;
+        }
         //display left or right depending on deck type
         if (LeftMouseoverDeckTypes.Contains(CardBeingScaled.GetDeckType()))
         {
@@ -90,9 +97,8 @@ public class CardScaler : MonoBehaviour
         cardPropertyTypeText = cardPropertyTypeText.ToLower();
         CardBeingScaled.TMP_MouseOverProperty.text = cardPropertyTypeText;
         CardBeingScaled.TMP_MouseOverProperty.color = CardBeingScaled.TypeColor;
-
-
-        if (!ActionGUI.AllPanelsAreClosed())
+        
+        if (ActionGUI.PanelState != EPanelState.Inactive) //trying to prevent the card from being scaled if it's in a panel
         {
             return;
         }
@@ -133,9 +139,11 @@ public class CardScaler : MonoBehaviour
         CardBeingScaled.TMP_MouseOverFlavorLeft.text = "";
         CardBeingScaled.TMP_MouseOverProperty.text = "";
         
-
-        CardBeingScaled.RevertScaling();
-        CardBeingScaled.RevertPosition();
+        if(ActionGUI.PanelState == EPanelState.Inactive)
+        {
+            CardBeingScaled.RevertScaling();
+            CardBeingScaled.RevertPosition();
+        }
 
         CardBeingScaled = null;
     }

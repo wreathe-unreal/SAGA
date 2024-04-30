@@ -4465,6 +4465,38 @@
                     ],
                     "Title": "Explore Glint"
                 }
+            },
+            {
+                "ActionKey": {
+                    "ActionName": "Work",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "glint",
+                    "MaxRepetitions": 0,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                        [
+                            "",
+                            "",
+                            "Precious"
+                        ]
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 8,
+                    "FlavorText": "Flavor text...",
+                    "OutcomeText": "Outcome text...",
+                    "ReturnedCardIDs": [
+                        "work"
+                    ],
+                    "ReturnedQuantities": [
+                        1
+                    ],
+                    "Title": "Action Title"
+                }
             }
         ],
         "FlavorText": "Perhaps the most mineral rich sector in known space. The dwarves wasted no time with attempts to exploit their whole of their home. Wealth is the rule here.",

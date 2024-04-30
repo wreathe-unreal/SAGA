@@ -101,9 +101,7 @@ public class Board : MonoBehaviour
     }
 
     public void TimePasses()
-    {
-        bool bGameOver = false;
-        
+    {        
         if (GoldCard.GoldTimer.fillAmount < 1f)
         {
             GoldCard.GoldTimer.fillAmount += Time.deltaTime / 120;
@@ -115,7 +113,6 @@ public class Board : MonoBehaviour
             {
                 print(GoldCard.ID);
                 print(GoldCard.Quantity);
-                bGameOver = true;
                 Card bankruptCard = Instantiate<Card>(Board.State.CardToAdd);
                 bankruptCard.Initialize("bankrupt");
                 ActionGUI.Instance.DisplayEndGame(bankruptCard);
