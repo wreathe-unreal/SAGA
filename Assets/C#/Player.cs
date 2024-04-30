@@ -27,10 +27,12 @@ public class Player : MonoBehaviour
 
     private static Card BattleOpponent;
     
-    public Location Location;
+    public static Location Location;
     public Dictionary<string, float> AttributeMap = new Dictionary<string, float>();
     private Dictionary<string, int> ActionRepetitionsMap;
     private static Player _State;
+
+    public static bool bInitialized = false;
 
     private void Start()
     {
@@ -39,6 +41,10 @@ public class Player : MonoBehaviour
         InputCards = new List<Card>();
         ReturnedCards = new List<Card>();
         ReturnedQuantities = new List<int>();
+        Player.Location = GetComponent<Location>();
+        Player.Location.SetLocation("Deepmine");
+        bInitialized = true;
+
     }
 
     private void Update()

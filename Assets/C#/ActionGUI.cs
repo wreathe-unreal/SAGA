@@ -87,7 +87,7 @@ public class ActionGUI : MonoBehaviour
         PanelState = EPanelState.Inactive;
         CooldownDuration = .5f;
         bFirstCoro = true;
-        MainCamera = FindObjectOfType<Camera>();;
+        MainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
         TextInput = FindObjectOfType<TMP_InputField>();
         _board = FindObjectOfType<Board>();
         

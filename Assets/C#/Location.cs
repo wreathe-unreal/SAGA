@@ -1,21 +1,26 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.Rendering.PostProcessing;
-using ColorParameter = UnityEngine.Rendering.ColorParameter;
-using Vignette = UnityEngine.Rendering.Universal.Vignette;
 
+
+[Serializable]
+public class SkyboxMaterial
+{
+    public string Location;
+    public Material M_Skybox;
+}
 public class Location : MonoBehaviour
 {
     public string Name;
     public string System;
     public string Habitat;
-    public Vignette PP_Vignette;
-    // Start is called before the first frame update
+
+    public List<SkyboxMaterial> SkyboxMap;
+    
     void Start()
     {
-        PP_Vignette = FindObjectOfType<Volume>().GetComponent<Vignette>();
+        
     }
 
     // Update is called once per frame
@@ -74,7 +79,6 @@ public class Location : MonoBehaviour
         Name = newLocation;
         UpdatePlayerSystem();
         UpdatePlayerHabitat();
-        
         foreach (Deck d in Board.Decks.Values)
         {
             if (d.Name == "Habitat")
@@ -82,7 +86,7 @@ public class Location : MonoBehaviour
                 d.SetCardPositions();
             }
         }
-        
+    
         foreach (Card c in Board.Decks["Habitat"])
         {
             if (c != null && c.Name == Habitat)
@@ -93,7 +97,7 @@ public class Location : MonoBehaviour
             {
                 c.LocationGlow.fillAmount = 0;
             }
-                
+            
         }
         foreach (Card c in Board.Decks["System"])
         {
@@ -106,17 +110,52 @@ public class Location : MonoBehaviour
                 c.LocationGlow.fillAmount = 0;
             }
         }
+
+        UpdateSkyBox();
+
     }
     
     private void UpdateSkyBox()
     {
+        //update post process volumes and scene
+        Transform Skyboxes = GameObject.Find("Skybox").transform;
+        foreach (Transform child in transform)
+        {
+            child.gameObject.SetActive(false); // Disable the child GameObject
+        }
+        
         switch (Name)
         {
             case "Deepmine":
-                PP_Vignette.color = new ColorParameter(new Color(0f, 1f, .3f));
+                Skyboxes.Find("Deepmine").gameObject.SetActive(true);
                 
                 break;
+            case "Wreckage Bay":
+                Skyboxes.Find("WreckageBay").gameObject.SetActive(true);
                 
+                break;
+        }
+    
+        //update skybox tint
+        foreach (SkyboxMaterial map in SkyboxMap)
+        {
+            if (map.Location == Name)
+            {
+                RenderSettings.skybox = map.M_Skybox;
+                DynamicGI.UpdateEnvironment(); // Update global illumination to reflect changes
+                return;
+            }
+        }
+        
+        //search again for a more generic case if none found
+        foreach (SkyboxMaterial map in SkyboxMap)
+        {
+            if (map.Location == System)
+            {
+                RenderSettings.skybox = map.M_Skybox;
+                DynamicGI.UpdateEnvironment(); // Update global illumination to reflect changes
+                return;
+            }
         }
     }
     

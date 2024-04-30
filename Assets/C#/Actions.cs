@@ -106,8 +106,9 @@ public class ActionKey
          {
              return false;
          }
+         
         
-        if (this.ReqLocation != "" && player.Location.IsInLocation(this.ReqLocation))
+        if (this.ReqLocation != "" && !Player.Location.IsInLocation(this.ReqLocation))
         {
             return false;
         }
@@ -154,7 +155,7 @@ public class ActionKey
             return false;
         }
         
-        if (this.ReqLocation != "" && player.Location.IsInLocation(this.ReqLocation))
+        if (this.ReqLocation != "" && !Player.Location.IsInLocation(this.ReqLocation))
         {
             return false;
         }

@@ -70,6 +70,9 @@ public class Board : MonoBehaviour
             }
         }
 
+        
+        
+
     }
 
     // Update is called once per frame
@@ -178,7 +181,7 @@ public class Board : MonoBehaviour
 
     private void AddStartingCards()
     {
-        List<string> InitialCards = new List<string> { "work", "glint", "deepmine", "toil_the_deep", "gold"};
+        List<string> InitialCards = new List<string> { "work", "glint", "deepmine", "toil_the_deep", "gold", "travel", "wreckage_bay", "nocturne"};
 
         foreach (string s in InitialCards)
         {
@@ -186,7 +189,6 @@ public class Board : MonoBehaviour
             c.SetFaceUpState(true);
         }
         
-        Player.State.Location.SetLocation("Deepmine");
 
     }
 
@@ -261,7 +263,7 @@ public class Deck : IEnumerable<Card>
                 continue;
             }
             
-            if (card.Data.System == Player.State.Location.System)
+            if (card.Data.System == Player.Location.System)
             {
 
                 if (positionIndex < Positions.Count)
@@ -287,7 +289,7 @@ public class Deck : IEnumerable<Card>
     
     public void SetCardPositions() 
     {
-        if (Name == "Habitat")
+        if (Player.bInitialized && Name == "Habitat")
         {
             SetHabitatCardPositions();
             return;
