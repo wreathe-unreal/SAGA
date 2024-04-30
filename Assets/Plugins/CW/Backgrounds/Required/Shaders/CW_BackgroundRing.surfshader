@@ -1,0 +1,91 @@
+﻿BEGIN_OPTIONS
+	Workflow "Unlit"
+	Alpha "Blend"
+	Tags { "Queue" = "Transparent-1" }
+END_OPTIONS
+
+BEGIN_PROPERTIES
+	[Header(BASE)]
+	[NoScaleOffset]_CW_AlbedoTex("	Albedo (RGB) Alpha (A)", 2D) = "white" {}
+	_CW_Color("	Color", Color) = (1.0, 1.0, 1.0, 0.0)
+	_CW_Brightness("	Brightness", Float) = 1.0
+	_CW_Opacity("	Opacity", Range(0, 1)) = 1.0
+	_CW_AlbedoShift("	Albedo Shift", Range(0,6.2831853)) = 0
+
+	[Header(SHADOW)]
+	[Toggle(_CW_SHADOW)] _CW_Shadow ("	Enable", Float) = 0
+	[NoScaleOffset]_CW_ShadowGradientTex("	Gradient (A)", 2D) = "white" {}
+	_CW_ShadowAngle("	Angle", Float) = 0.0
+	_CW_ShadowCircle("	Circle", Range(0.01, 1.0)) = 0.01
+	_CW_ShadowRadius("	Radius", Float) = 1.0
+	_CW_ShadowBlur("	Blur", Float) = 0.2
+	_CW_ShadowPenumbraColor("	Penumbra Color", Color) = (1,0,0)
+	_CW_ShadowUmbraColor("	Umbra Color", Color) = (0,0,0)
+END_PROPERTIES
+
+BEGIN_PASS("All")
+	Blend One OneMinusSrcAlpha, One One
+END_PASS
+
+BEGIN_DEFINES
+	#pragma shader_feature_local _CW_SHADOW
+END_DEFINES
+
+BEGIN_CBUFFER
+	float3 _CW_Color;
+	float  _CW_Brightness;
+	float  _CW_Opacity;
+	float  _CW_AlbedoShift;
+	float2 _CW_RingArc; // Auto
+
+	// Shadow
+	float  _CW_ShadowAngle;
+	float  _CW_ShadowCircle;
+	float  _CW_ShadowRadius;
+	float  _CW_ShadowBlur;
+	float3 _CW_ShadowPenumbraColor;
+	float3 _CW_ShadowUmbraColor;
+END_CBUFFER
+
+BEGIN_CODE
+	TEXTURE2D(_CW_AlbedoTex);
+	SAMPLER(sampler_CW_AlbedoTex);
+
+	TEXTURE2D(_CW_ShadowGradientTex);
+	SAMPLER(sampler_CW_ShadowGradientTex);
+
+	float2 CW_Rotate(float2 v, float a)
+	{
+		float s = sin(a);
+		float c = cos(a);
+		return float2(c * v.x - s * v.y, s * v.x + c * v.y);
+	}
+	
+	float3 CW_ShiftColor(float3 color, float shift)
+	{
+		float3 m = float3(cos(shift), -sin(shift) * 0.57735f, 0.0f);
+		m = float3(m.xy, -m.y) + (1.0f - m.x) * 0.33333f;
+		return mul(float3x3(m, m.zxy, m.yzx), color);
+	}
+
+	void SurfaceFunction(inout Surface o, ShaderData d)
+	{
+		float4 color = SAMPLE_TEXTURE2D(_CW_AlbedoTex, sampler_CW_AlbedoTex, (length(d.texcoord0.xy) - _CW_RingArc.x) * _CW_RingArc.y);
+
+		color.rgb = CW_ShiftColor(color.rgb, _CW_AlbedoShift);
+
+		o.Albedo = color.xyz * color.w * _CW_Color * _CW_Brightness * _CW_Opacity;
+		o.Alpha  = color.w * _CW_Opacity;
+
+		#if _CW_SHADOW
+			float2 shadowPoint = CW_Rotate(d.texcoord0.xy, _CW_ShadowAngle);
+			float2 shadowClip  = float2(shadowPoint.x, (shadowPoint.y - _CW_RingArc.x) * _CW_ShadowCircle);
+			float  shadowDst   = length(shadowClip) - _CW_ShadowBlur * 0.5f;
+			float  shadow      = (_CW_ShadowRadius - shadowDst) / _CW_ShadowBlur;
+			float  shadowGrad  = 1.0f - SAMPLE_TEXTURE2D(_CW_ShadowGradientTex, sampler_CW_ShadowGradientTex, shadow).w;
+			float3 shadowColor = lerp(_CW_ShadowPenumbraColor, _CW_ShadowUmbraColor, shadowGrad);
+
+			o.Albedo *= lerp(float3(1.0f, 1.0f, 1.0f), shadowColor, shadowGrad * (shadowPoint.y > 0));
+		#endif
+	}
+END_CODE

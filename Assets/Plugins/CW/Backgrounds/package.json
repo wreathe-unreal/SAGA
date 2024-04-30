@@ -1,0 +1,12 @@
+{
+    "name": "com.cwilkes.space-backgrounds",
+    "displayName": "CW Space Backgrounds",
+    "version": "1.0.0",
+    "author": {
+        "name": "Carlos Wilkes",
+        "email": "carlos.wilkes@gmail.com",
+        "url": "https://carloswilkes.com"
+    },
+    "unity": "2020.3",
+    "description": "High detail modular space backgrounds."
+}

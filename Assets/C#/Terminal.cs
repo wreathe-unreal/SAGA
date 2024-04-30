@@ -11,35 +11,20 @@ using Unity.VisualScripting; // Include this namespace for Regex
 using UnityEngine.UI;
 public class Terminal : MonoBehaviour
 {
-     public ActionGUI ActionPanel;
-     private static TMP_InputField TextInput;
+     public static TMP_InputField TMP_Input;
      public static string[] ParsedText;
      private static bool bStatusText = true;
      
      void Start()
      {
-         TextInput = gameObject.GetComponent<TMP_InputField>();
+         TMP_Input = gameObject.GetComponent<TMP_InputField>();
 
 
      }
      
      void Update()
      {
-         if (ActionGUI.PanelState != EPanelState.EndState)
-         {
-             
-             // Listen for key down event only once in Update
-             if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
-             {
-                 ActionPanel.StartInputCoroutine();
-             }
 
-             if (Input.GetKeyDown(KeyCode.Escape) && ActionGUI.IsActionPanelOpen())
-             {
-                 ActionGUI.Instance.CancelActionPanel();
-                 TextInput.interactable = true;
-             }
-         }
      }
 
      
@@ -47,7 +32,7 @@ public class Terminal : MonoBehaviour
      public static void ParseText()
      {
          ParsedText = Array.Empty<string>();
-         string input = TextInput.text;
+         string input = TMP_Input.text;
          string[] words = input.Split(new[] { "+" }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToArray();
 
          for (int i = 0; i < words.Length; i++)
@@ -60,24 +45,24 @@ public class Terminal : MonoBehaviour
 
      public static void AppendText(string appendText)
      {
-         if (bStatusText || TextInput.text.Length == 0)
+         if (bStatusText || TMP_Input.text.Length == 0)
          {
-             TextInput.text = appendText;
+             TMP_Input.text = appendText;
              
          }
          else
          {
-             TextInput.text += " + " + appendText;
+             TMP_Input.text += " + " + appendText;
          }
          bStatusText = false;
      }
 
      public static void SetText(string newText, bool bIsStatusText)
      {
-         TextInput.text = newText;
+         TMP_Input.text = newText;
          if (bIsStatusText)
          {
-             TextInput.interactable = true;
+             TMP_Input.interactable = true;
              Player.State.NullActionCard();
          }
          bStatusText = bIsStatusText;

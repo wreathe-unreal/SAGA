@@ -1,0 +1,112 @@
+﻿BEGIN_OPTIONS
+	Workflow "Unlit"
+	Alpha "Blend"
+	Tags { "Queue" = "Transparent-1" }
+END_OPTIONS
+
+BEGIN_PROPERTIES
+	[Header(BASE)]
+	[NoScaleOffset]_CW_SkyboxTex("	Albedo (RGB)", Cube) = "white" {}
+	_CW_Brightness("	Brightness", Float) = 1.0
+
+	[Header(DETAIL)]
+	[Toggle(_CW_DETAIL)] _CW_Detail ("	Enable", Float) = 0
+	[NoScaleOffset]_CW_DetailTex("	Detail (RGB)", 2D) = "gray" {}
+	_CW_DetailTiling("	Detail Tiling", Float) = 2.0
+	_CW_DetailStrength("	Detail Strength", Float) = 2.0
+	
+	[Space]
+	[NoScaleOffset]_CW_DetailOffset("	Offset (A)", 3D) = "white" {}
+	_CW_DetailOffsetTiling("	Detail Offset Tiling", Float) = 10.0
+	_CW_DetailOffsetStrength("	Detail Offset Strength", Float) = 1.0
+	_CW_DetailBands("	Detail Bands", Float) = 10.0
+	_CW_DetailJitter("	Detail Jitter", Float) = 1.0
+	_CW_DetailSeed("	Detail Seed", Int) = 0
+	_CW_DetailTransition("	Detail Transition", Float) = 1.0
+END_PROPERTIES
+
+BEGIN_PASS("All")
+	Blend One OneMinusSrcAlpha, One One
+END_PASS
+
+BEGIN_DEFINES
+	#pragma shader_feature_local _CW_DETAIL
+END_DEFINES
+
+BEGIN_CBUFFER
+	float _CW_Brightness;
+
+	// DETAIL
+	float _CW_DetailTiling;
+	float _CW_DetailStrength;
+	
+	float _CW_DetailOffsetTiling;
+	float _CW_DetailOffsetStrength;
+	float _CW_DetailBands;
+	float _CW_DetailJitter;
+	float _CW_DetailSeed;
+	float _CW_DetailTransition;
+END_CBUFFER
+
+BEGIN_CODE
+	SAMPLER(sampler_CW_SkyboxTex);
+		TEXTURECUBE(_CW_SkyboxTex);
+
+	SAMPLER(sampler_CW_DetailTex);
+		TEXTURE2D(_CW_DetailTex);
+
+	SAMPLER(sampler_CW_DetailOffset);
+		TEXTURE3D(_CW_DetailOffset);
+	
+	float2 CW_Rotate(float2 v, float a)
+	{
+		float s = sin(a); float c = cos(a); return float2(v.x * c - v.y * s, v.x * s + v.y * c);
+	}
+	
+	float4 CW_SampleBand(float4 coord, float index)
+	{
+		float  pole  = abs(index) > _CW_DetailBands * 0.7f;
+		float2 uv    = lerp(coord.xy, coord.zw, pole);
+		float2 gradX = lerp(ddx(coord.xy), ddx(coord.zw), pole);
+		float2 gradY = lerp(ddy(coord.xy), ddy(coord.zw), pole);
+		
+		index += _CW_DetailSeed % 5393.0f;
+		
+		uv = CW_Rotate(uv, sin(index * 17.0f));
+		
+		uv.x += sin(index * 13.0f) * _CW_DetailJitter;
+		uv.y += cos(index * 13.0f) * _CW_DetailJitter;
+		
+		return SAMPLE_TEXTURE2D_GRAD(_CW_DetailTex, sampler_CW_DetailTex, uv, gradX, gradY);
+	}
+	
+	float4 CW_SampleWeight(float4 detailA, float4 detailB, float t)
+	{
+		t = pow(t, 1.0f + detailA.r * _CW_DetailTransition);
+		t = 1.0f - pow(1.0f - t, 1.0f + detailB.r * _CW_DetailTransition);
+	
+		return lerp(detailA, detailB, t);
+	}
+
+	void SurfaceFunction(inout Surface o, ShaderData d)
+	{
+		float4 skyboxTex = SAMPLE_TEXTURECUBE(_CW_SkyboxTex, sampler_CW_SkyboxTex, d.localSpacePosition);
+		float4 color     = skyboxTex;
+
+		#if _CW_DETAIL
+			float4 detailCoord = d.texcoord0 * _CW_DetailTiling;
+			float  offset      = (SAMPLE_TEXTURE3D(_CW_DetailOffset, sampler_CW_DetailOffset, d.localSpacePosition * _CW_DetailOffsetTiling).w - 0.5f) * _CW_DetailOffsetStrength;
+			float  band        = d.localSpacePosition.y * _CW_DetailBands + offset;
+			float  bandF       = frac(band);
+			float  bandI       = band - bandF;
+			float4 detailA     = CW_SampleBand(detailCoord, bandI);
+			float4 detailB     = CW_SampleBand(detailCoord, bandI + 1.0f);
+			float4 detail      = CW_SampleWeight(detailA, detailB, bandF);
+
+			color.rgb *= detail.rgb;
+		#endif
+
+		o.Albedo = color.xyz * _CW_Brightness;
+		o.Alpha  = 1.0f;
+	}
+END_CODE

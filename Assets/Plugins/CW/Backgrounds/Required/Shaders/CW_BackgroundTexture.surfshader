@@ -1,0 +1,54 @@
+﻿BEGIN_OPTIONS
+	Workflow "Unlit"
+	Alpha "Blend"
+	Tags { "Queue" = "Transparent-1" }
+END_OPTIONS
+
+BEGIN_PROPERTIES
+	[Enum(UnityEngine.Rendering.BlendMode)] _CW_SrcBlend ("SrcBlend", Float) = 1
+	[Enum(UnityEngine.Rendering.BlendMode)] _CW_DstBlend ("DstBlend", Float) = 1
+	
+	[Header(BASE)]
+	[NoScaleOffset]_CW_AlbedoTex("	Albedo (RGB)", 2D) = "white" {}
+	[NoScaleOffset]_CW_AlphaTex("	Alpha (A)", 2D) = "white" {}
+	_CW_Color("	Color", Color) = (1.0, 1.0, 1.0, 0.0)
+	_CW_Brightness("	Brightness", Float) = 1.0
+	_CW_Opacity("	Opacity", Range(0, 1)) = 1.0
+	_CW_AlbedoShift("	Albedo Shift", Range(0,6.2831853)) = 0
+END_PROPERTIES
+
+BEGIN_PASS("All")
+	Blend [_CW_SrcBlend] [_CW_DstBlend], One One
+END_PASS
+
+BEGIN_CBUFFER
+	float3 _CW_Color;
+	float  _CW_Brightness;
+	float  _CW_Opacity;
+	float  _CW_AlbedoShift;
+END_CBUFFER
+
+BEGIN_CODE
+	SAMPLER(sampler_CW_AlbedoTex);
+		TEXTURE2D(_CW_AlbedoTex);
+	SAMPLER(sampler_CW_AlphaTex);
+		TEXTURE2D(_CW_AlphaTex);
+
+	float3 CW_ShiftColor(float3 color, float shift)
+	{
+		float3 m = float3(cos(shift), -sin(shift) * 0.57735f, 0.0f);
+		m = float3(m.xy, -m.y) + (1.0f - m.x) * 0.33333f;
+		return mul(float3x3(m, m.zxy, m.yzx), color);
+	}
+
+	void SurfaceFunction(inout Surface o, ShaderData d)
+	{
+		float4 color = SAMPLE_TEXTURE2D(_CW_AlbedoTex, sampler_CW_AlbedoTex, d.texcoord0.xy);
+		float4 alpha = SAMPLE_TEXTURE2D(_CW_AlphaTex, sampler_CW_AlphaTex, d.texcoord0.xy);
+
+		color.rgb = CW_ShiftColor(color.rgb, _CW_AlbedoShift);
+
+		o.Albedo = color * _CW_Color * _CW_Brightness * _CW_Opacity;
+		o.Alpha  = alpha.w * _CW_Opacity;
+	}
+END_CODE

@@ -1,0 +1,116 @@
+﻿BEGIN_OPTIONS
+	Workflow "Unlit"
+	Alpha "Blend"
+END_OPTIONS
+
+BEGIN_PROPERTIES
+	[Enum(UnityEngine.Rendering.BlendMode)] _CW_SrcBlend ("SrcBlend", Float) = 1
+	[Enum(UnityEngine.Rendering.BlendMode)] _CW_DstBlend ("DstBlend", Float) = 1
+	
+	[Header(BASE)]
+	[NoScaleOffset]_CW_CloudsTex("	Albedo (RGB)", 2D) = "white" {}
+	_CW_Brightness("	Brightness", Float) = 1.0
+	_CW_Opacity("	Opacity", Range(0, 1)) = 1.0
+	_CW_AlbedoShift("	Albedo Shift", Range(0,6.2831853)) = 0
+	_CW_AlbedoTint("	Albedo Tint", Color) = (1.0, 1.0, 1.0, 1.0)
+
+	[Header(GRID)]
+	[Toggle(_CW_GRID)] _CW_Grid ("	Enable", Float) = 0
+	_CW_GridX("	Tiles X", Int) = 1
+	_CW_GridY("	Tiles Y", Int) = 1
+	
+	[Header(DETAIL)]
+	[Toggle(_CW_DETAIL)] _CW_Detail ("	Enable", Float) = 0
+	[NoScaleOffset]_CW_DetailTex("	Texture (RGB)", 2D) = "white" {}
+	_CW_DetailTiling("	Tiling", Float) = 1.0
+	_CW_DetailJitter("	Jitter", Float) = 1.0
+	_CW_DetailExposure("	Exposure", Range(1, 10)) = 1.0
+	_CW_DetailPowerMin("	Power Min", Float) = 1.0
+	_CW_DetailPowerMax("	Power Max", Float) = 10.0
+END_PROPERTIES
+
+BEGIN_PASS("All")
+	Blend [_CW_SrcBlend] [_CW_DstBlend], One One
+	ZWrite Off
+END_PASS
+
+BEGIN_DEFINES
+	#pragma shader_feature_local _CW_GRID
+	#pragma shader_feature_local _CW_DETAIL
+END_DEFINES
+
+BEGIN_CBUFFER
+	float  _CW_Brightness;
+	float  _CW_Opacity;
+	float  _CW_AlbedoShift;
+	float3 _CW_AlbedoTint;
+	
+	// GRID
+	int _CW_GridX;
+	int _CW_GridY;
+	
+	// DETAIL
+	float _CW_DetailTiling;
+	float _CW_DetailJitter;
+	float _CW_DetailExposure;
+	float _CW_DetailPowerMin;
+	float _CW_DetailPowerMax;
+END_CBUFFER
+
+BEGIN_CODE
+	SAMPLER(sampler_CW_CloudsTex);
+		TEXTURE2D(_CW_CloudsTex);
+	
+	SAMPLER(sampler_CW_DetailTex);
+		TEXTURE2D(_CW_DetailTex);
+
+	static const float2 _CW_Coords[4] = { float2(0.0f, 0.0f), float2(1.0f, 0.0f), float2(0.0f, 1.0f), float2(1.0f, 1.0f) };
+
+	float3 CW_ShiftColor(float3 color, float shift)
+	{
+		float3 m = float3(cos(shift), -sin(shift) * 0.57735f, 0.0f);
+		m = float3(m.xy, -m.y) + (1.0f - m.x) * 0.33333f;
+		return mul(float3x3(m, m.zxy, m.yzx), color);
+	}
+
+	void ModifyVertex(inout VertexData v, inout ExtraV2F e)
+	{
+		uint index = (uint)(v.vertexColor.w * 255);
+
+		v.texcoord0.xy = _CW_Coords[index];
+
+		#if _CW_GRID
+			int   cell  = v.vertexColor.z * 255;
+			int   tiles = _CW_GridX * _CW_GridY;
+			float stepX = 1.0f / _CW_GridX;
+			float stepY = 1.0f / _CW_GridY;
+
+			v.texcoord0.x = (v.texcoord0.x + cell % _CW_GridX) * stepX;
+			v.texcoord0.y = (v.texcoord0.y + cell / _CW_GridX) * stepY;
+		#endif
+		
+		#if _CW_DETAIL
+			float detailAngle = v.vertexColor.x * 500.0f;
+			
+			v.texcoord0.z = v.texcoord0.x * _CW_DetailTiling + sin(detailAngle) * _CW_DetailJitter;
+			v.texcoord0.w = v.texcoord0.y * _CW_DetailTiling + cos(detailAngle) * _CW_DetailJitter;
+		#endif
+	}
+
+	void SurfaceFunction(inout Surface o, ShaderData d)
+	{
+		float4 cloudsTex = SAMPLE_TEXTURE2D(_CW_CloudsTex, sampler_CW_CloudsTex, d.texcoord0.xy);
+		float4 color     = cloudsTex;
+		
+		#if _CW_DETAIL
+			color.rgb = pow(color.rgb, _CW_DetailExposure);
+			
+			float4 stars = SAMPLE_TEXTURE2D(_CW_DetailTex, sampler_CW_DetailTex, d.texcoord0.zw);
+			
+			color.rgb *= pow(stars.rgb, lerp(color.rgb, _CW_DetailPowerMin, _CW_DetailPowerMax));
+		#endif
+
+		o.Albedo = CW_ShiftColor(color.rgb, _CW_AlbedoShift) * _CW_AlbedoTint * _CW_Brightness * _CW_Opacity;
+		o.Alpha  = _CW_Opacity;
+	}
+END_CODE

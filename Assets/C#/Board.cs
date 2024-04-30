@@ -20,7 +20,7 @@ public class Board : MonoBehaviour
     static public Dictionary<string, Deck> Decks;
     public Card CardToAdd;
     public Transform HiddenParent;
-    private Card GoldCard;
+    public Card GoldCard;
 
     public static Board GetInstance()
     {
@@ -93,36 +93,11 @@ public class Board : MonoBehaviour
             {
                 Board.Decks["Fleet"].Cards[0].SetFaceUpState(true);
             }
-
-            
-            TimePasses();
         }
         
     }
 
-    public void TimePasses()
-    {        
-        if (GoldCard.GoldTimer.fillAmount < 1f)
-        {
-            GoldCard.GoldTimer.fillAmount += Time.deltaTime / 120;
-            return;
-        }
-        if(GoldCard.GoldTimer.fillAmount >= 1f)
-        {
-            if (GoldCard.Quantity <= 0)
-            {
-                print(GoldCard.ID);
-                print(GoldCard.Quantity);
-                Card bankruptCard = Instantiate<Card>(Board.State.CardToAdd);
-                bankruptCard.Initialize("bankrupt");
-                ActionGUI.Instance.DisplayEndGame(bankruptCard);
-                return;
-            }
-            ActionGUI.Instance.DisplayTimePassesPanel(GoldCard);
-            GoldCard.GoldTimer.fillAmount = 0f;
-            return;
-        }
-    }
+    
     
     public Card AddCard(string cardID, int quantity, bool bSetCardPositionsAfterAdding)
     {
@@ -211,7 +186,7 @@ public class Board : MonoBehaviour
             c.SetFaceUpState(true);
         }
         
-        Player.State.SetLocation("Deepmine");
+        Player.State.Location.SetLocation("Deepmine");
 
     }
 
@@ -275,7 +250,7 @@ public class Deck : IEnumerable<Card>
     }
 
 
-    private void SetHabitCardPositions()
+    private void SetHabitatCardPositions()
     {
         //assuming we are in Habitats deck
         int positionIndex = 0; // Track the position index
@@ -286,7 +261,7 @@ public class Deck : IEnumerable<Card>
                 continue;
             }
             
-            if (card.Data.System == Player.State.System)
+            if (card.Data.System == Player.State.Location.System)
             {
 
                 if (positionIndex < Positions.Count)
@@ -314,7 +289,7 @@ public class Deck : IEnumerable<Card>
     {
         if (Name == "Habitat")
         {
-            SetHabitCardPositions();
+            SetHabitatCardPositions();
             return;
         }
 

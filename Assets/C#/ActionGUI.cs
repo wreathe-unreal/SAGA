@@ -101,7 +101,22 @@ public class ActionGUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (ActionGUI.PanelState != EPanelState.EndState)
+        {
+            // Listen for key down event only once in Update
+            if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+            {
+                StartInputCoroutine();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Escape) && ActionGUI.IsActionPanelOpen())
+            {
+                ActionGUI.Instance.CancelActionPanel();
+                Terminal.TMP_Input.interactable = true;
+            }
+        }
         
+        TimePasses();
     }
     
     public void xButtonClicked()
@@ -147,6 +162,27 @@ public class ActionGUI : MonoBehaviour
         PanelState = EPanelState.Inactive;
     }
 
+    public void TimePasses()
+    {        
+        if (Board.State.GoldCard.GoldTimer.fillAmount < 1f)
+        {
+            Board.State.GoldCard.GoldTimer.fillAmount += Time.deltaTime / 120;
+            return;
+        }
+        if(Board.State.GoldCard.GoldTimer.fillAmount >= 1f)
+        {
+            if (Board.State.GoldCard.Quantity <= 0)
+            {
+                Card bankruptCard = Instantiate<Card>(Board.State.CardToAdd);
+                bankruptCard.Initialize("bankrupt");
+                ActionGUI.Instance.DisplayEndGame(bankruptCard);
+                return;
+            }
+            ActionGUI.Instance.DisplayTimePassesPanel(Board.State.GoldCard);
+            Board.State.GoldCard.GoldTimer.fillAmount = 0f;
+            return;
+        }
+    }
 
     public void StartInputCoroutine()
     {

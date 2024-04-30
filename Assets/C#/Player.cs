@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 
 public class Attribute
 {
@@ -25,10 +26,8 @@ public class Player : MonoBehaviour
     private static Card ActionCard;
 
     private static Card BattleOpponent;
-
-    public string System;
-    public string Habitat;
-    public string Location;
+    
+    public Location Location;
     public Dictionary<string, float> AttributeMap = new Dictionary<string, float>();
     private Dictionary<string, int> ActionRepetitionsMap;
     private static Player _State;
@@ -64,7 +63,7 @@ public class Player : MonoBehaviour
             cardSpecifiers.Add(cs);
         }
              
-        ActionKey actionKeyToFind = new ActionKey(ActionCard.Name, InputCards[0].ID, Location, cardSpecifiers);
+        ActionKey actionKeyToFind = new ActionKey(ActionCard.Name, InputCards[0].ID, Location.Name, cardSpecifiers);
              
         CardData mainCardData = CardDB.CardDataLookup[InputCards[0].ID];
 
@@ -263,7 +262,7 @@ public class Player : MonoBehaviour
         ActionCard = null;
     }
 
-    public string GetLocation()
+    public Location GetLocation()
     {
         return Location;
     }
@@ -276,181 +275,6 @@ public class Player : MonoBehaviour
     public void SetBattleOpponent(Card NewBattleOpponent)
     {
         BattleOpponent = NewBattleOpponent;
-    }
-
-    public void UpdatePlayerHabitat()
-    {
-        if (IsPlayerInHabitat())
-        {
-            Habitat = Location;
-        }
-        else
-        {
-            Habitat = "";
-
-        }
-    }
-
-    public bool IsPlayerInHabitat()
-    {
-        List<string> Systems = new List<string> { "Avalon", "Glint", "Merlin", "Nocturne", "Bane", "Macbeth IV" };
-
-        foreach (string s in Systems)
-        {
-            if (Location == s)
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public string UpdatePlayerSystem()
-    {
-        string newSystem = "";
-        
-        switch (Location)
-        {
-            case "Avalon":
-            case "Roundtable Nexus":
-            case "Terminus Est":
-            case "The Citadel":
-            case "The White Lodge":
-            case "Dragonroost":
-            case "Yggdrasil":
-            case "Leviathan Belt":
-            case "Earth":
-                newSystem = "Avalon";
-                break;
-            case "Glint":
-            case "Boulderhearth":
-            case "Forge":
-            case "Behemoth":
-            case "The Sledge":
-            case "Brewhalla":
-            case "Deepmine":
-            case "Jormungandr":
-            case "Ben Nevis":
-                newSystem = "Glint";
-                break;
-            case "Merlin":
-            case "Jenasysz":
-            case "Nostalgia V":
-            case "Undine":
-            case "Reverie":
-            case "Lore":
-            case "Longbow":
-            case "Myst":
-            case "Veil Lookouts":
-                newSystem = "Merlin";
-                break;
-            case "Nocturne":
-            case "Dracule":
-            case "Crimsontide":
-            case "One-eyed Jacks":
-            case "Wreckage Bay":
-            case "Smuggler's Nook":
-            case "Rakshasa":
-            case "Black Sun Campaign":
-            case "The Feast":
-                newSystem = "Nocturne";
-                break;
-            case "Bane":
-            case "Bameth":
-            case "Obsidian Conclave":
-            case "Voltage":
-            case "Darkwash":
-            case "Golem":
-            case "Blitzkrieg":
-            case "Zweijager":
-                newSystem = "Bane";
-                break;
-            case "Macbeth IV":
-            case "Mausoleum":
-            case "Umbressa":
-            case "Sakura":
-            case "Exvulsa":
-            case "Triangula":
-            case "Blame":
-            case "Abyss Abbey":
-            case "The Black Mass":
-                newSystem = "Macbeth IV";
-                break;
-
-        }
-
-        System = newSystem;
-
-        return newSystem;
-    }
-    
-    public List<string> GetSystemHabitats(string System)
-    {
-        List<string> Habitats = new List<string>();
-        switch (System)
-        {
-            case "Avalon":
-                Habitats.Add("Roundtable Nexus");
-                Habitats.Add("Terminus Est");
-                Habitats.Add("The Citadel");
-                Habitats.Add("The White Lodge");
-                Habitats.Add("Dragonroost");
-                Habitats.Add("Yggdrasil");
-                Habitats.Add("Leviathan Belt");
-                Habitats.Add("Earth");
-                break;
-            case "Glint":
-                Habitats.Add("Boulderhearth");
-                Habitats.Add("Forge");
-                Habitats.Add("Behemoth");
-                Habitats.Add("The Sledge");
-                Habitats.Add("Brewhalla");
-                Habitats.Add("Deepmine");
-                Habitats.Add("Jormungandr");
-                Habitats.Add("Ben Nevis");
-                break;
-            case "Merlin":
-                Habitats.Add("Jenasysz");
-                Habitats.Add("Nostalgia V");
-                Habitats.Add("Undine");
-                Habitats.Add("Reverie");
-                Habitats.Add("Lore");
-                Habitats.Add("Longbow");
-                Habitats.Add("Myst");
-                Habitats.Add("Veil Lookouts");
-                break;
-            case "Nocturne":
-                Habitats.Add("Dracule");
-                Habitats.Add("Crimsontide");
-                Habitats.Add("One-eyed Jacks");
-                Habitats.Add("Wreckage Bay");
-                Habitats.Add("Smuggler's Nook");
-                Habitats.Add("Rakshasa");
-                Habitats.Add("Black Sun Campaign");
-                Habitats.Add("The Feast");
-                break;
-            case "Bane":
-                Habitats.Add("Bameth");
-                Habitats.Add("Obsidian Conclave");
-                Habitats.Add("Voltage");
-                Habitats.Add("Darkwash");
-                Habitats.Add("Golem");
-                Habitats.Add("Blitzkrieg");
-                Habitats.Add("Zweijager");
-                break;
-            case "Macbeth IV":
-                Habitats.Add("Mausoleum");
-                Habitats.Add("Umbressa");
-                Habitats.Add("Sakura");
-                Habitats.Add("Exvulsa");
-                Habitats.Add("Triangula");
-                Habitats.Add("Blame");
-                Habitats.Add("Abyss Abbey");
-                Habitats.Add("The Black Mass");
-                break;
-        }
-
-        return Habitats;
     }
 
     public void HandleTravel(ActionData currentActionData)
@@ -467,47 +291,10 @@ public class Player : MonoBehaviour
         }
 
 
-        SetLocation(newLocation);
-        
-        
+        Location.SetLocation(newLocation);
+
     }
 
-    public void SetLocation(string newLocation)
-    {
-        Location = newLocation;
-        UpdatePlayerSystem();
-        UpdatePlayerHabitat();
-        
-        foreach (Deck d in Board.Decks.Values)
-        {
-            if (d.Name == "Habitat")
-            {
-                d.SetCardPositions();
-            }
-        }
-        
-        foreach (Card c in Board.Decks["Habitat"])
-        {
-            if (c != null && c.Name == Habitat)
-            {
-                c.LocationGlow.fillAmount = 100;
-            }
-            else
-            {
-                c.LocationGlow.fillAmount = 0;
-            }
-                
-        }
-        foreach (Card c in Board.Decks["System"])
-        {
-            if (c != null && c.Name == System)
-            {
-                c.LocationGlow.fillAmount = 100;
-            }
-            else
-            {
-                c.LocationGlow.fillAmount = 0;
-            }
-        }
-    }
+
+    
 }

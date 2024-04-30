@@ -1,0 +1,205 @@
+﻿BEGIN_OPTIONS
+	Workflow "Unlit"
+	Alpha "Blend"
+	Tags { "Queue" = "Transparent-1" }
+END_OPTIONS
+
+BEGIN_PROPERTIES
+	[Header(SURFACE)]
+	[NoScaleOffset]_CW_SurfaceAlbedoTex("	Albedo (RGB)", 2D) = "white" {}
+	_CW_SurfaceRadius("	Radius", Range(0.0, 1.0)) = 1.0
+	_CW_SurfaceWarp("	Warp", Range(0.0, 1.0)) = 1.0
+	_CW_SurfaceTiling("	Tiling", Float) = 1.0
+	_CW_SurfaceScroll("	Scroll", Vector) = (0.1, 0.0, 0.0, 0.0)
+	_CW_SurfaceEdge("	Edge", Float) = 100.0
+	_CW_AlbedoShift("	Albedo Shift", Range(0,6.2831853)) = 0
+	_CW_AlbedoTint("	Albedo Tint", Color) = (1.0, 1.0, 1.0, 1.0)
+
+	[Header(LIGHTING)]
+	[Toggle(_CW_LIGHTING)] _CW_Lighting ("	Enable", Float) = 0
+	[NoScaleOffset]_CW_LightingGradientTex("	Gradient (A)", 2D) = "white" {}
+	_CW_LightingAngle("	Angle", Float) = 0.0
+	_CW_LightingOffset("	Offset", Float) = 0.0
+	_CW_LightingSharpness("	Sharpness", Float) = 1.0
+	_CW_LightingColor("	Color", Color) = (1.0, 0.8, 0.8, 0.0)
+	_CW_LightingPower("	Power", Float) = 1.0
+
+	[Header(CLOUDS)]
+	[Toggle(_CW_CLOUDS)] _CW_Clouds ("	Enable", Float) = 0
+	[NoScaleOffset]_CW_CloudsTex("	Mask (A)", 2D) = "white" {}
+	_CW_CloudsEdge("	Edge", Float) = 1.0
+	_CW_CloudsTiling("	Tiling", Float) = 1.0
+	_CW_CloudsScroll("	Scroll", Vector) = (0.1, 0.0, 0.0, 0.0)
+	_CW_CloudsThreshold("	Threshold", Range(0.0, 1.0)) = 0.0
+	_CW_CloudsColor("	Clouds Color", Color) = (1.0, 1.0, 1.0, 0.0)
+
+	[Header(CLOUDS SHADOW)]
+	[Toggle(_CW_CLOUDS_SHADOW)] _CW_CloudsShadow ("	Enable", Float) = 0
+	_CW_CloudsShadowColor("	Color", Color) = (0.0, 0.0, 0.0, 0.0)
+	_CW_CloudsShadowOffset("	Offset", Vector) = (0.1, 0.1, 0.0, 0.0)
+	_CW_CloudsShadowBlur("	Blur", Range(0.0, 1.0)) = 0.0
+
+	[Header(ATMOSPHERE)]
+	[Toggle(_CW_ATMOSPHERE)] _CW_Atmosphere ("	Enable", Float) = 0
+	[NoScaleOffset]_CW_AtmosphereGradientTex("	Gradient (A)", 2D) = "white" {}
+	_CW_AtmosphereEdgeShift("	Edge Shift", Range(0.0, 1.0)) = 1.0
+	_CW_AtmosphereFog("	Fog", Range(0.0, 1.0)) = 0.0
+	_CW_AtmosphereFogMul("	Fog Mul", Float) = 1.0
+	_CW_AtmosphereFogPower("	Fog Power", Float) = 1.0
+	_CW_AtmosphereBrightness("	Brightness", Float) = 1.0
+	_CW_AtmosphereOuter("	Outer", Float) = 0.0
+	_CW_AtmosphereInnerColor("	Inner Color", Color) = (0.8, 0.8, 1.0, 0.0)
+	_CW_AtmosphereOuterColor("	Outer Color", Color) = (0.5, 0.5, 1.0, 0.0)
+END_PROPERTIES
+
+BEGIN_PASS("All")
+	Blend One OneMinusSrcAlpha, One One
+END_PASS
+
+BEGIN_DEFINES
+	#pragma shader_feature_local _CW_CLOUDS
+	#pragma shader_feature_local _CW_CLOUDS_SHADOW
+	#pragma shader_feature_local _CW_ATMOSPHERE
+	#pragma shader_feature_local _CW_LIGHTING
+END_DEFINES
+
+BEGIN_CBUFFER
+	float  _CW_SurfaceRadius;
+	float  _CW_SurfaceWarp;
+	float  _CW_SurfaceTiling;
+	float2 _CW_SurfaceScroll;
+	float  _CW_SurfaceEdge;
+	float  _CW_AlbedoShift;
+	float3 _CW_AlbedoTint;
+
+	// Clouds
+	float  _CW_CloudsEdge;
+	float  _CW_CloudsTiling;
+	float2 _CW_CloudsScroll;
+	float  _CW_CloudsThreshold;
+	float3 _CW_CloudsColor;
+
+	// Clouds Shadow
+	float4 _CW_CloudsShadowColor;
+	float2 _CW_CloudsShadowOffset;
+	float  _CW_CloudsShadowBlur;
+
+	// Atmosphere
+	float  _CW_AtmosphereEdgeShift;
+	float  _CW_AtmosphereFog;
+	float  _CW_AtmosphereFogMul;
+	float  _CW_AtmosphereFogPower;
+	float  _CW_AtmosphereOuter;
+	float  _CW_AtmosphereBrightness;
+	float3 _CW_AtmosphereInnerColor;
+	float3 _CW_AtmosphereOuterColor;
+
+	// Lighting
+	float  _CW_LightingAngle;
+	float  _CW_LightingOffset;
+	float  _CW_LightingSharpness;
+	float3 _CW_LightingColor;
+	float  _CW_LightingPower;
+END_CBUFFER
+
+BEGIN_CODE
+	TEXTURE2D(_CW_SurfaceAlbedoTex);
+	SAMPLER(sampler_CW_SurfaceAlbedoTex);
+
+	TEXTURE2D(_CW_AtmosphereGradientTex);
+	SAMPLER(sampler_CW_AtmosphereGradientTex);
+
+	TEXTURE2D(_CW_LightingGradientTex);
+	SAMPLER(sampler_CW_LightingGradientTex);
+
+	TEXTURE2D(_CW_CloudsTex);
+	SAMPLER(sampler_CW_CloudsTex);
+
+	float2 CW_GetWarp(float2 uv, float w)
+	{
+		float k = abs(1.0f - dot(uv, uv) * w);
+
+		// Prevents edge aliasing when the planet is small on screen, maybe there's a faster way to do this?
+		float d = max(abs(ddx(k)), abs(ddy(k)));
+		k = max(k, d);
+
+		return uv / sqrt(k);
+	}
+
+	float2 CW_Rotate(float2 v, float a)
+	{
+		float s = sin(a);
+		float c = cos(a);
+		return float2(c * v.x - s * v.y, s * v.x + c * v.y);
+	}
+
+	float4 CW_GetClouds(float2 uv, float2 offset)
+	{
+		float2 cloudsUV     = (CW_GetWarp(uv, _CW_SurfaceWarp) + _Time.x * _CW_CloudsScroll) * _CW_CloudsTiling + offset;
+		float4 clouds       = SAMPLE_TEXTURE2D(_CW_CloudsTex, sampler_CW_CloudsTex, cloudsUV);
+
+		clouds.r *= 1.0f - saturate(pow(length(uv), _CW_CloudsEdge));
+
+		clouds.r = saturate(clouds.r - _CW_CloudsThreshold) / (1.0f - _CW_CloudsThreshold);
+		
+		return clouds;
+	}
+
+	float3 CW_ShiftColor(float3 color, float shift)
+	{
+		float3 m = float3(cos(shift), -sin(shift) * 0.57735f, 0.0f);
+		m = float3(m.xy, -m.y) + (1.0f - m.x) * 0.33333f;
+		return mul(float3x3(m, m.zxy, m.yzx), color);
+	}
+
+	void SurfaceFunction(inout Surface o, ShaderData d)
+	{
+		d.texcoord0.xy = normalize(d.localSpacePosition.xy) * d.texcoord0.x;
+
+		float2 planetUV = d.texcoord0.xy / _CW_SurfaceRadius;
+		float2 mainUV   = (CW_GetWarp(planetUV, _CW_SurfaceWarp) + _Time.x * _CW_SurfaceScroll);
+
+		o.Alpha  = 1.0f - saturate(pow(length(planetUV), _CW_SurfaceEdge));
+		o.Albedo = SAMPLE_TEXTURE2D(_CW_SurfaceAlbedoTex, sampler_CW_SurfaceAlbedoTex, mainUV * _CW_SurfaceTiling).xyz * o.Alpha;
+
+		o.Albedo = CW_ShiftColor(o.Albedo, _CW_AlbedoShift) * _CW_AlbedoTint;
+
+		float dist2 = length(d.texcoord0.xy);
+		dist2 = (dist2 - _CW_AtmosphereEdgeShift) / (1.0f - _CW_AtmosphereEdgeShift);
+		
+		#if _CW_CLOUDS_SHADOW
+			float4 cloudsShadowAlpha = CW_GetClouds(planetUV, _CW_CloudsShadowOffset);
+
+			o.Albedo = lerp(o.Albedo, _CW_CloudsShadowColor.xyz, lerp(cloudsShadowAlpha.g, cloudsShadowAlpha.b, _CW_CloudsShadowBlur) * _CW_CloudsShadowColor.w);
+		#endif
+
+		#if _CW_CLOUDS
+			float4 cloudsAlbedoAlpha = CW_GetClouds(planetUV, 0.0f);
+
+			o.Albedo = lerp(o.Albedo, _CW_CloudsColor, cloudsAlbedoAlpha.r * o.Alpha);
+		#endif
+
+		float dist = sqrt(abs(1.0f - dot(d.texcoord0.xy, d.texcoord0.xy)));
+
+		#if _CW_ATMOSPHERE
+			float  edge            = _CW_AtmosphereFog + (1.0f - dist) * (1.0f - _CW_AtmosphereFog); edge = saturate(pow(edge, _CW_AtmosphereFogPower) * _CW_AtmosphereFogMul);
+			float2 gradientUV      = dist2;
+			float  gradientColor   = SAMPLE_TEXTURE2D(_CW_AtmosphereGradientTex, sampler_CW_AtmosphereGradientTex, gradientUV + _CW_AtmosphereOuter).w;
+			float  atmosphereAlpha = SAMPLE_TEXTURE2D(_CW_AtmosphereGradientTex, sampler_CW_AtmosphereGradientTex, gradientUV).w * edge;
+			float3 atmosphereColor = lerp(_CW_AtmosphereOuterColor, _CW_AtmosphereInnerColor, gradientColor) * _CW_AtmosphereBrightness * atmosphereAlpha;
+
+			o.Albedo = atmosphereColor + o.Albedo * (1.0f - atmosphereAlpha);
+			o.Alpha  += atmosphereAlpha * (1.0f - o.Alpha);
+		#endif
+
+		#if _CW_LIGHTING
+			float shadowU    = 1.0f;
+			float shadowV    = (CW_GetWarp(CW_Rotate(d.texcoord0.xy, _CW_LightingAngle), _CW_SurfaceWarp).y + _CW_LightingOffset) / _CW_LightingSharpness + 0.5f;
+			float shadowGrad = SAMPLE_TEXTURE2D(_CW_LightingGradientTex, sampler_CW_LightingGradientTex, float2(shadowU, shadowV)).w;
+
+			o.Albedo *= lerp(1.0f, _CW_LightingColor, pow(1.0f - shadowGrad * o.Alpha, _CW_LightingPower));
+
+			o.Albedo *= shadowGrad;
+		#endif
+	}
+END_CODE
