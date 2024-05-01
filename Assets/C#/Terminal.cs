@@ -14,6 +14,7 @@ public class Terminal : MonoBehaviour
      public static TMP_InputField TMP_Input;
      public static string[] ParsedText;
      private static bool bStatusText = true;
+     private static bool bPaused = false;
      
      void Start()
      {
@@ -24,10 +25,25 @@ public class Terminal : MonoBehaviour
      
      void Update()
      {
-
+         if (Input.GetKeyDown(KeyCode.Space))
+         {
+             PauseButtonClicked();
+         }
      }
 
-     
+     public static void PauseButtonClicked()
+     {
+         if (bPaused)
+         {
+             Time.timeScale = 0f;
+         }
+         else
+         {
+             Time.timeScale = 1f;
+         }
+
+         bPaused = !bPaused;
+     }
 
      public static void ParseText()
      {
