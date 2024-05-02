@@ -60,7 +60,7 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
-        if (ActionGUI.PanelState != EPanelState.EndState)
+        if (ActionGUI.PanelState == EPanelState.Inactive)
         {
             RenderSettings.skybox.SetFloat("_Rotation", Time.time * SkyBoxRotationSpeed);
         

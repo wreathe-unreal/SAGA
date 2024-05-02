@@ -87,7 +87,7 @@ public class Starship : MonoBehaviour
     {
         EComponentType ect = EComponentTypeLookup[c.Data.Type];
 
-        if (Components[ect] == null ||Components[ect].Power < StarshipComponentDB[c.ID].Power)
+        if (Components[ect] == null ||Components[ect].Power < StarshipComponentDB[c.Name].Power)
         {
             Board.Decks["Starship"].Cards.Insert((int)ect - 1, c); //our ECT are 1 based but deck list is 0 based
             Components[ect] = StarshipComponentDB[c.Name];

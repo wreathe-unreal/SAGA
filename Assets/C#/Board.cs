@@ -77,9 +77,7 @@ public class Board : MonoBehaviour
             }
         }
 
-        
-        
-
+        Player.Location.SetLocation("Deepmine");
     }
 
     // Update is called once per frame
@@ -145,6 +143,10 @@ public class Board : MonoBehaviour
         {
             Card newCard = Instantiate<Card>(CardToAdd);
             newCard.Initialize(cardID);
+            if (newCard.DeckType != "Action" && quantity > 1)
+            {
+                newCard.ModifyQuantity(quantity-1);
+            }
             Decks[deckType].Cards.Add(newCard);
             if (bSetCardPositionsAfterAdding)
             {
@@ -200,7 +202,7 @@ public class Board : MonoBehaviour
 
     private void AddStartingCards()
     {
-        List<string> InitialCards = new List<string> { "riders_auto_indent", "my_coding_style", "work", "glint", "deepmine", "toil_the_deep", "battle", "gold", "travel", "wreckage_bay", "nocturne"};
+        List<string> InitialCards = new List<string> {"gold", "gold", "work", "toil_the_deep", "deepmine", "avalon", "macbeth_iv", "glint", "nocturne", "bane", "merlin"};
 
         foreach (string s in InitialCards)
         {
@@ -218,11 +220,17 @@ public class Board : MonoBehaviour
             c.Reparent(null);
            
         }
+        
+        foreach (Card c in Cards)
+        {
+            c.RevertScaling();
+        }
 
         foreach (Deck d in Board.Decks.Values)
         {
             d.SetCardPositions();
         }
+        
 
         Cards.Clear();
     }
@@ -354,6 +362,7 @@ public class Deck : IEnumerable<Card>
             case "Character":
             case "Enemy":
             case "Ambition":
+            case "Quest":
                 SetHabitatBasedCardPositions();
                 break;
             

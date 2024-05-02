@@ -2,7 +2,7 @@
     {
         "Actions": [
         ],
-        "FlavorText": "Flavor text...\n",
+        "FlavorText": "One must work, be it clashing with ships among stars, trading with distant moons, or even the silent struggle deep within the mines.  ",
         "Habitat": "",
         "ID": "work",
         "ImagePath": "work.png",
@@ -16,7 +16,7 @@
     {
         "Actions": [
         ],
-        "FlavorText": "",
+        "FlavorText": "Dreams, like distant stars, beckon the bold from the safety of known shores to the wild seas of possibility.",
         "Habitat": "",
         "ID": "dream",
         "ImagePath": "dream.png",
@@ -30,7 +30,7 @@
     {
         "Actions": [
         ],
-        "FlavorText": "",
+        "FlavorText": "Words yield worlds—spun with silk for diplomacy, edged with steel for defiance, whispered for romance, or roared for revolution.",
         "Habitat": "",
         "ID": "talk",
         "ImagePath": "talk.png",
@@ -58,7 +58,7 @@
     {
         "Actions": [
         ],
-        "FlavorText": "",
+        "FlavorText": "Through the vast tapestry of stars, travelers weave their paths, each jump through hyperspace a leap into the unknown, guided by the light of distant suns.",
         "Habitat": "",
         "ID": "travel",
         "ImagePath": "travel.png",
@@ -72,7 +72,7 @@
     {
         "Actions": [
         ],
-        "FlavorText": "",
+        "FlavorText": "In the stillness of the lab, star maps unfold and cosmic secrets are deciphered, each discovery a stepping stone across the infinite void.",
         "Habitat": "",
         "ID": "research",
         "ImagePath": "research.png",
@@ -100,7 +100,7 @@
     {
         "Actions": [
         ],
-        "FlavorText": "",
+        "FlavorText": "Beyond the familiar horizons lie mysteries veiled in shadow—each step into the unknown a dance with destiny.",
         "Habitat": "",
         "ID": "explore",
         "ImagePath": "explore.png",
@@ -114,7 +114,7 @@
     {
         "Actions": [
         ],
-        "FlavorText": "",
+        "FlavorText": "In the crucible of conflict, where steel meets steel, the true mettle of warriors is forged under the unforgiving hammer of fate.",
         "Habitat": "",
         "ID": "battle",
         "ImagePath": "battle.png",
@@ -193,7 +193,7 @@
                 }
             }
         ],
-        "FlavorText": "With it's surface engulfed in flame and smoke, the only rule below is: don't ask what the creature beside you did to retreat here.",
+        "FlavorText": "Beneath the endless surface firestorm, enslaved souls toil in endless dark, mining the seeds of their own despair.  The only rule: don't ask what the creature beside you did to retreat here.",
         "Habitat": "Deepmine",
         "ID": "deepmine",
         "ImagePath": "deepmine.png",
@@ -206,6 +206,39 @@
     },
     {
         "Actions": [
+            {
+                "ActionKey": {
+                    "ActionName": "Work",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "toil_the_deep",
+                    "MaxRepetitions": 0,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "Deepmine",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "Toil Progress",
+                    "AttributeModifier": 1,
+                    "Duration": 8,
+                    "FlavorText": "There is little else to do but bend my back and put the flame to the tunnel.",
+                    "OutcomeText": "In the stretch of tunnel you've been assigned, you see a glint... a shimmer... what could it be?",
+                    "ReturnedCardIDs": [
+                        "work",
+                        "toil_the_deep",
+                        "glint_in_the_wall",
+                        "gold"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    "Title": "Toil in the Deepmines"
+                }
+            },
             {
                 "ActionKey": {
                     "ActionName": "Work",
@@ -236,58 +269,85 @@
                     ],
                     "Title": "Toil in the Deepmines"
                 }
-            },
-            {
-                "ActionKey": {
-                    "ActionName": "Work",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "toil_the_deep",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "Deepmine",
-                    "SecondaryCardSpecifiers": [
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "Toil Progress",
-                    "AttributeModifier": 1,
-                    "Duration": 8,
-                    "FlavorText": "There is little else to do but bend my back and put the flame to the tunnel.",
-                    "OutcomeText": "In the stretch of tunnel you've been assigned, you see a glint... a shimmer... what could it be?",
-                    "ReturnedCardIDs": [
-                        "work",
-                        "toil_the_deep",
-                        "glint_in_the_wall",
-                        "jolt_battery",
-                        "microvault"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1,
-                        1,
-                        1,
-                        1
-                    ],
-                    "Title": "Toil in the Deepmines"
-                }
             }
         ],
-        "FlavorText": "As the contract binds, there is little else to do but bend my back and put the flame to the tunnel.",
+        "FlavorText": "Bound by ink and iron, this contract seals your fate to the shadows beneath, where you will toil until the dwaven claim over you is satisfied.",
         "Habitat": "Deepmine",
         "ID": "toil_the_deep",
         "ImagePath": "toil_the_deep.png",
         "Lifespan": 0,
         "Name": "Toil the Deep",
         "Price": 0,
-        "Property": "Civilian",
+        "Property": "Cursed",
         "System": "Glint",
-        "Type": "Ambition"
+        "Type": "Quest"
     },
     {
         "Actions": [
+            {
+                "ActionKey": {
+                    "ActionName": "Dream",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "gold",
+                    "MaxRepetitions": 0,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 8,
+                    "FlavorText": "I dream of all the possibilities one could accomplish with limitless coin.",
+                    "OutcomeText": "You find a deep desire to possess, in that is an energy of it's own.",
+                    "ReturnedCardIDs": [
+                        "dream",
+                        "gold",
+                        "avarice"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Title": "If I was a Rich Scab"
+                }
+            },
+            {
+                "ActionKey": {
+                    "ActionName": "Research",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "gold",
+                    "MaxRepetitions": 0,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 8,
+                    "FlavorText": "I plumb literature on economics, notably the old works of those Captains of Industry such as Mr. Mint, and the relentless Rheingold.",
+                    "OutcomeText": "You learn about the ways of coin, the whys and hows of it's exchange.",
+                    "ReturnedCardIDs": [
+                        "research",
+                        "gold",
+                        "economic_theory"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Title": "The Way of Mint"
+                }
+            }
         ],
-        "FlavorText": "Harken to that melodious sound of the clink of coin.",
+        "FlavorText": "Gleaming gold, each piece stamped with the seal of Glint—coveted, hoarded, bound in blood.",
         "Habitat": "",
         "ID": "gold",
         "ImagePath": "gold.png",
@@ -320,9 +380,11 @@
                     "OutcomeText": "Entombed in stone you find the skeleton of a small craft, by the laws of salvage it's yours to dream with.",
                     "ReturnedCardIDs": [
                         "shattered_shuttle",
-                        "dream"
+                        "dream",
+                        "work"
                     ],
                     "ReturnedQuantities": [
+                        1,
                         1,
                         1
                     ],
@@ -426,7 +488,7 @@
                 }
             }
         ],
-        "FlavorText": "The remnants of someone else's dream, perhaps you can make it your own.",
+        "FlavorText": "It whispers of escape, by the laws of salvage, it is yours to dream with.  ",
         "Habitat": "",
         "ID": "shattered_shuttle",
         "ImagePath": "shattered_shuttle.png",
@@ -456,37 +518,6 @@
             {
                 "ActionKey": {
                     "ActionName": "Talk",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "helldiver_uma",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "Helldiver Uma Progress",
-                    "AttributeModifier": 1,
-                    "Duration": 8,
-                    "FlavorText": "I approach the shift supervisor to see to speak of Freedom.",
-                    "OutcomeText": "She suggests that you save to take a trip to Wreckage Bay. They might have what you need.",
-                    "ReturnedCardIDs": [
-                        "talk",
-                        "helldiver_uma",
-                        "greyhound"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1,
-                        1
-                    ],
-                    "Title": "To Speak of Freedom"
-                }
-            },
-            {
-                "ActionKey": {
-                    "ActionName": "Talk",
                     "Attribute": "Helldiver Uma Progress",
                     "AttributeMinimum": 1,
                     "ID": "helldiver_uma",
@@ -503,10 +534,39 @@
                     "FlavorText": "I approach supervisor Uma, but I've already asked her about my dream.",
                     "OutcomeText": "She greets you like she would any of the other scabs, but she does inquire as to whether or not you've moved up in the world.",
                     "ReturnedCardIDs": [
-                        "shattered_shuttle",
-                        "dream",
                         "talk",
                         "helldiver_uma"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1
+                    ],
+                    "Title": "Talking to Uma"
+                }
+            },
+            {
+                "ActionKey": {
+                    "ActionName": "Talk",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "helldiver_uma",
+                    "MaxRepetitions": 0,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "Helldiver Uma Progress",
+                    "AttributeModifier": 1,
+                    "Duration": 8,
+                    "FlavorText": "I approach the shift supervisor to see to speak of Freedom.",
+                    "OutcomeText": "She suggests that you save to take a trip to Wreckage Bay. They might have what you need.",
+                    "ReturnedCardIDs": [
+                        "gold",
+                        "talk",
+                        "helldiver_uma",
+                        "greyhound"
                     ],
                     "ReturnedQuantities": [
                         1,
@@ -514,11 +574,11 @@
                         1,
                         1
                     ],
-                    "Title": "Talking to Uma"
+                    "Title": "To Speak of Freedom"
                 }
             }
         ],
-        "FlavorText": "Shift Supervisor Uma, is as experienced a helldiver as they come. In the Deepmines, she's the person all the scabs look up to.",
+        "FlavorText": "Deepmine East Wing Tunnel 380's overseer, as friendly as Helldivers come.",
         "Habitat": "Deepmine",
         "ID": "helldiver_uma",
         "ImagePath": "helldiver_uma.png",
@@ -615,17 +675,13 @@
                     "AttributeModifier": 0,
                     "Duration": 8,
                     "FlavorText": "I drop a coin into his hand.",
-                    "OutcomeText": "He gestures for you to follow. It doesn't take long.",
+                    "OutcomeText": "He grants you shuttle tickets and suggests you go to Nocturne and from there to Wreckage Bay.",
                     "ReturnedCardIDs": [
-                        "greyhound",
-                        "travel",
-                        "wreckage_bay",
                         "trade",
-                        "nocturne"
+                        "travel",
+                        "wreckage_bay"
                     ],
                     "ReturnedQuantities": [
-                        1,
-                        1,
                         1,
                         1,
                         1
@@ -641,7 +697,7 @@
         "Lifespan": 0,
         "Name": "Greyhound",
         "Price": 18,
-        "Property": "Civilian",
+        "Property": "Economic",
         "System": "Glint",
         "Type": "Character"
     },
@@ -715,7 +771,7 @@
                 }
             }
         ],
-        "FlavorText": "The Buccaneer's bonyard, a veritable asteroid belt except without any asteroids, there's just a whole lot of stolen ships and ship parts floating around.",
+        "FlavorText": "The Buccaneer's boneyard, a ring planet orbit littered with scrapped and plundered ship debris.",
         "Habitat": "Wreckage Bay",
         "ID": "wreckage_bay",
         "ImagePath": "wreckage_bay.png",
@@ -728,75 +784,6 @@
     },
     {
         "Actions": [
-            {
-                "ActionKey": {
-                    "ActionName": "Talk",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "dogboy",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "",
-                    "AttributeModifier": 0,
-                    "Duration": 8,
-                    "FlavorText": "I inquire about ship parts, he gives a sickeningly wet and not quite toothy grin.",
-                    "OutcomeText": "Delighted that you're in search of scraps. He informs you that if you have the gold, he's got the parts. If not, you can work... like a dog to save for what you need.",
-                    "ReturnedCardIDs": [
-                        "dogboy",
-                        "talk",
-                        "salvage_scrap"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1,
-                        1
-                    ],
-                    "Title": "On Table Scraps"
-                }
-            },
-            {
-                "ActionKey": {
-                    "ActionName": "Trade",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "dogboy",
-                    "MaxRepetitions": 1,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "Wreckage Bay",
-                    "SecondaryCardSpecifiers": [
-                        [
-                            "gold",
-                            "",
-                            ""
-                        ]
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "",
-                    "AttributeModifier": 0,
-                    "Duration": 8,
-                    "FlavorText": "I've have enough, time to continue my journey.",
-                    "OutcomeText": "He unceremoniously dumps a pile of components both mundane and magical on the table in front of you.",
-                    "ReturnedCardIDs": [
-                        "trade",
-                        "dogboy",
-                        "components",
-                        "research"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1,
-                        2,
-                        1
-                    ],
-                    "Title": "Buying Ship Parts"
-                }
-            },
             {
                 "ActionKey": {
                     "ActionName": "Trade",
@@ -834,6 +821,79 @@
                     ],
                     "Title": "Shopping as a Pirate"
                 }
+            },
+            {
+                "ActionKey": {
+                    "ActionName": "Talk",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "dogboy",
+                    "MaxRepetitions": 0,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 8,
+                    "FlavorText": "I inquire about ship parts, he gives a sickeningly wet and not quite toothy grin.",
+                    "OutcomeText": "Delighted that you're in search of scraps. He informs you that if you have the gold, he's got the parts. If not, you can work... like a dog to save for what you need.",
+                    "ReturnedCardIDs": [
+                        "dogboy",
+                        "talk",
+                        "salvage_scrap",
+                        "components",
+                        "research"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    "Title": "On Table Scraps"
+                }
+            },
+            {
+                "ActionKey": {
+                    "ActionName": "Trade",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "dogboy",
+                    "MaxRepetitions": 1,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "Wreckage Bay",
+                    "SecondaryCardSpecifiers": [
+                        [
+                            "gold",
+                            "",
+                            ""
+                        ]
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 8,
+                    "FlavorText": "I've have enough, time to continue my journey.",
+                    "OutcomeText": "He unceremoniously dumps a pile of components both mundane and magical on the table in front of you.",
+                    "ReturnedCardIDs": [
+                        "trade",
+                        "dogboy",
+                        "research",
+                        "components"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    "Title": "Buying Ship Parts"
+                }
             }
         ],
         "FlavorText": "A ghoulish servant of greater sires, he takes delight in reminding those who darken his door that they are in search of... scraps.",
@@ -855,9 +915,9 @@
                     "Attribute": "",
                     "AttributeMinimum": 0,
                     "ID": "salvage_scrap",
-                    "MaxRepetitions": 0,
+                    "MaxRepetitions": 6,
                     "MinRepetitions": 0,
-                    "ReqLocation": "",
+                    "ReqLocation": "Wreckage Bay",
                     "SecondaryCardSpecifiers": [
                     ]
                 },
@@ -888,47 +948,12 @@
         "Lifespan": 0,
         "Name": "Salvage Scrap",
         "Price": 0,
-        "Property": "Civilian",
+        "Property": "Industrial",
         "System": "Nocturne",
-        "Type": "Ambition"
+        "Type": "Quest"
     },
     {
         "Actions": [
-            {
-                "ActionKey": {
-                    "ActionName": "Research",
-                    "Attribute": "Component Research Progress",
-                    "AttributeMinimum": 1,
-                    "ID": "components",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "",
-                    "AttributeModifier": 0,
-                    "Duration": 8,
-                    "FlavorText": "Seeking to understand the manipulation of reality's component parts.",
-                    "OutcomeText": "This feeling evokes the memory of our ancient ancestors, banging rocks together to produce flame, thankfully we have manuals.",
-                    "ReturnedCardIDs": [
-                        "research",
-                        "rattler",
-                        "glitchray",
-                        "junked_materia_engine",
-                        "sputterjets"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1,
-                        1,
-                        1,
-                        1
-                    ],
-                    "Title": "Praying over Magic Wires"
-                }
-            },
             {
                 "ActionKey": {
                     "ActionName": "Research",
@@ -944,7 +969,7 @@
                 "ActionResult": {
                     "AttributeModified": "Component Research Progress",
                     "AttributeModifier": 1,
-                    "Duration": 8,
+                    "Duration": 18,
                     "FlavorText": "Seeking to understand the manipulation of reality's component parts.",
                     "OutcomeText": "This evokes the memory of our ancient ancestors, banging rocks together to produce flame, thankfully we have manuals.",
                     "ReturnedCardIDs": [
@@ -953,6 +978,41 @@
                         "cracked_capacitor",
                         "microvault",
                         "spark_jump"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    "Title": "Praying over Magic Wires"
+                }
+            },
+            {
+                "ActionKey": {
+                    "ActionName": "Research",
+                    "Attribute": "Component Research Progress",
+                    "AttributeMinimum": 1,
+                    "ID": "components",
+                    "MaxRepetitions": 1,
+                    "MinRepetitions": 1,
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 18,
+                    "FlavorText": "Seeking to understand the manipulation of reality's component parts.",
+                    "OutcomeText": "This feeling evokes the memory of our ancient ancestors, banging rocks together to produce flame, thankfully we have manuals.",
+                    "ReturnedCardIDs": [
+                        "research",
+                        "rattler",
+                        "glitchray",
+                        "junked_materia_engine",
+                        "sputterjets"
                     ],
                     "ReturnedQuantities": [
                         1,
@@ -2645,8 +2705,8 @@
                     "AttributeModified": "",
                     "AttributeModifier": 0,
                     "Duration": 8,
-                    "FlavorText": "Flavor text...",
-                    "OutcomeText": "Outcome text...",
+                    "FlavorText": "I reach into the dark cloud.",
+                    "OutcomeText": "Where will you go now?",
                     "ReturnedCardIDs": [
                         "travel",
                         "nocturne"
@@ -2655,11 +2715,11 @@
                         1,
                         1
                     ],
-                    "Title": "Travel to Nocturne"
+                    "Title": "Traveling to Nocturne"
                 }
             }
         ],
-        "FlavorText": "A dense interstellar cloud obscures this place, making it the place the ideal environment for Aristoratic Vampire Pirates to call home.",
+        "FlavorText": "Shrouded in the cloak of a dense interstellar cloud, this shadowed realm offers sanctuary to the Vampire Pirates.",
         "Habitat": "",
         "ID": "nocturne",
         "ImagePath": "nocturne.png",
@@ -3507,8 +3567,8 @@
                     "AttributeModified": "Allucard Ally Progress",
                     "AttributeModifier": 1,
                     "Duration": 8,
-                    "FlavorText": "I speak to the awoken Prince.",
-                    "OutcomeText": "With a deep bow Alucard introduces himself. Pledging upon the honor of his house that he is at your service.",
+                    "FlavorText": "I speak to the reanimated Prince of night.",
+                    "OutcomeText": "With a deep bow Alucard introduces himself. Pledging upon the honor of his house that he is at your service. Just don't sleep around him.",
                     "ReturnedCardIDs": [
                         "talk",
                         "alucard",
@@ -3520,6 +3580,35 @@
                         1
                     ],
                     "Title": "An Unlikely Ally"
+                }
+            },
+            {
+                "ActionKey": {
+                    "ActionName": "Dream",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "alucard",
+                    "MaxRepetitions": 0,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 8,
+                    "FlavorText": "I dream of the Dark Star.",
+                    "OutcomeText": "The Dark Star is drawn by your dreaming, his instincts overwhelming. He gives to you the last goodnight.",
+                    "ReturnedCardIDs": [
+                        "dream",
+                        "the_kiss_of_night"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1
+                    ],
+                    "Title": "Sleeping Softly"
                 }
             }
         ],
@@ -3667,6 +3756,44 @@
         "Actions": [
             {
                 "ActionKey": {
+                    "ActionName": "Talk",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "jean",
+                    "MaxRepetitions": 0,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                        [
+                            "",
+                            "Fleet",
+                            ""
+                        ]
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 8,
+                    "FlavorText": "The local fence wonders if you would want to haul \"clean\" goods to Yggdrasil in the Avalon System.",
+                    "OutcomeText": "After the goods are loaded onto your ship, he says that he's always looking for responsible haulers.",
+                    "ReturnedCardIDs": [
+                        "talk",
+                        "jean",
+                        "laundered_trade_goods",
+                        "yggdrasil"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    "Title": "A Hauling Job"
+                }
+            },
+            {
+                "ActionKey": {
                     "ActionName": "Trade",
                     "Attribute": "",
                     "AttributeMinimum": 0,
@@ -3701,46 +3828,6 @@
                         1
                     ],
                     "Title": "Trading the Contraband"
-                }
-            },
-            {
-                "ActionKey": {
-                    "ActionName": "Talk",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "jean",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                        [
-                            "",
-                            "Fleet",
-                            ""
-                        ]
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "",
-                    "AttributeModifier": 0,
-                    "Duration": 8,
-                    "FlavorText": "The local fence wonders if you would want to haul \"clean\" goods to Yggdrasil in the Avalon System.",
-                    "OutcomeText": "After the goods are loaded onto your ship, he says that he's always looking for responsible haulers.",
-                    "ReturnedCardIDs": [
-                        "talk",
-                        "jean",
-                        "laundered_trade_goods",
-                        "avalon",
-                        "yggdrasil"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1,
-                        1,
-                        1,
-                        1
-                    ],
-                    "Title": "A Hauling Job"
                 }
             }
         ],
@@ -4468,38 +4555,6 @@
             },
             {
                 "ActionKey": {
-                    "ActionName": "Work",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "glint",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                        [
-                            "",
-                            "",
-                            "Precious"
-                        ]
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "",
-                    "AttributeModifier": 0,
-                    "Duration": 8,
-                    "FlavorText": "Flavor text...",
-                    "OutcomeText": "Outcome text...",
-                    "ReturnedCardIDs": [
-                        "work"
-                    ],
-                    "ReturnedQuantities": [
-                        1
-                    ],
-                    "Title": "Action Title"
-                }
-            },
-            {
-                "ActionKey": {
                     "ActionName": "Travel",
                     "Attribute": "",
                     "AttributeMinimum": 0,
@@ -4514,21 +4569,21 @@
                     "AttributeModified": "",
                     "AttributeModifier": 0,
                     "Duration": 8,
-                    "FlavorText": "Flavor text...",
-                    "OutcomeText": "Outcome text...",
+                    "FlavorText": "I stretch toward the borders of ancient giants.",
+                    "OutcomeText": "Where will you go now?",
                     "ReturnedCardIDs": [
-                        "glint",
-                        "travel"
+                        "travel",
+                        "glint"
                     ],
                     "ReturnedQuantities": [
                         1,
                         1
                     ],
-                    "Title": "Action Title"
+                    "Title": "Travel to Glint"
                 }
             }
         ],
-        "FlavorText": "Perhaps the most mineral rich sector in known space. The dwarves wasted no time with attempts to exploit their whole of their home. Wealth is the rule here.",
+        "FlavorText": "The home of the Dwarves. Beneath the iron skies of Glint, ale flows like rivers and slave's chains bind the cosmos; here, wealth is forged in the furnaces of tyranny.",
         "Habitat": "",
         "ID": "glint",
         "ImagePath": "glint.png",
@@ -4541,6 +4596,35 @@
     },
     {
         "Actions": [
+            {
+                "ActionKey": {
+                    "ActionName": "Travel",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "boulderhearth",
+                    "MaxRepetitions": 0,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 8,
+                    "FlavorText": "Flavor text...",
+                    "OutcomeText": "Outcome text...",
+                    "ReturnedCardIDs": [
+                        "travel",
+                        "boulderhearth"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1
+                    ],
+                    "Title": "Action Title"
+                }
+            }
         ],
         "FlavorText": "Flavor text...\n",
         "Habitat": "Boulderhearth",
@@ -4555,6 +4639,35 @@
     },
     {
         "Actions": [
+            {
+                "ActionKey": {
+                    "ActionName": "Travel",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "forge",
+                    "MaxRepetitions": 0,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 8,
+                    "FlavorText": "Flavor text...",
+                    "OutcomeText": "Outcome text...",
+                    "ReturnedCardIDs": [
+                        "forge",
+                        "travel"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1
+                    ],
+                    "Title": "Action Title"
+                }
+            }
         ],
         "FlavorText": "",
         "Habitat": "Forge",
@@ -5386,6 +5499,42 @@
     },
     {
         "Actions": [
+            {
+                "ActionKey": {
+                    "ActionName": "Dream",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "laundered_trade_goods",
+                    "MaxRepetitions": 0,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                        [
+                            "avarice",
+                            "",
+                            ""
+                        ]
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 8,
+                    "FlavorText": "I wonder just how much can be made from lucrative business ventures, I'm only seeing a cut.. and it's already profitable.",
+                    "OutcomeText": "You dream of owning your own lucrative business.",
+                    "ReturnedCardIDs": [
+                        "dream",
+                        "laundered_trade_goods",
+                        "visions_of_craft"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Title": "The Seeds of Ambition"
+                }
+            }
         ],
         "FlavorText": "A large crate of trade goods, meant to be delivered to the Avalon's Trade Authority on Yggdrasil.",
         "Habitat": "",
@@ -5741,9 +5890,38 @@
                     ],
                     "Title": "Explore Avalon"
                 }
+            },
+            {
+                "ActionKey": {
+                    "ActionName": "Travel",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "avalon",
+                    "MaxRepetitions": 0,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 8,
+                    "FlavorText": "I jaunt into the domain of man, seat of the order.",
+                    "OutcomeText": "Where will you go now?",
+                    "ReturnedCardIDs": [
+                        "travel",
+                        "avalon"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1
+                    ],
+                    "Title": "Travel to Avalon"
+                }
             }
         ],
-        "FlavorText": "Governed by the Order of Roundtable, the knights of humanity sail forth. With honor and friendship Avalon, is indeed the jewel of the stars.",
+        "FlavorText": "Governed by the Order of Roundtable, the knights of humanity sail forth. With honor and friendship Avalon, the jewel of the stars.",
         "Habitat": "",
         "ID": "avalon",
         "ImagePath": "avalon.png",
@@ -6116,12 +6294,209 @@
     },
     {
         "Actions": [
+        ],
+        "FlavorText": "When one has harkened to the call of clink, it provides a thrumming energy which can be utilized.",
+        "Habitat": "",
+        "ID": "avarice",
+        "ImagePath": "avarice.png",
+        "Lifespan": 60,
+        "Name": "Avarice",
+        "Price": 0,
+        "Property": "Economic",
+        "System": "",
+        "Type": "Ambition"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "In the knowing of the hows and whys, one can find additional opportunities.",
+        "Habitat": "",
+        "ID": "economic_theory",
+        "ImagePath": "economic_theory.png",
+        "Lifespan": 120,
+        "Name": "Economic Theory",
+        "Price": 0,
+        "Property": "Economic",
+        "System": "",
+        "Type": "Ambition"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "The end was.. intoxicatingly sweet. Goodnight.",
+        "Habitat": "",
+        "ID": "the_kiss_of_night",
+        "ImagePath": "the_kiss_of_night.png",
+        "Lifespan": 0,
+        "Name": "The Kiss Of Night",
+        "Price": 0,
+        "Property": "",
+        "System": "",
+        "Type": "EndState"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "A symbol of trust and responsibility, it's chain hangs heavy on your neck. This symbol represents your raising to the peerage.",
+        "Habitat": "",
+        "ID": "crest_of_knighthood",
+        "ImagePath": "crest_of_knighthood.png",
+        "Lifespan": 0,
+        "Name": "Crest of Knighthood",
+        "Price": 0,
+        "Property": "Promotion",
+        "System": "",
+        "Type": "Object"
+    },
+    {
+        "Actions": [
             {
                 "ActionKey": {
-                    "ActionName": "Battle",
+                    "ActionName": "Work",
                     "Attribute": "",
                     "AttributeMinimum": 0,
-                    "ID": "my_coding_style",
+                    "ID": "patrol_avalon",
+                    "MaxRepetitions": 0,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "Avalon",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 8,
+                    "FlavorText": "You search the emptiness between for vipers laying in wait.",
+                    "OutcomeText": "You have secured the tradelanes, along with a pittance for your efforts. Thankfully nobility is it's own reward.. right?",
+                    "ReturnedCardIDs": [
+                        "work",
+                        "patrol_avalon"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1
+                    ],
+                    "Title": "Patrol the Order's Boundaries"
+                }
+            }
+        ],
+        "FlavorText": "The lone patrol is a noble effort, a necessity for the aspiring knight-errant.",
+        "Habitat": "",
+        "ID": "patrol_avalon",
+        "ImagePath": "patrol_avalon.png",
+        "Lifespan": 0,
+        "Name": "Patrol Avalon",
+        "Price": 0,
+        "Property": "Military",
+        "System": "",
+        "Type": "Ambition"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "I could start my own business.",
+        "Habitat": "",
+        "ID": "visions_of_craft",
+        "ImagePath": "visions_of_craft.png",
+        "Lifespan": 60,
+        "Name": "Visions Of Craft",
+        "Price": 0,
+        "Property": "Economic",
+        "System": "",
+        "Type": "Ambition"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Your purse is empty, you can no longer struggle in the Space Between.",
+        "Habitat": "",
+        "ID": "bankrupt",
+        "ImagePath": "bankrupt.png",
+        "Lifespan": 0,
+        "Name": "Bankrupt",
+        "Price": 0,
+        "Property": "",
+        "System": "",
+        "Type": "EndState"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Oh death where art thy sting? In endings we find new beginnings.",
+        "Habitat": "",
+        "ID": "death",
+        "ImagePath": "death.png",
+        "Lifespan": 0,
+        "Name": "Death",
+        "Price": 0,
+        "Property": "",
+        "System": "",
+        "Type": "EndState"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "A symbol emblazoned with a simple glyph, it grants audience with the mysterious Mr. Fisher.",
+        "Habitat": "",
+        "ID": "rune_of_passage",
+        "ImagePath": "rune_of_passage.png",
+        "Lifespan": 0,
+        "Name": "Rune of Passage",
+        "Price": 0,
+        "Property": "Classified",
+        "System": "",
+        "Type": "Object"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "These tokens mysteriously appear when one defeats the strong.",
+        "Habitat": "",
+        "ID": "token_of_victory",
+        "ImagePath": "token_of_victory.png",
+        "Lifespan": 0,
+        "Name": "Token of Victory",
+        "Price": 0,
+        "Property": "Secret",
+        "System": "",
+        "Type": "Currency"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "A simple golden ring with a sword emblazoned in it's face. The final key required to take command of the legendary worldship Excalibur.",
+        "Habitat": "",
+        "ID": "signet_of_authority",
+        "ImagePath": "signet_of_authority.png",
+        "Lifespan": 0,
+        "Name": "Signet of Authority",
+        "Price": 0,
+        "Property": "Excalibur Fragment",
+        "System": "",
+        "Type": "Object"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "A Commission given to you by King Arthur to bring Admiral Sascha of the Crimson Fleet to justice.",
+        "Habitat": "",
+        "ID": "defeat_admiral_sascha",
+        "ImagePath": "defeat_admiral_sascha.png",
+        "Lifespan": 0,
+        "Name": "Defeat Admiral Sascha",
+        "Price": 0,
+        "Property": "Quest",
+        "System": "",
+        "Type": "Ambition"
+    },
+    {
+        "Actions": [
+            {
+                "ActionKey": {
+                    "ActionName": "Travel",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "merlin",
                     "MaxRepetitions": 0,
                     "MinRepetitions": 0,
                     "ReqLocation": "",
@@ -6132,41 +6507,263 @@
                     "AttributeModified": "",
                     "AttributeModifier": 0,
                     "Duration": 8,
-                    "FlavorText": "Action flavor text...\n",
-                    "OutcomeText": "Outcome text...",
+                    "FlavorText": "I wade towards the misty isles, of white shores, and mystic shades.",
+                    "OutcomeText": "You pass the boundary of the veil. Where will you go?",
                     "ReturnedCardIDs": [
-                        "my_coding_style",
-                        "battle",
-                        "components"
+                        "travel",
+                        "merlin"
                     ],
                     "ReturnedQuantities": [
                         1,
-                        1,
                         1
                     ],
-                    "Title": ""
+                    "Title": "Travel to Merlin"
                 }
             }
         ],
-        "FlavorText": "Flavor text...\n",
+        "FlavorText": "Seat of mystery and wonder, mystics and magi hail Merlin as the center of the arcane world. Long have the elves proudly used their knowlege to aid others in their development.",
         "Habitat": "",
-        "ID": "my_coding_style",
-        "ImagePath": "my_coding_style.png",
+        "ID": "merlin",
+        "ImagePath": "merlin.png",
         "Lifespan": 0,
-        "Name": "My Coding Style",
+        "Name": "Merlin",
         "Price": 0,
         "Property": "",
-        "System": "",
+        "System": "Merlin",
+        "Type": "System"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "",
+        "Habitat": "Jenasysz",
+        "ID": "jenasysz",
+        "ImagePath": "jenasysz.png",
+        "Lifespan": 0,
+        "Name": "Jenasysz",
+        "Price": 0,
+        "Property": "Capital",
+        "System": "Merlin",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Exfrag Location",
+        "Habitat": "Nostalgia V",
+        "ID": "nostalgia_v",
+        "ImagePath": "nostalgia_v.png",
+        "Lifespan": 0,
+        "Name": "Nostalgia V",
+        "Price": 0,
+        "Property": "Station",
+        "System": "Merlin",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "water planet trading hub",
+        "Habitat": "Undine",
+        "ID": "undine",
+        "ImagePath": "undine.png",
+        "Lifespan": 0,
+        "Name": "Undine",
+        "Price": 0,
+        "Property": "Colony",
+        "System": "Merlin",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "nebula rich in quintessence",
+        "Habitat": "Reverie",
+        "ID": "reverie",
+        "ImagePath": "reverie.png",
+        "Lifespan": 0,
+        "Name": "Reverie",
+        "Price": 0,
+        "Property": "Mineable",
+        "System": "Merlin",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "planet that has the library of alexandria and elven temple equivalent",
+        "Habitat": "Lore",
+        "ID": "lore",
+        "ImagePath": "lore.png",
+        "Lifespan": 0,
+        "Name": "Lore",
+        "Price": 0,
+        "Property": "Colony",
+        "System": "Merlin",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "long elven warship with the best pilot training in the galaxy",
+        "Habitat": "Longbow",
+        "ID": "longbow",
+        "ImagePath": "longbow.png",
+        "Lifespan": 0,
+        "Name": "Longbow",
+        "Price": 0,
+        "Property": "Military",
+        "System": "Merlin",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "propagates and sustains the veil massive shield generator station",
+        "Habitat": "Myst",
+        "ID": "myst",
+        "ImagePath": "myst.png",
+        "Lifespan": 0,
+        "Name": "Myst",
+        "Price": 0,
+        "Property": "Military",
+        "System": "Merlin",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "some kind of force field curtain great wall of china?",
+        "Habitat": "Veil Lookouts",
+        "ID": "veil_lookout",
+        "ImagePath": "veil_lookout.png",
+        "Lifespan": 0,
+        "Name": "Veil Lookout",
+        "Price": 0,
+        "Property": "Outpost",
+        "System": "Merlin",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "King of Faery",
+        "Habitat": "Jenasysz",
+        "ID": "king_oberon",
+        "ImagePath": "king_oberon.png",
+        "Lifespan": 0,
+        "Name": "King Oberon",
+        "Price": 0,
+        "Property": "Elven",
+        "System": "Merlin",
+        "Type": "Character"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Head Curator of Nostalgia V",
+        "Habitat": "Nostalgia V",
+        "ID": "historia",
+        "ImagePath": "historia.png",
+        "Lifespan": 0,
+        "Name": "Historia",
+        "Price": 0,
+        "Property": "Elven",
+        "System": "Merlin",
+        "Type": "Character"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Head of Merlin' Trade",
+        "Habitat": "Undine",
+        "ID": "amber",
+        "ImagePath": "amber.png",
+        "Lifespan": 0,
+        "Name": "Amber",
+        "Price": 0,
+        "Property": "Elven",
+        "System": "Merlin",
+        "Type": "Character"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Reverie Station Commander",
+        "Habitat": "Reverie",
+        "ID": "sephora",
+        "ImagePath": "sephora.png",
+        "Lifespan": 0,
+        "Name": "Sephora",
+        "Price": 0,
+        "Property": "Elven",
+        "System": "Merlin",
+        "Type": "Character"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "The Current Merlin",
+        "Habitat": "Lore",
+        "ID": "merlin_iii",
+        "ImagePath": "merlin_iii.png",
+        "Lifespan": 0,
+        "Name": "Merlin III",
+        "Price": 0,
+        "Property": "Elven",
+        "System": "Merlin",
+        "Type": "Character"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Piloting Instructor",
+        "Habitat": "Longbow",
+        "ID": "dart",
+        "ImagePath": "dart.png",
+        "Lifespan": 0,
+        "Name": "Dart",
+        "Price": 0,
+        "Property": "Elven",
+        "System": "Merlin",
+        "Type": "Character"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Head of Merlin Military",
+        "Habitat": "Myst",
+        "ID": "admiral_root",
+        "ImagePath": "admiral_root.png",
+        "Lifespan": 0,
+        "Name": "Admiral Root",
+        "Price": 0,
+        "Property": "Elven",
+        "System": "Merlin",
+        "Type": "Character"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Mysterious administrator who maintains the Veil",
+        "Habitat": "Veil Lookouts",
+        "ID": "veilkeeper",
+        "ImagePath": "veilkeeper.png",
+        "Lifespan": 0,
+        "Name": "Veilkeeper",
+        "Price": 0,
+        "Property": "Elven",
+        "System": "Merlin",
         "Type": "Character"
     },
     {
         "Actions": [
             {
                 "ActionKey": {
-                    "ActionName": "Battle",
+                    "ActionName": "Travel",
                     "Attribute": "",
                     "AttributeMinimum": 0,
-                    "ID": "riders_auto_indent",
+                    "ID": "bane",
                     "MaxRepetitions": 0,
                     "MinRepetitions": 0,
                     "ReqLocation": "",
@@ -6177,31 +6774,520 @@
                     "AttributeModified": "",
                     "AttributeModifier": 0,
                     "Duration": 8,
-                    "FlavorText": "Flavor text...",
-                    "OutcomeText": "Outcome text...",
+                    "FlavorText": "I break towards the Metallic Heart.",
+                    "OutcomeText": "Where will you go now?",
                     "ReturnedCardIDs": [
-                        "battle",
-                        "riders_auto_indent",
-                        "salvage_scrap"
+                        "travel",
+                        "bane"
                     ],
                     "ReturnedQuantities": [
                         1,
-                        1,
                         1
                     ],
-                    "Title": "Action Title"
+                    "Title": "Travel to Bane"
                 }
             }
         ],
-        "FlavorText": "",
+        "FlavorText": "Due to inhabiting a natrually hostile environment the Macht, an ancient sub-species of dwarf bent their magics towards the shedding of their bodily forms. Here their metallic inheritance goes on.",
         "Habitat": "",
-        "ID": "riders_auto_indent",
-        "ImagePath": "riders_auto_indent.png",
+        "ID": "bane",
+        "ImagePath": "bane.png",
         "Lifespan": 0,
-        "Name": "Rider's Auto Indent",
-        "Price": 1,
+        "Name": "Bane",
+        "Price": 0,
+        "Property": "",
+        "System": "Bane",
+        "Type": "System"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "transmog and upgrade of ship parts station",
+        "Habitat": "Bameth",
+        "ID": "bameth",
+        "ImagePath": "bameth.png",
+        "Lifespan": 0,
+        "Name": "Bameth",
+        "Price": 0,
+        "Property": "Station",
+        "System": "Bane",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "diplomatic hq united nations",
+        "Habitat": "Obsidian Conclave",
+        "ID": "obsidian_conclave",
+        "ImagePath": "obsidian_conclave.png",
+        "Lifespan": 0,
+        "Name": "Obsidian Conclave",
+        "Price": 0,
+        "Property": "Outpost",
+        "System": "Bane",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "uninhabitable storm planet -> they live underground trade hub",
+        "Habitat": "Voltage",
+        "ID": "voltage",
+        "ImagePath": "voltage.png",
+        "Lifespan": 0,
+        "Name": "Voltage",
+        "Price": 0,
+        "Property": "Colony",
+        "System": "Bane",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "corrosive nebula DANGER w/ shady outposts dotting the habitable",
+        "Habitat": "Darkwash",
+        "ID": "darkwash",
+        "ImagePath": "darkwash.png",
+        "Lifespan": 0,
+        "Name": "Darkwash",
+        "Price": 0,
+        "Property": "Outpost",
+        "System": "Bane",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "dangerous Bane asteroid field, quintessence manufacturing",
+        "Habitat": "Onyx Storm",
+        "ID": "onyx_storm",
+        "ImagePath": "onyx_storm.png",
+        "Lifespan": 0,
+        "Name": "Onyx Storm",
+        "Price": 0,
+        "Property": "Mineable",
+        "System": "Bane",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "worldship citadel, basically what the behemoth was before it got",
+        "Habitat": "Golem",
+        "ID": "golem",
+        "ImagePath": "golem.png",
+        "Lifespan": 0,
+        "Name": "Golem",
+        "Price": 0,
+        "Property": "Worldship",
+        "System": "Bane",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "exshard, capital ship royal ship",
+        "Habitat": "Blitzkrieg",
+        "ID": "blitzkrieg",
+        "ImagePath": "blitzkrieg.png",
+        "Lifespan": 0,
+        "Name": "Blitzkrieg",
+        "Price": 0,
+        "Property": "Military",
+        "System": "Bane",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "catamaran the most powerful military ship in the universe",
+        "Habitat": "Zweijager",
+        "ID": "zweijger",
+        "ImagePath": "zweijger.png",
+        "Lifespan": 0,
+        "Name": "Zweijäger",
+        "Price": 0,
+        "Property": "Military",
+        "System": "Bane",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Ship of Thessius, will turn you into a Transhuman",
+        "Habitat": "Bameth",
+        "ID": "facade",
+        "ImagePath": "facade.png",
+        "Lifespan": 0,
+        "Name": "Facade",
+        "Price": 0,
+        "Property": "Machtzwergen",
+        "System": "Bane",
+        "Type": "Character"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Democracy pusher guy, his head is a tv screen",
+        "Habitat": "Obsidian Conclave",
+        "ID": "faceless_representative",
+        "ImagePath": "faceless_representative.png",
+        "Lifespan": 0,
+        "Name": "Faceless Representative",
+        "Price": 0,
+        "Property": "Machtzwergen",
+        "System": "Bane",
+        "Type": "Character"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "A Clockwork Economist",
+        "Habitat": "Voltage",
+        "ID": "unter_clockwork",
+        "ImagePath": "unter_clockwork.png",
+        "Lifespan": 0,
+        "Name": "Unter Clockwork",
+        "Price": 0,
+        "Property": "Machtzwergen",
+        "System": "Bane",
+        "Type": "Character"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "DJ that produces Noise, keeps people too busy to notice",
+        "Habitat": "Darkwash",
+        "ID": "the_funk",
+        "ImagePath": "the_funk.png",
+        "Lifespan": 0,
+        "Name": "The Funk",
+        "Price": 0,
+        "Property": "Machtzwergen",
+        "System": "Bane",
+        "Type": "Character"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Repressed Citizen that works in the Asteroid Field",
+        "Habitat": "Onyx Storm",
+        "ID": "krass",
+        "ImagePath": "krass.png",
+        "Lifespan": 0,
+        "Name": "Krass",
+        "Price": 0,
+        "Property": "Machtzwergen",
+        "System": "Bane",
+        "Type": "Character"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "The definition of Royale Politique, likes to be on the Golem, the eternal President",
+        "Habitat": "Golem",
+        "ID": "president_ironheart",
+        "ImagePath": "president_ironheart.png",
+        "Lifespan": 0,
+        "Name": "President Ironheart",
+        "Price": 0,
+        "Property": "Machtzwergen",
+        "System": "Bane",
+        "Type": "Character"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Head of the Bane Military",
+        "Habitat": "Blitzkrieg",
+        "ID": "admiral_panzer",
+        "ImagePath": "admiral_panzer.png",
+        "Lifespan": 0,
+        "Name": "Admiral Panzer",
+        "Price": 0,
+        "Property": "Machtzwergen",
+        "System": "Bane",
+        "Type": "Character"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Enforcer of the Bane System",
+        "Habitat": "Zweijager",
+        "ID": "captain_erenuber",
+        "ImagePath": "captain_erenuber.png",
+        "Lifespan": 0,
+        "Name": "Captain Erenuber",
+        "Price": 0,
+        "Property": "Machtzwergen",
+        "System": "Bane",
+        "Type": "Character"
+    },
+    {
+        "Actions": [
+            {
+                "ActionKey": {
+                    "ActionName": "Travel",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "macbeth_iv",
+                    "MaxRepetitions": 0,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 8,
+                    "FlavorText": "I creep into the warp.",
+                    "OutcomeText": "Where will you go now?",
+                    "ReturnedCardIDs": [
+                        "travel",
+                        "macbeth_iv"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1
+                    ],
+                    "Title": "Travel to Macbeth IV"
+                }
+            }
+        ],
+        "FlavorText": "Once a part of elfspace, the dark elves rejected the helping of others and instead turned selfishly inward. While their dark delights worry most, they mostly keep to themselves. Though it must be said that none do debauchery better, and many a sailor on leave finds themself vacationioning here at least once, usually though, once is not enough.",
+        "Habitat": "",
+        "ID": "macbeth_iv",
+        "ImagePath": "macbeth_iv.png",
+        "Lifespan": 0,
+        "Name": "Macbeth IV",
+        "Price": 0,
+        "Property": "",
+        "System": "MacbethIV",
+        "Type": "System"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "ship graveyard from mega-battle where excalibur was destroyed",
+        "Habitat": "Mausoleum",
+        "ID": "mausoleum",
+        "ImagePath": "mausoleum.png",
+        "Lifespan": 0,
+        "Name": "Mausoleum",
+        "Price": 0,
         "Property": "Cursed",
-        "System": "",
+        "System": "MacbethIV",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "death star military station",
+        "Habitat": "Umbressa",
+        "ID": "umbressa",
+        "ImagePath": "umbressa.png",
+        "Lifespan": 0,
+        "Name": "Umbressa",
+        "Price": 0,
+        "Property": "Station",
+        "System": "MacbethIV",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "somewhat neutral taiwan dark elves trade red light district",
+        "Habitat": "Sakura",
+        "ID": "sakura",
+        "ImagePath": "sakura.png",
+        "Lifespan": 0,
+        "Name": "Sakura",
+        "Price": 0,
+        "Property": "Colony",
+        "System": "MacbethIV",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "black hole monitoring station  DANGER",
+        "Habitat": "Exvulsa",
+        "ID": "exvulsa",
+        "ImagePath": "exvulsa.png",
+        "Lifespan": 0,
+        "Name": "Exvulsa",
+        "Price": 0,
+        "Property": "Station",
+        "System": "MacbethIV",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "capital",
+        "Habitat": "Triangula",
+        "ID": "triangula",
+        "ImagePath": "triangula.png",
+        "Lifespan": 0,
+        "Name": "Triangula",
+        "Price": 0,
+        "Property": "Capital",
+        "System": "MacbethIV",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "hedonistic crazy place",
+        "Habitat": "Blame",
+        "ID": "blame",
+        "ImagePath": "blame.png",
+        "Lifespan": 0,
+        "Name": "Blame",
+        "Price": 0,
+        "Property": "Colony",
+        "System": "MacbethIV",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "asylum exfrag location tristans rest equivalent\n\n(Asylum Convent)",
+        "Habitat": "Abyss Abbey",
+        "ID": "abyss_abbey",
+        "ImagePath": "abyss_abbey.png",
+        "Lifespan": 0,
+        "Name": "Abyss Abbey",
+        "Price": 0,
+        "Property": "Monastery",
+        "System": "MacbethIV",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "the white lodge equivalent\n\nA vigil at the edge of the Space Between, beyond it is the great black, and whatever is beyond.",
+        "Habitat": "The Black Mass",
+        "ID": "the_black_mass",
+        "ImagePath": "the_black_mass.png",
+        "Lifespan": 0,
+        "Name": "The Black Mass",
+        "Price": 0,
+        "Property": "Station",
+        "System": "MacbethIV",
+        "Type": "Habitat"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Scavenger\n\nTrusty Patches",
+        "Habitat": "Mausoleum",
+        "ID": "nitpick",
+        "ImagePath": "nitpick.png",
+        "Lifespan": 0,
+        "Name": "Nitpick",
+        "Price": 0,
+        "Property": "Civilian",
+        "System": "MacbethIV",
+        "Type": "Character"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Head of the Macbethiv Military",
+        "Habitat": "Umbressa",
+        "ID": "admiral_malic",
+        "ImagePath": "admiral_malic.png",
+        "Lifespan": 0,
+        "Name": "Admiral Malic",
+        "Price": 0,
+        "Property": "Dark Elven",
+        "System": "MacbethIV",
+        "Type": "Character"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "An Absurdist that thinks it's hilarious to be a good-badguy",
+        "Habitat": "Sakura",
+        "ID": "the_harlequin",
+        "ImagePath": "the_harlequin.png",
+        "Lifespan": 0,
+        "Name": "The Harlequin",
+        "Price": 0,
+        "Property": "Dark Elven",
+        "System": "MacbethIV",
+        "Type": "Character"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Scientist in charge of the Black Hole Monitoring Station, is researching Black Holy Technology",
+        "Habitat": "Exvulsa",
+        "ID": "separator_reave",
+        "ImagePath": "separator_reave.png",
+        "Lifespan": 0,
+        "Name": "Separator Reave",
+        "Price": 0,
+        "Property": "Dark Elven",
+        "System": "MacbethIV",
+        "Type": "Character"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Tyrant of Macbethiv, has multiple personality disorder",
+        "Habitat": "Triangula",
+        "ID": "triumvirate",
+        "ImagePath": "triumvirate.png",
+        "Lifespan": 0,
+        "Name": "Triumvirate",
+        "Price": 0,
+        "Property": "Dark Elven",
+        "System": "MacbethIV",
+        "Type": "Character"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "The great temptress, will just as surely take your humanity away as Facade",
+        "Habitat": "Blame",
+        "ID": "lady_hedonia",
+        "ImagePath": "lady_hedonia.png",
+        "Lifespan": 0,
+        "Name": "Lady Hedonia",
+        "Price": 0,
+        "Property": "Dark Elven",
+        "System": "MacbethIV",
+        "Type": "Character"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "Stealer of Treasures",
+        "Habitat": "Abyss Abbey",
+        "ID": "watcher_anubis",
+        "ImagePath": "watcher_anubis.png",
+        "Lifespan": 0,
+        "Name": "Watcher Anubis",
+        "Price": 0,
+        "Property": "Dark Elven",
+        "System": "MacbethIV",
+        "Type": "Character"
+    },
+    {
+        "Actions": [
+        ],
+        "FlavorText": "A shadow at the edge of reachable things.",
+        "Habitat": "The Black Mass",
+        "ID": "nobody",
+        "ImagePath": "nobody.png",
+        "Lifespan": 0,
+        "Name": "Nobody",
+        "Price": 0,
+        "Property": "Classified",
+        "System": "MacbethIV",
         "Type": "Character"
     }
 ]

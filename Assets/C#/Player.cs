@@ -43,7 +43,6 @@ public class Player : MonoBehaviour
         ReturnedCards = new List<Card>();
         ReturnedQuantities = new List<int>();
         Player.Location = GetComponent<Location>();
-        Player.Location.SetLocation("Deepmine");
         bInitialized = true;
 
     }
@@ -305,20 +304,16 @@ public class Player : MonoBehaviour
 
     public void HandleTravel(ActionData currentActionData)
     {
-        string newLocation;
-        if (currentActionData.ActionResult.ReturnedCardIDs[0] != "travel")
+        //find the system or habitat card in the travel results that the player already owns..this is the new location
+        foreach (string s in currentActionData.ActionResult.ReturnedCardIDs)
         {
-            newLocation = CardDB.CardDataLookup[currentActionData.ActionResult.ReturnedCardIDs[0]].Name;
-
+            if (CardDB.CardDataLookup[s].Type == "Habitat" || CardDB.CardDataLookup[s].Type == "System")
+            {
+                Location.SetLocation(CardDB.CardDataLookup[s].Name);
+                return;
+            }
         }
-        else
-        {
-            newLocation = CardDB.CardDataLookup[currentActionData.ActionResult.ReturnedCardIDs[1]].Name;
-        }
-
-
-        Location.SetLocation(newLocation);
-
+        
     }
 
 

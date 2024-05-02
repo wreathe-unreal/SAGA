@@ -99,9 +99,11 @@
         "Portal Drive",
         "Kinetic Weapon",
         "Energy Weapon",
+ 	"Quest",
         "Missle Weapon",
         "Engine",
-        "Thrusters"
+        "Thrusters",
+        "EndState"
     ],
     "ESystem": 
     [

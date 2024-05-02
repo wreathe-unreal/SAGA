@@ -58,6 +58,8 @@ public class CardScaler : MonoBehaviour
             float zComponent = CardBeingScaled.transform.localPosition.z - 1f;
             CardBeingScaled.transform.localPosition += Vector3.back * zComponent;
         }
+
+        print(CardBeingScaled.Quantity);
     }
 
     void MouseOver()
@@ -119,7 +121,7 @@ public class CardScaler : MonoBehaviour
 
         // Clamp to screen edges
         Vector3 viewportPosition = MainCamera.WorldToViewportPoint(CardBeingScaled.transform.position);
-        viewportPosition.x = Mathf.Clamp(viewportPosition.x, 0.05f, 0.95f); // Adjust these values based on your needs
+        viewportPosition.x = Mathf.Clamp(viewportPosition.x, 0.05f, 0.95f); 
         viewportPosition.y = Mathf.Clamp(viewportPosition.y, 0.15f, 0.85f);
         viewportPosition = MainCamera.ViewportToWorldPoint(viewportPosition);
         viewportPosition.z = CardBeingScaled.transform.position.z;

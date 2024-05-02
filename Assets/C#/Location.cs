@@ -80,41 +80,16 @@ public class Location : MonoBehaviour
         UpdatePlayerSystem();
         UpdatePlayerHabitat();
         
+
         //update system and habitat based deck card positions
         foreach (Deck d in Board.Decks.Values)
         {
-            if (d.Name == "Habitat" || d.Name == "Character" || d.Name == "Ambition" || d.Name == "Enemy")
+            if (d.Name == "Habitat" || d.Name == "Character" || d.Name == "Ambition" || d.Name == "Enemy" || d.Name == "Quest")
             {
                 d.SetCardPositions();
             }
         }
-    
-        foreach (Card c in Board.Decks["Habitat"])
-        {
-            if (c != null && c.Name == Habitat)
-            {
-                c.LocationGlow.fillAmount = 100;
-            }
-            else
-            {
-                c.LocationGlow.fillAmount = 0;
-            }
-            
-        }
-        foreach (Card c in Board.Decks["System"])
-        {
-            if (c != null && c.Name == System)
-            {
-                c.LocationGlow.fillAmount = 100;
-            }
-            else
-            {
-                c.LocationGlow.fillAmount = 0;
-            }
-        }
-
         UpdateSkyBox();
-
     }
     
     private void UpdateSkyBox()
@@ -160,7 +135,40 @@ public class Location : MonoBehaviour
             }
         }
     }
-    
+
+    public void UpdateCardGlow()
+    {
+        
+        
+        foreach (Card c in Board.Decks["Habitat"].Cards)
+        {
+            if (c != null && c.Name == Habitat)
+            {
+                c.LocationGlow.fillAmount = 1;
+                break;
+            }
+            else
+            {
+                c.LocationGlow.fillAmount = 0;
+            }
+            
+        }
+        
+        foreach (Card c in Board.Decks["System"].Cards)
+        {
+            if (c != null && c.Name == System)
+            {
+                c.LocationGlow.fillAmount = 1;
+                break;
+
+            }
+            else
+            {
+                c.LocationGlow.fillAmount = 0;
+
+            }
+        }
+    }
     public void UpdatePlayerHabitat()
     {
         if (IsPlayerInHabitat())
@@ -188,7 +196,7 @@ public class Location : MonoBehaviour
         return true;
     }
 
-    public string UpdatePlayerSystem()
+    public void UpdatePlayerSystem()
     {
         string newSystem = "";
         
@@ -263,77 +271,5 @@ public class Location : MonoBehaviour
         }
 
         System = newSystem;
-
-        return newSystem;
-    }
-    
-    public List<string> GetSystemHabitats(string System)
-    {
-        List<string> Habitats = new List<string>();
-        
-        switch (System)
-        {
-            case "Avalon":
-                Habitats.Add("Roundtable Nexus");
-                Habitats.Add("Terminus Est");
-                Habitats.Add("The Citadel");
-                Habitats.Add("The White Lodge");
-                Habitats.Add("Dragonroost");
-                Habitats.Add("Yggdrasil");
-                Habitats.Add("Leviathan Belt");
-                Habitats.Add("Earth");
-                break;
-            case "Glint":
-                Habitats.Add("Boulderhearth");
-                Habitats.Add("Forge");
-                Habitats.Add("Behemoth");
-                Habitats.Add("The Sledge");
-                Habitats.Add("Brewhalla");
-                Habitats.Add("Deepmine");
-                Habitats.Add("Jormungandr");
-                Habitats.Add("Ben Nevis");
-                break;
-            case "Merlin":
-                Habitats.Add("Jenasysz");
-                Habitats.Add("Nostalgia V");
-                Habitats.Add("Undine");
-                Habitats.Add("Reverie");
-                Habitats.Add("Lore");
-                Habitats.Add("Longbow");
-                Habitats.Add("Myst");
-                Habitats.Add("Veil Lookouts");
-                break;
-            case "Nocturne":
-                Habitats.Add("Dracule");
-                Habitats.Add("Crimsontide");
-                Habitats.Add("One-eyed Jacks");
-                Habitats.Add("Wreckage Bay");
-                Habitats.Add("Smuggler's Nook");
-                Habitats.Add("Rakshasa");
-                Habitats.Add("Black Sun Campaign");
-                Habitats.Add("The Feast");
-                break;
-            case "Bane":
-                Habitats.Add("Bameth");
-                Habitats.Add("Obsidian Conclave");
-                Habitats.Add("Voltage");
-                Habitats.Add("Darkwash");
-                Habitats.Add("Golem");
-                Habitats.Add("Blitzkrieg");
-                Habitats.Add("Zweijager");
-                break;
-            case "Macbeth IV":
-                Habitats.Add("Mausoleum");
-                Habitats.Add("Umbressa");
-                Habitats.Add("Sakura");
-                Habitats.Add("Exvulsa");
-                Habitats.Add("Triangula");
-                Habitats.Add("Blame");
-                Habitats.Add("Abyss Abbey");
-                Habitats.Add("The Black Mass");
-                break;
-        }
-
-        return Habitats;
     }
 }

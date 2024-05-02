@@ -153,6 +153,7 @@ public class Card : MonoBehaviour
         TMP_Name.color = TypeColor;
 
         BorderMesh.material.color = TypeColor;
+        TMP_Quantity.enabled = true;
     }
 
     public void SetCardColor()
@@ -223,7 +224,7 @@ public class Card : MonoBehaviour
             TMP_Quantity.enabled = true;
         }
 
-        if (Quantity == 0 && ID != "gold")
+        if (Quantity <= 1 && ID != "gold")
         {
             TMP_Quantity.enabled = false;
         }
@@ -294,7 +295,6 @@ public class Card : MonoBehaviour
             this.TMP_Quantity.enabled = true;
             this.PieTimer.enabled = true;
             this.GoldTimer.enabled = true;
-            this.LocationGlow.enabled = true;
 
         }
         else //if we are parenting the card to a panel
@@ -309,7 +309,6 @@ public class Card : MonoBehaviour
             this.TMP_Quantity.enabled = false;
             this.PieTimer.enabled = false;
             this.GoldTimer.enabled = false;
-            this.LocationGlow.enabled = false;
             this.transform.localScale = new Vector3(.95f, .89f, 1f);
 
            

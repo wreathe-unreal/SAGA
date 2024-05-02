@@ -174,7 +174,7 @@ public class ActionGUI : MonoBehaviour
             Board.State.GoldCard.GoldTimer.fillAmount += Time.deltaTime / 120;
             return;
         }
-        if(Board.State.GoldCard.GoldTimer.fillAmount >= 1f)
+        if(Board.State.GoldCard.GoldTimer.fillAmount >= 1f && PanelState == EPanelState.Inactive)
         {
             if (Board.State.GoldCard.Quantity <= 0)
             {
@@ -342,8 +342,10 @@ public class ActionGUI : MonoBehaviour
         {
             Board.State.ResetCardPositionAndList(Player.State.ReturnedCards);
         }
-        SetPanelActive(false);
 
+        SetPanelActive(false);
+        
+        Player.State.GetLocation().UpdateCardGlow();
         if (Board.State.GetStarship().CurrentHealth <= 0)
         {
             Card deathCard = Instantiate<Card>(Board.State.CardToAdd);
@@ -473,6 +475,7 @@ public class ActionGUI : MonoBehaviour
             FlavorText.text = "Our ship sustained severe damage from the battle.";
             return;
         }
+        
         TitleText.text = OpenedActionCard.CurrentActionData.ActionResult.Title;
         FlavorText.text = OpenedActionCard.CurrentActionData.ActionResult.OutcomeText;
     }
