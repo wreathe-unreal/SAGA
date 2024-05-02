@@ -38,7 +38,7 @@ public class CameraController : MonoBehaviour
     private float targetOrthographicSize;
     public float AnimSpeed = 50;
     private float AnimTimer;
-
+    
     void Awake()
     {
         cam = GetComponent<Camera>();
@@ -66,7 +66,7 @@ public class CameraController : MonoBehaviour
         
             if(cam.orthographic == false)
             {
-                AnimTimer += Time.deltaTime * AnimSpeed; 
+                AnimTimer += Time.unscaledDeltaTime * AnimSpeed; 
             
                 cam.fieldOfView = Mathf.Lerp(178, 59, AnimTimer);
 
@@ -96,17 +96,17 @@ public class CameraController : MonoBehaviour
 
     void HandleMovement()
     {
-        float moveX = Input.GetAxis("Horizontal") * HorizontalMoveSpeed * Time.deltaTime;
-        float moveY = Input.GetAxis("Vertical") * VerticalMoveSpeed * Time.deltaTime;
+        float moveX = Input.GetAxisRaw("Horizontal") * HorizontalMoveSpeed * Time.unscaledDeltaTime;
+        float moveY = Input.GetAxisRaw("Vertical") * VerticalMoveSpeed * Time.unscaledDeltaTime;
 
         if (Input.mousePosition.x <= ScreenEdgeThreshold)
-            moveX -= HorizontalMoveSpeed * Time.deltaTime;
+            moveX -= HorizontalMoveSpeed * Time.unscaledDeltaTime;
         if (Input.mousePosition.x >= Screen.width - ScreenEdgeThreshold)
-            moveX += HorizontalMoveSpeed * Time.deltaTime;
+            moveX += HorizontalMoveSpeed * Time.unscaledDeltaTime;
         if (Input.mousePosition.y <= ScreenEdgeThreshold)
-            moveY -= VerticalMoveSpeed * Time.deltaTime;
+            moveY -= VerticalMoveSpeed * Time.unscaledDeltaTime;
         if (Input.mousePosition.y >= Screen.height - ScreenEdgeThreshold)
-            moveY += VerticalMoveSpeed * Time.deltaTime;
+            moveY += VerticalMoveSpeed * Time.unscaledDeltaTime;
 
         newPosition = transform.position + new Vector3(moveX, moveY, 0);
         newPosition.x = Mathf.Clamp(newPosition.x, MinX, MaxX);
@@ -118,12 +118,12 @@ public class CameraController : MonoBehaviour
     void HandleZoom()
     {
         
-        float scroll = Input.GetAxis("Mouse ScrollWheel") * ZoomVelocity;
+        float scroll = Input.GetAxisRaw("Mouse ScrollWheel") * ZoomVelocity;
         if (cam.orthographic)
         {
             targetOrthographicSize -= scroll;
             targetOrthographicSize = Mathf.Clamp(targetOrthographicSize, MinZoom, MaxZoom);
-            cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, targetOrthographicSize, Time.deltaTime * ZoomSmoothing);
+            cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, targetOrthographicSize, Time.unscaledDeltaTime * ZoomSmoothing);
         }
     }
 
@@ -140,7 +140,7 @@ public class CameraController : MonoBehaviour
             MousePos *= -1;
         }
         
-        MousePos *= ZoomMovementSpeed * 10 * Time.deltaTime;
+        MousePos *= ZoomMovementSpeed * 10 * Time.unscaledDeltaTime;
 
         
         
@@ -168,7 +168,7 @@ public class CameraController : MonoBehaviour
         float horizontalInput = Input.GetAxis("Horizontal");
         float targetYRotation = horizontalInput * RollAngle;
         Quaternion targetRotation = Quaternion.Euler(0, targetYRotation, 0);
-        cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, targetRotation, Time.deltaTime * RollReturnSpeed);
+        cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, targetRotation, Time.unscaledDeltaTime * RollReturnSpeed);
     }
     
     void HandlePitch()
@@ -176,6 +176,6 @@ public class CameraController : MonoBehaviour
         float verticalInput = Input.GetAxis("Vertical");
         float targetXRotation = -verticalInput * PitchAngle;
         Quaternion targetRotation = Quaternion.Euler(targetXRotation, 0, 0);
-        cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, targetRotation, Time.deltaTime * PitchReturnSpeed);
+        cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, targetRotation, Time.unscaledDeltaTime * PitchReturnSpeed);
     }
 }

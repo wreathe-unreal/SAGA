@@ -114,7 +114,7 @@ public class CardScaler : MonoBehaviour
 
         //adjust scaling based on camera zoom level
         CardBeingScaled.transform.localScale = Vector3.Lerp(CardBeingScaled.transform.localScale,
-            targetScale * (MainCamera.orthographicSize / 157), Time.deltaTime * 10);
+            targetScale * (MainCamera.orthographicSize / 157), Time.unscaledDeltaTime * 10);
 
 
         // Clamp to screen edges

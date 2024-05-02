@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public enum EPanelState
@@ -36,6 +37,7 @@ public class ActionGUI : MonoBehaviour
     private static Transform DisplayedPanel;
     private static List<Transform> BeginActionButtons;
     public static EPanelState PanelState;
+    public Terminal TerminalRef;
 
 
     //inspector values
@@ -96,27 +98,31 @@ public class ActionGUI : MonoBehaviour
         BeginActionButtons.Add(Instance.transform.FindDeepChild("3Panel/Canvas/ActionButton"));
         BeginActionButtons.Add(Instance.transform.FindDeepChild("4Panel/Canvas/ActionButton"));
         BeginActionButtons.Add(Instance.transform.FindDeepChild("5Panel/Canvas/ActionButton"));
+        TerminalRef = FindObjectOfType<Terminal>();
     }
     
     // Update is called once per frame
     void Update()
     {
-        if (ActionGUI.PanelState != EPanelState.EndState)
+        if (Time.timeScale == 0 || TerminalRef.bPaused == true)
         {
-            // Listen for key down event only once in Update
-            if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+            if (ActionGUI.PanelState != EPanelState.EndState)
             {
-                StartInputCoroutine();
-            }
+                // Listen for key down event only once in Update
+                if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+                {
+                    StartInputCoroutine();
+                }
 
-            if (Input.GetKeyDown(KeyCode.Escape) && ActionGUI.IsActionPanelOpen())
-            {
-                ActionGUI.Instance.CancelActionPanel();
-                Terminal.TMP_Input.interactable = true;
+                if (Input.GetKeyDown(KeyCode.Escape) && ActionGUI.IsActionPanelOpen())
+                {
+                    ActionGUI.Instance.CancelActionPanel();
+                    Terminal.TMP_Input.interactable = true;
+                }
             }
-        }
         
-        TimePasses();
+            TimePasses();
+        }
     }
     
     public void xButtonClicked()
@@ -186,7 +192,12 @@ public class ActionGUI : MonoBehaviour
 
     public void StartInputCoroutine()
     {
-         Ray ray = MainCamera.ScreenPointToRay(Input.mousePosition);
+        if (Time.timeScale == 0 || TerminalRef.bPaused == true)
+        {
+            return;
+        }
+
+        Ray ray = MainCamera.ScreenPointToRay(Input.mousePosition);
          RaycastHit hit;
 
          if (Physics.Raycast(ray, out hit))

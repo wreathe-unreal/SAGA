@@ -14,7 +14,8 @@ public class Terminal : MonoBehaviour
      public static TMP_InputField TMP_Input;
      public static string[] ParsedText;
      private static bool bStatusText = true;
-     private static bool bPaused = false;
+     public bool bPaused = false;
+     public Button ExecuteButton;
      
      void Start()
      {
@@ -31,18 +32,19 @@ public class Terminal : MonoBehaviour
          }
      }
 
-     public static void PauseButtonClicked()
+     public void PauseButtonClicked()
      {
+         bPaused = !bPaused;
          if (bPaused)
          {
              Time.timeScale = 0f;
+             ExecuteButton.GetComponent<TMP_Text>().text = "PAUSED";
          }
          else
          {
              Time.timeScale = 1f;
+             ExecuteButton.GetComponent<TMP_Text>().text = "EXECUTE";
          }
-
-         bPaused = !bPaused;
      }
 
      public static void ParseText()

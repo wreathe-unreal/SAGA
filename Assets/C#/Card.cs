@@ -378,7 +378,7 @@ public class Card : MonoBehaviour
         while (time < duration)
         {
             transform.localScale = Vector3.Lerp(startScale, targetScale, Mathf.Pow(time / duration, 2));
-            time += Time.deltaTime;
+            time += Time.unscaledDeltaTime;
             yield return null;
         }
 
@@ -392,7 +392,7 @@ public class Card : MonoBehaviour
         while (time < duration)
         {
             transform.localPosition = Vector3.Lerp(startPosition, targetPosition, time / duration);
-            time += Time.deltaTime;
+            time += Time.unscaledDeltaTime;
             yield return null;
         }
         transform.localPosition = targetPosition;  // Ensure the position is exactly the target position at the end.
