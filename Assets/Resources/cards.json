@@ -209,41 +209,6 @@
             {
                 "ActionKey": {
                     "ActionName": "Work",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "toil_the_deep",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "Deepmine",
-                    "SecondaryCardSpecifiers": [
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "Toil Progress",
-                    "AttributeModifier": 1,
-                    "Duration": 8,
-                    "FlavorText": "There is little else to do but bend my back and put the flame to the tunnel.",
-                    "OutcomeText": "In the stretch of tunnel you've been assigned, you see a glint... a shimmer... what could it be?",
-                    "ReturnedCardIDs": [
-                        "work",
-                        "toil_the_deep",
-                        "glint_in_the_wall",
-                        "gold",
-                        "glint"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1,
-                        1,
-                        1,
-                        1
-                    ],
-                    "Title": "Toil in the Deepmines"
-                }
-            },
-            {
-                "ActionKey": {
-                    "ActionName": "Work",
                     "Attribute": "Toil Progress",
                     "AttributeMinimum": 1,
                     "ID": "toil_the_deep",
@@ -265,6 +230,41 @@
                         "gold"
                     ],
                     "ReturnedQuantities": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Title": "Toil in the Deepmines"
+                }
+            },
+            {
+                "ActionKey": {
+                    "ActionName": "Work",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "toil_the_deep",
+                    "MaxRepetitions": 0,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "Deepmine",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "Toil Progress",
+                    "AttributeModifier": 1,
+                    "Duration": 8,
+                    "FlavorText": "There is little else to do but bend my back and put the flame to the tunnel.",
+                    "OutcomeText": "In the stretch of tunnel you've been assigned, you see a glint... a shimmer... what could it be?",
+                    "ReturnedCardIDs": [
+                        "work",
+                        "toil_the_deep",
+                        "glint_in_the_wall",
+                        "jolt_battery",
+                        "microvault"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1,
                         1,
                         1,
                         1
@@ -6112,6 +6112,96 @@
         "Price": 0,
         "Property": "Human",
         "System": "Avalon",
+        "Type": "Character"
+    },
+    {
+        "Actions": [
+            {
+                "ActionKey": {
+                    "ActionName": "Battle",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "my_coding_style",
+                    "MaxRepetitions": 0,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 8,
+                    "FlavorText": "Action flavor text...\n",
+                    "OutcomeText": "Outcome text...",
+                    "ReturnedCardIDs": [
+                        "my_coding_style",
+                        "battle",
+                        "components"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Title": ""
+                }
+            }
+        ],
+        "FlavorText": "Flavor text...\n",
+        "Habitat": "",
+        "ID": "my_coding_style",
+        "ImagePath": "my_coding_style.png",
+        "Lifespan": 0,
+        "Name": "My Coding Style",
+        "Price": 0,
+        "Property": "",
+        "System": "",
+        "Type": "Character"
+    },
+    {
+        "Actions": [
+            {
+                "ActionKey": {
+                    "ActionName": "Battle",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "riders_auto_indent",
+                    "MaxRepetitions": 0,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 8,
+                    "FlavorText": "Flavor text...",
+                    "OutcomeText": "Outcome text...",
+                    "ReturnedCardIDs": [
+                        "battle",
+                        "riders_auto_indent",
+                        "salvage_scrap"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Title": "Action Title"
+                }
+            }
+        ],
+        "FlavorText": "",
+        "Habitat": "",
+        "ID": "riders_auto_indent",
+        "ImagePath": "riders_auto_indent.png",
+        "Lifespan": 0,
+        "Name": "Rider's Auto Indent",
+        "Price": 1,
+        "Property": "Cursed",
+        "System": "",
         "Type": "Character"
     }
 ]

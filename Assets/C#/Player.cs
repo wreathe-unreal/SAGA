@@ -31,6 +31,7 @@ public class Player : MonoBehaviour
     public Dictionary<string, float> AttributeMap = new Dictionary<string, float>();
     private Dictionary<string, int> ActionRepetitionsMap;
     private static Player _State;
+    public static bool bLastBattleWasWin = false;
 
     public static bool bInitialized = false;
 
@@ -101,6 +102,18 @@ public class Player : MonoBehaviour
         AttributeMap[ActionCard.CurrentActionData.ActionResult.AttributeModified] += ActionCard.CurrentActionData.ActionResult.AttributeModifier;
         
         IncrementActionRepetition(ActionCard.Name, InputCards[0].Data);
+
+        if (ActionCard.Name == "Battle")
+        {
+            foreach (Card c in InputCards)
+            {
+                if (c.Data.Type == "Character")
+                {
+                    SetBattleOpponent(c);
+                    break;
+                }
+            }
+        }
 
         ActionCard.CookActionResult();
 
@@ -206,7 +219,14 @@ public class Player : MonoBehaviour
     public void DecrementActionRepetition(string ActionName, CardData FirstCard)
     {
         string Key = ActionName + FirstCard.ID;
-        ActionRepetitionsMap[Key]--;
+        if (ActionRepetitionsMap.ContainsKey(Key))
+        {
+            ActionRepetitionsMap[Key]--;
+        }
+        else
+        {
+            ActionRepetitionsMap[Key] = 0;
+        }
     }
     
     // Property to access the instance

@@ -14,8 +14,7 @@ public class Terminal : MonoBehaviour
      public static TMP_InputField TMP_Input;
      public static string[] ParsedText;
      private static bool bStatusText = true;
-     public bool bPaused = false;
-     public Button ExecuteButton;
+     public TMP_Text TMP_ExecuteBtnText;
      
      void Start()
      {
@@ -34,16 +33,25 @@ public class Terminal : MonoBehaviour
 
      public void PauseButtonClicked()
      {
-         bPaused = !bPaused;
-         if (bPaused)
+         if (ActionGUI.PanelState != EPanelState.Inactive || Terminal.TMP_Input.isFocused)
          {
+             return;
+         }
+
+         if(Board.State.GetGameState() == EGameState.Unpaused)
+         {
+             Board.State.SetGameState(EGameState.Paused);
              Time.timeScale = 0f;
-             ExecuteButton.GetComponent<TMP_Text>().text = "PAUSED";
+             TMP_ExecuteBtnText.text = "paused";
+             transform.FindDeepChild("Text Area/Text").GetComponent<TextMeshProUGUI>().color = new Color(80 / 255f, 26 / 255f, 26 / 255f);
          }
          else
          {
+             Board.State.SetGameState(EGameState.Unpaused);
              Time.timeScale = 1f;
-             ExecuteButton.GetComponent<TMP_Text>().text = "EXECUTE";
+             TMP_ExecuteBtnText.text = "execute";
+             transform.FindDeepChild("Text Area/Text").GetComponent<TextMeshProUGUI>().color = new Color(1f, 1f, 1f);
+
          }
      }
 

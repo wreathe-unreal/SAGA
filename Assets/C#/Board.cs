@@ -8,9 +8,15 @@ using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using UnityEngine.UI;  // Needed for UI elements like Panels
 
+public enum EGameState
+{
+    Paused,
+    Unpaused
+}
 
 public class Board : MonoBehaviour
 {
+    private static EGameState GameState;
     private Starship Starship;
     static public Board State;
     public TMP_Text CurrentHealthText;
@@ -59,6 +65,7 @@ public class Board : MonoBehaviour
         State = gameObject.GetComponent<Board>();
         Starship = gameObject.GetComponent<Starship>();
         Database = new CardDB();
+        SetGameState(EGameState.Unpaused);
         InitializeDecks();
         AddStartingCards();
         
@@ -81,6 +88,7 @@ public class Board : MonoBehaviour
         if (ActionGUI.PanelState != EPanelState.EndState)
         {
             HealthBar.fillAmount = GetStarship().CurrentHealth / GetStarship().GetMaxHealth();
+            
             if (GetStarship().CurrentHealth != GetStarship().GetMaxHealth())
             {
                 CurrentHealthText.text = $"{GetStarship().CurrentHealth}";
@@ -90,8 +98,9 @@ public class Board : MonoBehaviour
                 CurrentHealthText.text = "";
             }
             MaxHealthText.text = $"{GetStarship().GetMaxHealth()}";
+            
             GetStarship().UpdateFleetCard();
-
+            
             if (Board.Decks["Fleet"].Cards.Count > 0 && ActionGUI.AllPanelsAreClosed()) 
             {
                 Board.Decks["Fleet"].Cards[0].SetFaceUpState(true);
@@ -155,6 +164,16 @@ public class Board : MonoBehaviour
         }
     }
 
+    public EGameState GetGameState()
+    {
+        return GameState;
+    }
+    
+    public void SetGameState(EGameState EGS_NewGameState)
+    {
+        GameState = EGS_NewGameState;
+    }
+    
     private static void InitializeDecks()
     {
         Decks = new Dictionary<string, Deck>();
@@ -181,7 +200,7 @@ public class Board : MonoBehaviour
 
     private void AddStartingCards()
     {
-        List<string> InitialCards = new List<string> { "work", "glint", "deepmine", "toil_the_deep", "gold", "travel", "wreckage_bay", "nocturne"};
+        List<string> InitialCards = new List<string> { "riders_auto_indent", "my_coding_style", "work", "glint", "deepmine", "toil_the_deep", "battle", "gold", "travel", "wreckage_bay", "nocturne"};
 
         foreach (string s in InitialCards)
         {
@@ -252,7 +271,7 @@ public class Deck : IEnumerable<Card>
     }
 
 
-    private void SetHabitatCardPositions()
+    private void SetSystemBasedCardPositions()
     {
         //assuming we are in Habitats deck
         int positionIndex = 0; // Track the position index
@@ -287,22 +306,67 @@ public class Deck : IEnumerable<Card>
         return;
     }
     
+    private void SetHabitatBasedCardPositions()
+    {
+        //assuming we are in Habitats deck
+        int positionIndex = 0; // Track the position index
+        foreach (var card in Cards)
+        {
+            if (card == null)
+            {
+                continue;
+            }
+            
+            if (card.Data.Habitat == Player.Location.Habitat || card.Data.Habitat == "")
+            {
+
+                if (positionIndex < Positions.Count)
+                {
+                    card.Reparent(null);
+                    card.SetPosition(Positions[positionIndex]);
+                    card.SetFaceUpState(true);
+                    positionIndex++; // Move to the next position
+                }
+                else
+                {
+                    Debug.Log("Not enough positions for all matching cards.");
+                    break; // Exit if there are no more positions available
+                }
+            }
+            else
+            {
+                card.gameObject.transform.SetParent(Board.State.HiddenParent);
+            }
+        }
+        return;
+    }
+    
+    
+    
     public void SetCardPositions() 
     {
-        if (Player.bInitialized && Name == "Habitat")
-        {
-            SetHabitatCardPositions();
-            return;
-        }
 
-
-        for (int i = 0; i < Positions.Count; i++)
+        switch (Name)
         {
-            if (i < Cards.Count && Cards[i] != null && Cards[i].Position != Positions[i])
-            {
-                    // Assign position to card
-                Cards[i].SetPosition(Positions[i]);
-            }
+            case "Habitat":
+                SetSystemBasedCardPositions();
+                break;
+            case "Character":
+            case "Enemy":
+            case "Ambition":
+                SetHabitatBasedCardPositions();
+                break;
+            
+            default:
+                for (int i = 0; i < Positions.Count; i++)
+                {
+                    if (i < Cards.Count && Cards[i] != null && Cards[i].Position != Positions[i])
+                    {
+                        // Assign position to card
+                        Cards[i].SetPosition(Positions[i]);
+                    }
+                }
+                break;
         }
     }
     

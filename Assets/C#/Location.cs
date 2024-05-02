@@ -79,9 +79,11 @@ public class Location : MonoBehaviour
         Name = newLocation;
         UpdatePlayerSystem();
         UpdatePlayerHabitat();
+        
+        //update system and habitat based deck card positions
         foreach (Deck d in Board.Decks.Values)
         {
-            if (d.Name == "Habitat")
+            if (d.Name == "Habitat" || d.Name == "Character" || d.Name == "Ambition" || d.Name == "Enemy")
             {
                 d.SetCardPositions();
             }

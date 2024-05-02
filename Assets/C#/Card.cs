@@ -113,7 +113,10 @@ public class Card : MonoBehaviour
     
     public void SetFaceUpState(bool bIsFaceUp)
     {
-            AnimController.SetBool("bIsFaceUp", bIsFaceUp);
+        if(!AnimController.GetBool("bIsFaceUp"))
+        {
+                AnimController.SetBool("bIsFaceUp", bIsFaceUp);
+        }
     }
 
     public bool GetFaceUpState()

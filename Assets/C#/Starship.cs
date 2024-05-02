@@ -297,12 +297,14 @@ public class Starship : MonoBehaviour
 
         if (results >= 0)
         {
-            ModifyCurrentHealth((int)results * 220);
+            ModifyCurrentHealth((int)(-1 * results * 220)); //arbitrary damage for losing
+            Player.bLastBattleWasWin = false;
             return false;
         }
         else
         {
-            ModifyCurrentHealth(((int)GetShipPower() - enemyPower) * 110);
+            ModifyCurrentHealth((int)(results * 110));
+            Player.bLastBattleWasWin = true;
             return true;
         }
     }

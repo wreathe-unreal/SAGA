@@ -104,11 +104,10 @@ public class ActionGUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Time.timeScale == 0 || TerminalRef.bPaused == true)
+        if (Time.timeScale >= 1f || Board.State.GetGameState() == EGameState.Unpaused)
         {
             if (ActionGUI.PanelState != EPanelState.EndState)
             {
-                // Listen for key down event only once in Update
                 if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
                 {
                     StartInputCoroutine();
@@ -120,9 +119,9 @@ public class ActionGUI : MonoBehaviour
                     Terminal.TMP_Input.interactable = true;
                 }
             }
-        
-            TimePasses();
         }
+
+        TimePasses();
     }
     
     public void xButtonClicked()
@@ -192,7 +191,7 @@ public class ActionGUI : MonoBehaviour
 
     public void StartInputCoroutine()
     {
-        if (Time.timeScale == 0 || TerminalRef.bPaused == true)
+        if (Board.State.GetGameState() == EGameState.Paused)
         {
             return;
         }
@@ -322,12 +321,13 @@ public class ActionGUI : MonoBehaviour
                 break;
         }
         
-        Board.State.ResetCardPositionAndList(Player.State.InputCards);
         
         Player.State.GetActionCard().transform.SetParent(null);
         Player.State.GetActionCard().CurrentActionData = null;
         Player.State.GetActionCard().CurrentActionHint = null;
+        Player.State.GetActionCard().RevertScaling();
         Player.State.NullActionCard();
+        Board.State.ResetCardPositionAndList(Player.State.InputCards);
         
         SetPanelActive(false);
         
@@ -343,6 +343,13 @@ public class ActionGUI : MonoBehaviour
             Board.State.ResetCardPositionAndList(Player.State.ReturnedCards);
         }
         SetPanelActive(false);
+
+        if (Board.State.GetStarship().CurrentHealth <= 0)
+        {
+            Card deathCard = Instantiate<Card>(Board.State.CardToAdd);
+            deathCard.Initialize("death");
+            DisplayEndGame(deathCard);
+        }
     }
 
     public static bool IsActionPanelOpen()
@@ -370,6 +377,7 @@ public class ActionGUI : MonoBehaviour
         PanelState = EPanelState.Action;
         
         SetPanelActive(true);
+
         
         switch (Player.State.InputCards.Count)
         {
@@ -414,18 +422,7 @@ public class ActionGUI : MonoBehaviour
         
         OpenedActionCard.bActionFinished = false;
 
-        if (OpenedActionCard.ID == "travel")
-        {
-            Player.State.HandleTravel(OpenedActionCard.CurrentActionData);
-        }
-
-        if (OpenedActionCard.ID == "battle" && !Board.State.GetStarship().GetBattleResults(Player.State.GetBattleOpponent().Data.Price)) //if the action is a battle and the player loses
-        {
-            Player.State.DecrementActionRepetition(OpenedActionCard.Name, Player.State.GetBattleOpponent().Data);
-            Player.State.ReturnedCards.Add(Board.GetInstance().AddCard(OpenedActionCard.ID, 1, false));
-            Player.State.ReturnedCards.Add(Board.GetInstance().AddCard(Player.State.GetBattleOpponent().ID, 1, false));
-        }
-        else //otherwise proceed as normal
+        if(!HandleSpecialActions(OpenedActionCard)) //if it wasn't a special action card proceed normally
         {
             for(int i = 0; i < OpenedActionCard.CurrentActionData.ActionResult.ReturnedCardIDs.Count; i++)
             {
@@ -469,9 +466,38 @@ public class ActionGUI : MonoBehaviour
                 Returned[4].Reparent(FivePanel_BottomRightCard);
                 break;
         }
-         
+
+        if (Player.State.GetActionCard().ID == "battle" && !Player.bLastBattleWasWin)
+        {
+            TitleText.text = "Defeat";
+            FlavorText.text = "Our ship sustained severe damage from the battle.";
+            return;
+        }
         TitleText.text = OpenedActionCard.CurrentActionData.ActionResult.Title;
         FlavorText.text = OpenedActionCard.CurrentActionData.ActionResult.OutcomeText;
+    }
+
+    private bool HandleSpecialActions(Card OpenedActionCard)
+    {
+        if (OpenedActionCard.ID == "travel")
+        {
+            Player.State.HandleTravel(OpenedActionCard.CurrentActionData);
+            return false;
+        }
+
+        if (OpenedActionCard.ID == "battle")
+        {
+            if (!Board.State.GetStarship().GetBattleResults(Player.State.GetBattleOpponent().Data.Price)) //if the action is a battle and the player loses
+            {
+                Player.State.DecrementActionRepetition(OpenedActionCard.Name, Player.State.GetBattleOpponent().Data);
+                Player.State.ReturnedCards.Add(Board.State.AddCard(OpenedActionCard.ID, 1, false));
+                Player.State.ReturnedCards.Add(Board.State.AddCard(Player.State.GetBattleOpponent().ID, 1, false));
+                Player.State.SetBattleOpponent(null);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void DisplayEndGame(Card card)
