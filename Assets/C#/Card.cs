@@ -283,7 +283,6 @@ public class Card : MonoBehaviour
         }
     }
 
-
     public void Reparent(Transform t)
     {
         this.transform.SetParent(t);
@@ -299,19 +298,17 @@ public class Card : MonoBehaviour
         }
         else //if we are parenting the card to a panel
         {
+            if (GetFaceUpState() == true && ActionGUI.IsReturnPanelOpen() && this.DeckType != "Action")
+            {
+                this.AnimController.Play("FaceDown");
+                this.AnimController.SetBool("bIsFaceUp", false);
+            }
             this.transform.localPosition = new Vector3(0f, 0f, 0f);
             this.OriginalPosition = this.transform.position;
-            if (!ActionGUI.IsActionPanelOpen())
-            {
-                AnimController.Play("FaceDown");
-                this.SetFaceUpState(true);
-            }
             this.TMP_Quantity.enabled = false;
             this.PieTimer.enabled = false;
             this.GoldTimer.enabled = false;
             this.transform.localScale = new Vector3(.95f, .89f, 1f);
-
-           
         }
     }
 

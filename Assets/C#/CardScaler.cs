@@ -58,8 +58,6 @@ public class CardScaler : MonoBehaviour
             float zComponent = CardBeingScaled.transform.localPosition.z - 1f;
             CardBeingScaled.transform.localPosition += Vector3.back * zComponent;
         }
-
-        print(CardBeingScaled.Quantity);
     }
 
     void MouseOver()

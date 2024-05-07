@@ -1,0 +1,17 @@
+{
+    "name": "BinaryCharm.Samples.TextMeshProAlpha.Runtime",
+    "references": [
+        "BinaryCharm.Samples.UI.Runtime",
+        "BinaryCharm.TextMeshProAlpha.Runtime",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

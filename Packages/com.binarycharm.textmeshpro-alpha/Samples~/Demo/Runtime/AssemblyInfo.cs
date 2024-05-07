@@ -1,0 +1,5 @@
+﻿[assembly: System.Reflection.AssemblyCompany("Binary Charm Ltd")]
+[assembly: System.Reflection.AssemblyTitle("TextMeshPro Alpha Demo Runtime Assembly")]
+[assembly: System.Reflection.AssemblyCopyright("Copyright 2022.")]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("BinaryCharm.Samples.TextMeshProAlpha.Editor")]
+[assembly: UnityEngine.Scripting.Preserve]

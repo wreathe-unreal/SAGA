@@ -1,5 +1,32 @@
 {
   "dependencies": {
+    "com.binarycharm.common": {
+      "version": "file:com.binarycharm.common",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.binarycharm.samples.ui": {
+      "version": "file:com.binarycharm.samples.ui",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.binarycharm.textmeshpro-alpha": {
+      "version": "file:com.binarycharm.textmeshpro-alpha",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0",
+        "com.unity.textmeshpro": "1.4.1"
+      }
+    },
+    "com.binarycharm.ui": {
+      "version": "file:com.binarycharm.ui",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.unity.burst": {
       "version": "1.8.12",
       "depth": 1,

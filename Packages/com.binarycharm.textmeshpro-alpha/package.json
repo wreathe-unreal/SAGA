@@ -1,0 +1,25 @@
+{
+  "name": "com.binarycharm.textmeshpro-alpha",
+  "version": "1.1.0",
+  "displayName": "TextMeshPro Alpha",
+  "description": "TMP_Text extension methods for smooth alpha fading",
+  "unity": "2019.4",
+  "documentationUrl": "https://www.binarycharm.com/tech/unity-textmeshpro-alpha/docs/AwwgfNKV405Jy26qqinN7Wwj2umIiMEg/docfx",
+  "hideInEditor": false,
+  "dependencies": {
+    "com.unity.ugui": "1.0.0",
+	"com.unity.textmeshpro" : "1.4.1"
+  },
+  "author": {
+    "name": "Binary Charm",
+    "email": "info@binarycharm.com",
+    "url": "https://www.binarycharm.com"
+  },
+  "samples": [
+    {
+      "displayName": "Demo",
+      "description": "Sample scene for testing and showing the package features",
+      "path": "Samples~/Demo"
+    }
+  ]
+}

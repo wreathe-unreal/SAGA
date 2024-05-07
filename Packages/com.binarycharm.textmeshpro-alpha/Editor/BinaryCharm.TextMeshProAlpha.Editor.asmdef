@@ -1,0 +1,19 @@
+{
+    "name": "BinaryCharm.TextMeshProAlpha.Editor",
+    "rootNamespace": "",
+    "references": [
+        "Unity.TextMeshPro",
+        "BinaryCharm.TextMeshProAlpha.Runtime"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

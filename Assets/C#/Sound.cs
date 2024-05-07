@@ -24,9 +24,16 @@ public class Sound : MonoBehaviour
         }
     }
 
+    
+
     public void PlayAmbience()
     {
         Play("Ambience.mp3");
+    }
+    
+    public void PlayKeyAudio()
+    {
+        Play("KeyClick.mp3");
     }
 
     public void PlayBubbling()

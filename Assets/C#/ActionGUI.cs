@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using BinaryCharm.TextMeshProAlpha;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -21,10 +22,11 @@ public class ActionGUI : MonoBehaviour
 {
     public static TMP_InputField TextInput;
 
+    private TextFade TextFader;
     private static float LastActionTime;
     private static float CooldownDuration;
     private static bool bFirstCoro;
-    
+
     //instance
     public static ActionGUI Instance; // Singleton instance
     public static Camera MainCamera;
@@ -38,8 +40,9 @@ public class ActionGUI : MonoBehaviour
     private static List<Transform> BeginActionButtons;
     public static EPanelState PanelState;
     public Terminal TerminalRef;
+    public static bool bTextIsBeingPrinted = false;
 
-
+    
     //inspector values
     public Transform OnePanel;
     public Transform OnePanel_OnlyCard;
@@ -83,6 +86,7 @@ public class ActionGUI : MonoBehaviour
             return;
         }
     }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -92,15 +96,16 @@ public class ActionGUI : MonoBehaviour
         MainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
         TextInput = FindObjectOfType<TMP_InputField>();
         _board = FindObjectOfType<Board>();
-        
+
         BeginActionButtons = new List<Transform>();
         BeginActionButtons.Add(Instance.transform.FindDeepChild("2Panel/Canvas/ActionButton"));
         BeginActionButtons.Add(Instance.transform.FindDeepChild("3Panel/Canvas/ActionButton"));
         BeginActionButtons.Add(Instance.transform.FindDeepChild("4Panel/Canvas/ActionButton"));
         BeginActionButtons.Add(Instance.transform.FindDeepChild("5Panel/Canvas/ActionButton"));
         TerminalRef = FindObjectOfType<Terminal>();
+        TextFader = GetComponent<TextFade>();
     }
-    
+
     // Update is called once per frame
     void Update()
     {
@@ -123,7 +128,7 @@ public class ActionGUI : MonoBehaviour
 
         TimePasses();
     }
-    
+
     public void xButtonClicked()
     {
         switch (PanelState)
@@ -133,7 +138,7 @@ public class ActionGUI : MonoBehaviour
                 break;
             case EPanelState.Return:
                 ExecuteReturnPanel();
-                
+
                 break;
             case EPanelState.Hint:
                 CloseHintPanel();
@@ -145,6 +150,7 @@ public class ActionGUI : MonoBehaviour
                 StartCoroutine(HandleUserInput());
                 break;
         }
+
         Terminal.SetText("> Action + Data", true);
     }
 
@@ -159,7 +165,7 @@ public class ActionGUI : MonoBehaviour
 
                 c.TMP_Quantity.color = new Color(1f, 1f, 1f);
                 c.TMP_Quantity.text = $"{c.Quantity}";
-                Board.State.ResetCardPositionAndList(new List<Card> { c } );
+                Board.State.ResetCardPositionAndList(new List<Card> { c });
                 Board.DestroyCard(c);
             }
         }
@@ -168,13 +174,14 @@ public class ActionGUI : MonoBehaviour
     }
 
     public void TimePasses()
-    {        
+    {
         if (Board.State.GoldCard.GoldTimer.fillAmount < 1f)
         {
             Board.State.GoldCard.GoldTimer.fillAmount += Time.deltaTime / 120;
             return;
         }
-        if(Board.State.GoldCard.GoldTimer.fillAmount >= 1f && PanelState == EPanelState.Inactive)
+
+        if (Board.State.GoldCard.GoldTimer.fillAmount >= 1f && PanelState == EPanelState.Inactive)
         {
             if (Board.State.GoldCard.Quantity <= 0)
             {
@@ -183,6 +190,7 @@ public class ActionGUI : MonoBehaviour
                 ActionGUI.Instance.DisplayEndGame(bankruptCard);
                 return;
             }
+
             ActionGUI.Instance.DisplayTimePassesPanel(Board.State.GoldCard);
             Board.State.GoldCard.GoldTimer.fillAmount = 0f;
             return;
@@ -197,111 +205,118 @@ public class ActionGUI : MonoBehaviour
         }
 
         Ray ray = MainCamera.ScreenPointToRay(Input.mousePosition);
-         RaycastHit hit;
+        RaycastHit hit;
 
-         if (Physics.Raycast(ray, out hit))
-         {
-             if (hit.transform.GetComponent<Card>() != null)  // Check if the hit object is this GameObject
-             {
-                 return;
-             }
-         }
-         
-         StartCoroutine(HandleUserInput());
-         bFirstCoro = false; //no cooldown for first enter coro
+        if (Physics.Raycast(ray, out hit))
+        {
+            if (hit.transform.GetComponent<Card>() != null) // Check if the hit object is this GameObject
+            {
+                return;
+            }
+        }
 
-     }
-     
+        StartCoroutine(HandleUserInput());
+        bFirstCoro = false; //no cooldown for first enter coro
+
+    }
+
     private IEnumerator HandleUserInput()
-     {
-         if (!bFirstCoro)
-         {
-             // Early exit if cooldown has not elapsed
-             float timeSinceLastAction = Time.realtimeSinceStartup - LastActionTime;
-             if (timeSinceLastAction <= CooldownDuration)
-                 yield break;
-         }
+    {
+        if (!bFirstCoro)
+        {
+            // Early exit if cooldown has not elapsed
+            float timeSinceLastAction = Time.realtimeSinceStartup - LastActionTime;
+            if (timeSinceLastAction <= CooldownDuration)
+                yield break;
+        }
 
-         // Update the last action time immediately
-         LastActionTime = Time.realtimeSinceStartup;
+        // Update the last action time immediately
+        LastActionTime = Time.realtimeSinceStartup;
 
-         if (CloseAndExecutePanels()) //if we close a panel we leave
-         {
-             yield break;
-         }
-         
-         
-         TextInput.interactable = false;
-         Terminal.ParseText();
-         
-         Terminal.SetText("> Action + Card(s)", true);
-
-         if (Terminal.ParsedText.Length > 5)
-         {
-             Terminal.SetText("TOO MANY CARDS.", true);
-             Sound.Manager.PlayError();
-             yield break;
-         }
-
-         Card NewAction = Board.Decks["Action"].FirstOrDefault(c => c.Name.ToLower() == Terminal.ParsedText[0]);
-
-         if (NewAction != null)
-         {
-             Player.State.SetActionCard(NewAction);
-         }
-
-         if (Player.State.GetActionCard() == null)
-         {
-             Terminal.SetText("NO ACTION FOUND.", true);
-             Sound.Manager.PlayError();
-             yield break;
-         }
-
-         
-         
-         //Check if the first word matches an action card
-         if (Terminal.ParsedText.Length == 1 && Player.State.GetActionCard().bActionFinished)
-         {
-             Player.State.GetActionCard().OpenAction(); //early exit if just a action and we open the action
-             yield break;
-         }
-         
-         if (Player.State.GetActionCard().CurrentActionData != null)
-         {
-             Terminal.SetText("ACTION NOT READY.", true);
-             Sound.Manager.PlayError();
-             yield break;
-         }
-         
-         //TRY TO FIND AN ACTION
-         Player.State.FindAction(Terminal.ParsedText);
-         //TRY TO FIND AN ACTION
+        if (bTextIsBeingPrinted == false)
+        {
+            if (CloseAndExecutePanels()) //if we close a panel we leave
+            {
+                yield break;
+            }
+        }
+        else
+        {
+            yield break;
+        }
 
 
-         if (Player.State.GetActionCard().CurrentActionData != null)
-         {
-             DisplayActionPanel();
-             Sound.Manager.PlayPlaceCards();
-             yield break;
-         }
+        TextInput.interactable = false;
+        Terminal.ParseText();
 
-         if (Player.State.GetActionCard().CurrentActionHint != null)
-         { 
-             DisplayHintPanel();
-             yield break;
-         }
+        Terminal.SetText("> Action + Card(s)", true);
 
-         Terminal.SetText("IMPOSSIBLE.", true);
-         Sound.Manager.PlayError();
-         yield break;
-     }
-    
+        if (Terminal.ParsedText.Length > 5)
+        {
+            Terminal.SetText("TOO MANY CARDS.", true);
+            Sound.Manager.PlayError();
+            yield break;
+        }
+
+        Card NewAction = Board.Decks["Action"].FirstOrDefault(c => c.Name.ToLower() == Terminal.ParsedText[0]);
+
+        if (NewAction != null)
+        {
+            Player.State.SetActionCard(NewAction);
+        }
+
+        if (Player.State.GetActionCard() == null)
+        {
+            Terminal.SetText("NO ACTION FOUND.", true);
+            Sound.Manager.PlayError();
+            yield break;
+        }
+
+
+
+        //Check if the first word matches an action card
+        if (Terminal.ParsedText.Length == 1 && Player.State.GetActionCard().bActionFinished)
+        {
+            Player.State.GetActionCard().OpenAction(); //early exit if just a action and we open the action
+            yield break;
+        }
+
+        if (Player.State.GetActionCard().CurrentActionData != null)
+        {
+            Terminal.SetText("ACTION NOT READY.", true);
+            Sound.Manager.PlayError();
+            yield break;
+        }
+
+        //TRY TO FIND AN ACTION
+        Player.State.FindAction(Terminal.ParsedText);
+        //TRY TO FIND AN ACTION
+
+
+        if (Player.State.GetActionCard().CurrentActionData != null)
+        {
+            DisplayActionPanel();
+            Sound.Manager.PlayPlaceCards();
+            yield break;
+        }
+
+        if (Player.State.GetActionCard().CurrentActionHint != null)
+        {
+            DisplayHintPanel();
+            yield break;
+        }
+
+        Terminal.SetText("IMPOSSIBLE.", true);
+        Sound.Manager.PlayError();
+        yield break;
+    }
+
     public void CancelActionPanel()
     {
         DisableAllBeginButtons();
 
         Sound.Manager.PlayError();
-        
+
         switch (Player.State.InputCards.Count)
         {
             case 0:
@@ -320,23 +335,23 @@ public class ActionGUI : MonoBehaviour
                 Sound.Manager.Play4Flip();
                 break;
         }
-        
-        
+
+
         Player.State.GetActionCard().transform.SetParent(null);
         Player.State.GetActionCard().CurrentActionData = null;
         Player.State.GetActionCard().CurrentActionHint = null;
         Player.State.GetActionCard().RevertScaling();
         Player.State.NullActionCard();
         Board.State.ResetCardPositionAndList(Player.State.InputCards);
-        
+
         SetPanelActive(false);
-        
+
         Player.State.InputCards = new List<Card>(); // Clear other cards
         Terminal.SetText("> Action + Data", true);
     }
-    
+
     public void ExecuteReturnPanel()
-    { 
+    {
         Sound.Manager.PlayPlaceCards();
         if (EndGamePanel.activeSelf == false)
         {
@@ -344,7 +359,7 @@ public class ActionGUI : MonoBehaviour
         }
 
         SetPanelActive(false);
-        
+
         Player.State.GetLocation().UpdateCardGlow();
         if (Board.State.GetStarship().CurrentHealth <= 0)
         {
@@ -359,28 +374,28 @@ public class ActionGUI : MonoBehaviour
         return PanelState == EPanelState.Action;
 
     }
-    
+
     public static bool IsHintPanelOpen()
     {
         return PanelState == EPanelState.Hint;
     }
-    
+
     public static bool IsReturnPanelOpen()
     {
         return PanelState == EPanelState.Return;
 
     }
-    
+
     public void DisplayActionPanel()
     {
         Sound.Manager.PlayTransmissionSent();
         Sound.Manager.Play1Flip();
-        
+
         PanelState = EPanelState.Action;
-        
+
         SetPanelActive(true);
 
-        
+
         switch (Player.State.InputCards.Count)
         {
             case 1:
@@ -410,40 +425,47 @@ public class ActionGUI : MonoBehaviour
                 Instance.transform.FindDeepChild("5Panel/Canvas/ActionButton").gameObject.SetActive(true);
                 break;
         }
-         
+
+
+
         TitleText.text = Player.State.GetActionCard().CurrentActionData.ActionResult.Title;
         FlavorText.text = Player.State.GetActionCard().CurrentActionData.ActionResult.FlavorText;
-         
-         
+        TextFader.TriggerFade(FlavorText, OnTextFadeComplete);
+
+
     }
 
     public void DisplayReturnPanel(Card OpenedActionCard)
     {
-        
+
         PanelState = EPanelState.Return;
-        
+
         OpenedActionCard.bActionFinished = false;
 
-        if(!HandleSpecialActions(OpenedActionCard)) //if it wasn't a special action card proceed normally
+        if (!HandleSpecialActions(OpenedActionCard)) //if it wasn't a special action card proceed normally
         {
-            for(int i = 0; i < OpenedActionCard.CurrentActionData.ActionResult.ReturnedCardIDs.Count; i++)
+            for (int i = 0; i < OpenedActionCard.CurrentActionData.ActionResult.ReturnedCardIDs.Count; i++)
             {
                 string id = OpenedActionCard.CurrentActionData.ActionResult.ReturnedCardIDs[i];
                 int qty = OpenedActionCard.CurrentActionData.ActionResult.ReturnedQuantities[i];
-                
+
                 Player.State.ReturnedCards.Add(Board.GetInstance().AddCard(id, qty, false));
-            } 
+            }
         }
 
         List<Card> Returned = Player.State.GetReturnedCards();
 
         SetPanelActive(true);
 
+
+        TitleText.text = OpenedActionCard.CurrentActionData.ActionResult.Title;
+        FlavorText.text = OpenedActionCard.CurrentActionData.ActionResult.OutcomeText;
+        
         switch (Returned.Count)
         {
             case 1:
                 Returned[0].Reparent(OnePanel_OnlyCard);
-                
+
                 break;
             case 2:
                 Returned[0].Reparent(TwoPanel_LeftCard);
@@ -469,15 +491,32 @@ public class ActionGUI : MonoBehaviour
                 break;
         }
 
+        TextFader.TriggerFade(FlavorText, OnTextFadeComplete);
+
         if (Player.State.GetActionCard().ID == "battle" && !Player.bLastBattleWasWin)
         {
             TitleText.text = "Defeat";
             FlavorText.text = "Our ship sustained severe damage from the battle.";
             return;
         }
-        
-        TitleText.text = OpenedActionCard.CurrentActionData.ActionResult.Title;
-        FlavorText.text = OpenedActionCard.CurrentActionData.ActionResult.OutcomeText;
+    }
+
+
+    public void PresentCards(List<Card> CardsToPresent)
+    {
+        if (ActionGUI.IsActionPanelOpen())
+        {
+            return;
+        }
+
+        foreach (Card c in CardsToPresent)
+        {
+            if (!c.AnimController.GetBool("bIsFaceUp"))
+            {
+                c.AnimController.Play("FaceDown");
+                c.SetFaceUpState(true);
+            }
+        }
     }
 
     private bool HandleSpecialActions(Card OpenedActionCard)
@@ -490,7 +529,9 @@ public class ActionGUI : MonoBehaviour
 
         if (OpenedActionCard.ID == "battle")
         {
-            if (!Board.State.GetStarship().GetBattleResults(Player.State.GetBattleOpponent().Data.Price)) //if the action is a battle and the player loses
+            if (!Board.State.GetStarship()
+                    .GetBattleResults(Player.State.GetBattleOpponent().Data
+                        .Price)) //if the action is a battle and the player loses
             {
                 Player.State.DecrementActionRepetition(OpenedActionCard.Name, Player.State.GetBattleOpponent().Data);
                 Player.State.ReturnedCards.Add(Board.State.AddCard(OpenedActionCard.ID, 1, false));
@@ -517,7 +558,7 @@ public class ActionGUI : MonoBehaviour
             }
         }
 
-        
+
         EndGamePanel.gameObject.SetActive(true);
         Vector3 screenCenter = new Vector3(Screen.width / 2, Screen.height / 2, MainCamera.nearClipPlane);
         Vector3 worldCenter = MainCamera.ScreenToWorldPoint(screenCenter);
@@ -570,8 +611,9 @@ public class ActionGUI : MonoBehaviour
             case EPanelState.Action:
                 cardsToDisplay = Player.State.InputCards.Count + 1;
                 break;
-            case EPanelState.Hint :
-                cardsToDisplay = Player.State.GetActionCard().CurrentActionHint.ActionKey.SecondaryCardSpecifiersReal.Count + 2;
+            case EPanelState.Hint:
+                cardsToDisplay = Player.State.GetActionCard().CurrentActionHint.ActionKey.SecondaryCardSpecifiersReal
+                    .Count + 2;
                 break;
             case EPanelState.Return:
                 cardsToDisplay = Player.State.ReturnedCards.Count;
@@ -583,8 +625,8 @@ public class ActionGUI : MonoBehaviour
                 cardsToDisplay = 1;
                 break;
         }
-        
-        switch(cardsToDisplay)
+
+        switch (cardsToDisplay)
         {
             case 1:
                 DisplayedPanel = OnePanel;
@@ -634,7 +676,7 @@ public class ActionGUI : MonoBehaviour
         float xScaling = transform.localScale.x * MainCamera.orthographicSize / 157;
         float ysCaling = transform.localScale.y * MainCamera.orthographicSize / 157;
         transform.localScale = new Vector3(xScaling, ysCaling, transform.localScale.z);
-        
+
         //normalize position
         Vector3 newPos = MainCamera.ViewportToWorldPoint(Vector3.one / 2);
         newPos.z = transform.position.z;
@@ -644,17 +686,19 @@ public class ActionGUI : MonoBehaviour
 
 
     }
-    
-    
+
+
 
     public void ExecuteActionPanel()
     {
+        if (bTextIsBeingPrinted) return;
+        
         Player.State.ExecuteAction();
         SetPanelActive(false);
         Sound.Manager.PlayWhoosh();
     }
-    
-    
+
+
 
     public void CloseHintPanel()
     {
@@ -667,14 +711,14 @@ public class ActionGUI : MonoBehaviour
         {
             c.Reparent(null);
         }
-        
+
         ThreePanel_RightHint.gameObject.SetActive(false);
         FourPanel_BottomHint.gameObject.SetActive(false);
         FourPanel_RightHint.gameObject.SetActive(false);
         FivePanel_BottomRightHint.gameObject.SetActive(false);
         FivePanel_BottomLeftHint.gameObject.SetActive(false);
         FivePanel_RightHint.gameObject.SetActive(false);
-        
+
         switch (Player.State.InputCards.Count)
         {
             case 0:
@@ -690,7 +734,7 @@ public class ActionGUI : MonoBehaviour
                 Sound.Manager.Play4Flip();
                 break;
         }
-        
+
         // Find all SpriteRenderer components in the scene
         SpriteRenderer[] allSprites = FindObjectsOfType<SpriteRenderer>();
 
@@ -703,7 +747,7 @@ public class ActionGUI : MonoBehaviour
                 Destroy(spriteRenderer.gameObject);
             }
         }
-        
+
         SetPanelActive(false);
 
         foreach (Deck d in Board.Decks.Values)
@@ -735,9 +779,10 @@ public class ActionGUI : MonoBehaviour
 
         return questionMark;
     }
+
     public void DisplayHintPanel()
     {
-        
+
         Sound.Manager.PlayError();
         Sound.Manager.PlayPlaceCards();
 
@@ -745,7 +790,8 @@ public class ActionGUI : MonoBehaviour
 
         List<Card> InputCards = Player.State.GetInputCards();
 
-        List<CardSpecifier> SecondaryCardSpecifiers = Player.State.GetActionCard().CurrentActionHint.ActionKey.SecondaryCardSpecifiersReal;
+        List<CardSpecifier> SecondaryCardSpecifiers =
+            Player.State.GetActionCard().CurrentActionHint.ActionKey.SecondaryCardSpecifiersReal;
 
         // foreach (Deck d in Board.Decks.Values)
         // {
@@ -754,9 +800,9 @@ public class ActionGUI : MonoBehaviour
 
 
         SetPanelActive(true);
-        
+
         List<string> SecondaryCardHints = new List<string>();
-        
+
         for (int i = 1; i <= SecondaryCardSpecifiers.Count; i++)
         {
             //Debug.Log(SecondaryCardSpecifiersReal[i - 1].GetSpecifierText() + " vs " + new CardSpecifier(cardData[i].ID, cardData[i].Type, cardData[i].Property).GetSpecifierText());
@@ -768,11 +814,11 @@ public class ActionGUI : MonoBehaviour
             }
             else
             {
-                SecondaryCardHints.Add(SecondaryCardSpecifiers[i-1].GetSpecifierText());
+                SecondaryCardHints.Add(SecondaryCardSpecifiers[i - 1].GetSpecifierText());
             }
         }
-        
-        
+
+
         switch (SecondaryCardSpecifiers.Count)
         {
             case 1:
@@ -781,22 +827,26 @@ public class ActionGUI : MonoBehaviour
                 InputCards[0].Reparent(ThreePanel_MiddleCard);
                 if (SecondaryCardHints[0] != "correct")
                 {
-                    CreateQuestionMark(ThreePanel_RightCard); ThreePanel_RightHint.gameObject.SetActive(true);
-                    ActivateSetHintText(ThreePanel_RightHint.gameObject.GetComponent<TMP_Text>(), SecondaryCardHints[0]);
+                    CreateQuestionMark(ThreePanel_RightCard);
+                    ThreePanel_RightHint.gameObject.SetActive(true);
+                    ActivateSetHintText(ThreePanel_RightHint.gameObject.GetComponent<TMP_Text>(),
+                        SecondaryCardHints[0]);
 
                 }
                 else
                 {
                     InputCards[1].Reparent(ThreePanel_RightCard);
                 }
+
                 break;
             case 2:
-                DisplayedPanel  = FourPanel;
+                DisplayedPanel = FourPanel;
                 Player.State.GetActionCard().Reparent(FourPanel_TopCard);
                 InputCards[0].Reparent(FourPanel_LeftCard);
                 if (SecondaryCardHints[0] != "correct")
                 {
-                    CreateQuestionMark(FourPanel_RightCard); FourPanel_RightHint.gameObject.SetActive(true);
+                    CreateQuestionMark(FourPanel_RightCard);
+                    FourPanel_RightHint.gameObject.SetActive(true);
                     ActivateSetHintText(FourPanel_RightHint.gameObject.GetComponent<TMP_Text>(), SecondaryCardHints[0]);
 
                 }
@@ -807,24 +857,25 @@ public class ActionGUI : MonoBehaviour
 
                 if (SecondaryCardHints[1] != "correct")
                 {
-                    CreateQuestionMark(FourPanel_BottomCard); 
+                    CreateQuestionMark(FourPanel_BottomCard);
                     FourPanel_BottomHint.gameObject.SetActive(true);
-                    ActivateSetHintText(FourPanel_BottomHint.gameObject.GetComponent<TMP_Text>(), SecondaryCardHints[1]);
+                    ActivateSetHintText(FourPanel_BottomHint.gameObject.GetComponent<TMP_Text>(),
+                        SecondaryCardHints[1]);
                 }
                 else
                 {
                     InputCards[2].Reparent(FourPanel_BottomCard);
                 }
-                
+
                 break;
             case 3:
-                DisplayedPanel  = FivePanel;
+                DisplayedPanel = FivePanel;
                 Player.State.GetActionCard().transform.SetParent(FivePanel_TopCard);
                 InputCards[0].Reparent(FivePanel_LeftCard);
                 if (SecondaryCardHints[0] != "correct")
                 {
-                    CreateQuestionMark(FivePanel_RightCard); 
-                    FivePanel_RightHint.gameObject.SetActive(true); 
+                    CreateQuestionMark(FivePanel_RightCard);
+                    FivePanel_RightHint.gameObject.SetActive(true);
                     ActivateSetHintText(FivePanel_RightHint.gameObject.GetComponent<TMP_Text>(), SecondaryCardHints[0]);
                 }
                 else
@@ -834,39 +885,43 @@ public class ActionGUI : MonoBehaviour
 
                 if (SecondaryCardHints[1] != "correct")
                 {
-                    CreateQuestionMark(FivePanel_BottomLeftCard); 
+                    CreateQuestionMark(FivePanel_BottomLeftCard);
                     FivePanel_BottomLeftHint.gameObject.SetActive(true);
-                    ActivateSetHintText(FivePanel_BottomLeftHint.gameObject.GetComponent<TMP_Text>(), SecondaryCardHints[1]);
+                    ActivateSetHintText(FivePanel_BottomLeftHint.gameObject.GetComponent<TMP_Text>(),
+                        SecondaryCardHints[1]);
                 }
                 else
                 {
                     InputCards[2].Reparent(FivePanel_BottomLeftCard);
                 }
+
                 if (SecondaryCardHints[2] != "correct")
                 {
                     CreateQuestionMark(FivePanel_BottomRightCard);
                     FivePanel_BottomRightHint.gameObject.SetActive(true);
-                    ActivateSetHintText(FivePanel_BottomRightHint.gameObject.GetComponent<TMP_Text>(), SecondaryCardHints[2]);
+                    ActivateSetHintText(FivePanel_BottomRightHint.gameObject.GetComponent<TMP_Text>(),
+                        SecondaryCardHints[2]);
                 }
                 else
                 {
                     InputCards[3].Reparent(FivePanel_BottomRightCard);
                 }
+
                 break;
         }
 
-       
-        
+
+
 
         foreach (Card c in InputCards)
         {
             c.transform.localPosition.Set(0f, 0f, 0f);
         }
-        
+
         DisableAllBeginButtons();
         TitleText.text = "";
         FlavorText.text = "";
-        
+
     }
 
     private static void ActivateSetHintText(TMP_Text textObject, string newText)
@@ -891,22 +946,22 @@ public class ActionGUI : MonoBehaviour
             CloseTimePassesPanel();
             return true;
         }
-        
+
         if (IsHintPanelOpen())
         {
             CloseHintPanel();
             ActionGUI.DisableAllBeginButtons();
             return true;
         }
-        
-        if(IsActionPanelOpen())
+
+        if (IsActionPanelOpen())
         {
             ExecuteActionPanel();
             ActionGUI.DisableAllBeginButtons();
             return true;
         }
-         
-        if(IsReturnPanelOpen())
+
+        if (IsReturnPanelOpen())
         {
             ExecuteReturnPanel();
             return true;
@@ -919,12 +974,13 @@ public class ActionGUI : MonoBehaviour
     public static bool IsTimePassesPanelOpen()
     {
         return PanelState == EPanelState.TimePasses;
-        
+
     }
 
     public static bool AllPanelsAreClosed()
     {
-        return !IsHintPanelOpen() && !IsActionPanelOpen() && !IsReturnPanelOpen() && !IsTimePassesPanelOpen() && !IsEndScreenPanelOpen();
+        return !IsHintPanelOpen() && !IsActionPanelOpen() && !IsReturnPanelOpen() && !IsTimePassesPanelOpen() &&
+               !IsEndScreenPanelOpen();
     }
 
     private static bool IsEndScreenPanelOpen()
@@ -937,16 +993,29 @@ public class ActionGUI : MonoBehaviour
         PanelState = EPanelState.TimePasses;
         Sound.Manager.PlayChurchBell();
         Sound.Manager.Play1Flip();
-        
+
         SetPanelActive(true);
-        
+
         goldCard.Reparent(OnePanel_OnlyCard);
         goldCard.TMP_Quantity.enabled = true;
         goldCard.TMP_Quantity.color = new Color(1f, 0f, 0f);
         goldCard.TMP_Quantity.text = "-1";
         TitleText.text = "Time Passes";
-        FlavorText.text = "Time slips like sand through clenched fists—seasons fade, the toll of life grows heavier, and with each passing year, the burdens carve deeper into the soul's weary map.";
-         
-                 
+        FlavorText.text =
+            "Time slips like sand through clenched fists, seasons fade, the toll of life grows heavier and it's burdens carve deeper into the soul's weary map.";
+        
+        TextFader.TriggerFade(FlavorText, OnTextFadeComplete);
+        bTextIsBeingPrinted = false; //allow the user to click out early
+
+
+    }
+    
+    private void OnTextFadeComplete()
+    {
+        bTextIsBeingPrinted = false;
+        if (IsReturnPanelOpen())
+        {
+            PresentCards(Player.State.GetReturnedCards());
+        }
     }
 }
