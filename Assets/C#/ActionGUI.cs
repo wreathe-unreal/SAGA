@@ -41,6 +41,7 @@ public class ActionGUI : MonoBehaviour
     public static EPanelState PanelState;
     public Terminal TerminalRef;
     public static bool bTextIsBeingPrinted = false;
+    public static bool bCardsBeingFlipped = false;
 
     
     //inspector values
@@ -220,6 +221,11 @@ public class ActionGUI : MonoBehaviour
 
     }
 
+    public bool IsPanelFinished()
+    {
+        return !bTextIsBeingPrinted && !bCardsBeingFlipped;
+    }
+    
     private IEnumerator HandleUserInput()
     {
         if (!bFirstCoro)
@@ -233,7 +239,7 @@ public class ActionGUI : MonoBehaviour
         // Update the last action time immediately
         LastActionTime = Time.realtimeSinceStartup;
 
-        if (bTextIsBeingPrinted == false)
+        if (IsPanelFinished())
         {
             if (CloseAndExecutePanels()) //if we close a panel we leave
             {
@@ -502,22 +508,41 @@ public class ActionGUI : MonoBehaviour
     }
 
 
-    public void PresentCards(List<Card> CardsToPresent)
-    {
-        if (ActionGUI.IsActionPanelOpen())
-        {
-            return;
-        }
+   public void StartPresentingCards(List<Card> CardsToPresent)
+   {
+       StartCoroutine(PresentCardsWithDelay(CardsToPresent));
+   }
+   
+   private IEnumerator PresentCardsWithDelay(List<Card> CardsToPresent)
+   {
+       bCardsBeingFlipped = true;
+       
+       if (ActionGUI.IsActionPanelOpen())
+       {
+           Debug.LogWarning("Action Panel Open: Stopping Coroutine.");
+           yield break; // Stop the coroutine if the action panel is open
+       }
+   
+       for (int i = 0; i < CardsToPresent.Count; i++)
+       {
+           var currentCard = CardsToPresent[i];
+           if (!currentCard.AnimController.GetBool("bIsFaceUp"))
+           {
+               Debug.Log($"Flipping Card {i + 1}/{CardsToPresent.Count}: {currentCard.name}");
+               currentCard.AnimController.Play("FaceDown");
+               currentCard.SetFaceUpState(true);
+               yield return new WaitForSecondsRealtime(1f); // Delay before flipping the next card
 
-        foreach (Card c in CardsToPresent)
-        {
-            if (!c.AnimController.GetBool("bIsFaceUp"))
-            {
-                c.AnimController.Play("FaceDown");
-                c.SetFaceUpState(true);
-            }
-        }
-    }
+           }
+           else
+           {
+               Debug.Log($"Card {i + 1}/{CardsToPresent.Count} is already face up: {currentCard.name}");
+           }
+       }
+   
+       Debug.Log("Finished presenting cards.");
+       bCardsBeingFlipped = false;
+   }
 
     private bool HandleSpecialActions(Card OpenedActionCard)
     {
@@ -691,7 +716,7 @@ public class ActionGUI : MonoBehaviour
 
     public void ExecuteActionPanel()
     {
-        if (bTextIsBeingPrinted) return;
+        if (!IsPanelFinished()) return;
         
         Player.State.ExecuteAction();
         SetPanelActive(false);
@@ -1015,7 +1040,7 @@ public class ActionGUI : MonoBehaviour
         bTextIsBeingPrinted = false;
         if (IsReturnPanelOpen())
         {
-            PresentCards(Player.State.GetReturnedCards());
+            StartPresentingCards(Player.State.GetReturnedCards());
         }
     }
 }
