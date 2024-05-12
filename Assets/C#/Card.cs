@@ -239,7 +239,7 @@ public class Card : MonoBehaviour
         StartCoroutine(ScaleToSize(new Vector3(1, 1, 1), .40f));
         
         Board.Decks["Action"].SetCardPositions();
-        
+
         Timer.StartTimer(CurrentActionData.ActionResult.Duration * 2);
         Timer.OnTimerUpdate += UpdateTimerBar;
         Timer.OnTimerComplete += ActionFinished;

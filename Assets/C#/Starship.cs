@@ -89,14 +89,14 @@ public class Starship : MonoBehaviour
 
         if (Components[ect] == null ||Components[ect].Power < StarshipComponentDB[c.Name].Power)
         {
-            Board.Decks["Starship"].Cards.Insert((int)ect - 1, c); //our ECT are 1 based but deck list is 0 based
+            Board.Decks["Starship"].Cards[(int)ect - 1] = c; // ect is 1 based
             Components[ect] = StarshipComponentDB[c.Name];
             ModifyCurrentHealth(((int)Components[ect].Power * 110));
             return true;
         }
         else
         {
-            Board.Decks["Object"].Cards[(int)ect - 1] = c; //our ECT are 1 based but deck list is 0 based
+            Board.State.AddCard(c.ID, 1, false);
             return false;
         }
     }

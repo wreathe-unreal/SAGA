@@ -176,9 +176,17 @@ public class ActionGUI : MonoBehaviour
 
     public void TimePasses()
     {
-        if (Board.State.GoldCard.GoldTimer.fillAmount < 1f)
+        if (Board.State.GoldCard != null)
         {
-            Board.State.GoldCard.GoldTimer.fillAmount += Time.deltaTime / 120;
+            if (Board.State.GoldCard.GoldTimer.fillAmount < 1f)
+            {
+                    Board.State.GoldCard.GoldTimer.fillAmount += Time.deltaTime / 120;
+                    return;
+            }
+        }
+        else
+        {
+            Board.State.FindGoldCard();
             return;
         }
 
@@ -200,10 +208,18 @@ public class ActionGUI : MonoBehaviour
 
     public void StartInputCoroutine()
     {
+        if(Instance.transform.FindDeepChild("Intro").gameObject.activeSelf)
+        {
+            Instance.transform.FindDeepChild("Intro").gameObject.SetActive(false);
+            return;
+        }
+
+        
         if (Board.State.GetGameState() == EGameState.Paused)
         {
             return;
         }
+        
 
         Ray ray = MainCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
@@ -815,8 +831,7 @@ public class ActionGUI : MonoBehaviour
 
         List<Card> InputCards = Player.State.GetInputCards();
 
-        List<CardSpecifier> SecondaryCardSpecifiers =
-            Player.State.GetActionCard().CurrentActionHint.ActionKey.SecondaryCardSpecifiersReal;
+        List<CardSpecifier> SecondaryCardSpecifiers = Player.State.GetActionCard().CurrentActionHint.ActionKey.SecondaryCardSpecifiersReal;
 
         // foreach (Deck d in Board.Decks.Values)
         // {

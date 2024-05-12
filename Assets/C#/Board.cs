@@ -52,11 +52,17 @@ public class Board : MonoBehaviour
                     // now it's safe to destroy the card object
                     Destroy(cardToBeDestroyed.gameObject);
 
-                    SearchDeck.SetCardPositions();
+                }
+                else
+                {
+                    Card cardToBeDestroyed = SearchDeck.Cards[i];
+                    cardToBeDestroyed.Reparent(null);
                 }
             }
         }
+        SearchDeck.SetCardPositions();
     }
+    
 
     // Start is called before the first frame update
     void Start()
@@ -68,7 +74,14 @@ public class Board : MonoBehaviour
         SetGameState(EGameState.Unpaused);
         InitializeDecks();
         AddStartingCards();
+        FindGoldCard();
         
+
+        Player.Location.SetLocation("Deepmine");
+    }
+
+    public void FindGoldCard()
+    {
         foreach (Card c in Board.Decks["Currency"])
         {
             if (c.ID == "gold")
@@ -76,8 +89,6 @@ public class Board : MonoBehaviour
                 GoldCard = c;
             }
         }
-
-        Player.Location.SetLocation("Deepmine");
     }
 
     // Update is called once per frame
@@ -202,7 +213,7 @@ public class Board : MonoBehaviour
 
     private void AddStartingCards()
     {
-        List<string> InitialCards = new List<string> {"gold", "gold", "work", "toil_the_deep", "deepmine", "avalon", "macbeth_iv", "glint", "nocturne", "bane", "merlin"};
+        List<string> InitialCards = new List<string> {"work", "toil_the_deep"};
 
         foreach (string s in InitialCards)
         {

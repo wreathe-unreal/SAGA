@@ -101,7 +101,7 @@ public class Player : MonoBehaviour
         AttributeMap[ActionCard.CurrentActionData.ActionResult.AttributeModified] += ActionCard.CurrentActionData.ActionResult.AttributeModifier;
         
         IncrementActionRepetition(ActionCard.Name, InputCards[0].Data);
-
+        
         if (ActionCard.Name == "Battle")
         {
             foreach (Card c in InputCards)
@@ -160,7 +160,7 @@ public class Player : MonoBehaviour
                 Card card = kvp.Value.Cards
                     .Where(c => c != null && c.Name.ToLower() == currentWord).FirstOrDefault();
                     
-                if (card != null)
+                if (card != null && card.Quantity > 0)
                 {
                     matchFound = true;
                     InputCards.Add(card);

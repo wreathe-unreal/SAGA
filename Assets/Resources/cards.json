@@ -269,6 +269,35 @@
                     ],
                     "Title": "Toil in the Deepmines"
                 }
+            },
+            {
+                "ActionKey": {
+                    "ActionName": "Dream",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "toil_the_deep",
+                    "MaxRepetitions": 0,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 8,
+                    "FlavorText": "There must be something greater than work...I will dream of a higher purpose than toiling in these mines.  ",
+                    "OutcomeText": "I dreamt of building a ship and travelling the cosmos. ",
+                    "ReturnedCardIDs": [
+                        "space_travel",
+                        "dream"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1
+                    ],
+                    "Title": "Dream Of Something Greater Than Work"
+                }
             }
         ],
         "FlavorText": "Bound by ink and iron, this contract seals your fate to the shadows beneath, where you will toil until the dwaven claim over you is satisfied.",
@@ -284,37 +313,6 @@
     },
     {
         "Actions": [
-            {
-                "ActionKey": {
-                    "ActionName": "Dream",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "gold",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "",
-                    "AttributeModifier": 0,
-                    "Duration": 8,
-                    "FlavorText": "I dream of all the possibilities one could accomplish with limitless coin.",
-                    "OutcomeText": "You find a deep desire to possess, in that is an energy of it's own.",
-                    "ReturnedCardIDs": [
-                        "dream",
-                        "gold",
-                        "avarice"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1,
-                        1
-                    ],
-                    "Title": "If I was a Rich Scab"
-                }
-            },
             {
                 "ActionKey": {
                     "ActionName": "Research",
@@ -344,6 +342,41 @@
                         1
                     ],
                     "Title": "The Way of Mint"
+                }
+            },
+            {
+                "ActionKey": {
+                    "ActionName": "Dream",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "gold",
+                    "MaxRepetitions": 0,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 8,
+                    "FlavorText": "I dream of piles of wealth as I drift off to sleep...\t",
+                    "OutcomeText": "Perhaps one day...I can become rich. ",
+                    "ReturnedCardIDs": [
+                        "gold",
+                        "dream",
+                        "gold",
+                        "avarice",
+                        "avarice"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    "Title": "If I Was a Rich Man"
                 }
             }
         ],
@@ -518,35 +551,6 @@
             {
                 "ActionKey": {
                     "ActionName": "Talk",
-                    "Attribute": "Helldiver Uma Progress",
-                    "AttributeMinimum": 1,
-                    "ID": "helldiver_uma",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "",
-                    "AttributeModifier": 0,
-                    "Duration": 8,
-                    "FlavorText": "I approach supervisor Uma, but I've already asked her about my dream.",
-                    "OutcomeText": "She greets you like she would any of the other scabs, but she does inquire as to whether or not you've moved up in the world.",
-                    "ReturnedCardIDs": [
-                        "talk",
-                        "helldiver_uma"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1
-                    ],
-                    "Title": "Talking to Uma"
-                }
-            },
-            {
-                "ActionKey": {
-                    "ActionName": "Talk",
                     "Attribute": "",
                     "AttributeMinimum": 0,
                     "ID": "helldiver_uma",
@@ -576,6 +580,41 @@
                     ],
                     "Title": "To Speak of Freedom"
                 }
+            },
+            {
+                "ActionKey": {
+                    "ActionName": "Talk",
+                    "Attribute": "Helldiver Uma Progress",
+                    "AttributeMinimum": 1,
+                    "ID": "helldiver_uma",
+                    "MaxRepetitions": 0,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 8,
+                    "FlavorText": "I approach supervisor Uma, but I've already asked her about my dream.",
+                    "OutcomeText": "She greets you like she would any of the other scabs, but she does inquire as to whether or not you've moved up in the world.  She shows you around Deepmine.",
+                    "ReturnedCardIDs": [
+                        "talk",
+                        "travel",
+                        "glint",
+                        "helldiver_uma",
+                        "deepmine"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    "Title": "Talking to Uma"
+                }
             }
         ],
         "FlavorText": "Deepmine East Wing Tunnel 380's overseer, as friendly as Helldivers come.",
@@ -591,37 +630,6 @@
     },
     {
         "Actions": [
-            {
-                "ActionKey": {
-                    "ActionName": "Talk",
-                    "Attribute": "",
-                    "AttributeMinimum": 0,
-                    "ID": "greyhound",
-                    "MaxRepetitions": 0,
-                    "MinRepetitions": 0,
-                    "ReqLocation": "",
-                    "SecondaryCardSpecifiers": [
-                    ]
-                },
-                "ActionResult": {
-                    "AttributeModified": "Greyhound Progress",
-                    "AttributeModifier": 1,
-                    "Duration": 8,
-                    "FlavorText": "I ask Greyhound about Wreckage bay.",
-                    "OutcomeText": "He's willing to take you, holding out a hand for payment before he'll grant passage.",
-                    "ReturnedCardIDs": [
-                        "greyhound",
-                        "talk",
-                        "trade"
-                    ],
-                    "ReturnedQuantities": [
-                        1,
-                        1,
-                        1
-                    ],
-                    "Title": "Greyhound's Fare"
-                }
-            },
             {
                 "ActionKey": {
                     "ActionName": "Talk",
@@ -655,6 +663,37 @@
             },
             {
                 "ActionKey": {
+                    "ActionName": "Talk",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "greyhound",
+                    "MaxRepetitions": 0,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "Greyhound Progress",
+                    "AttributeModifier": 1,
+                    "Duration": 8,
+                    "FlavorText": "I ask Greyhound about Wreckage Bay.",
+                    "OutcomeText": "He's willing to take you to Wreckage Bay in Nocturne, holding out a hand for payment before he'll grant passage.",
+                    "ReturnedCardIDs": [
+                        "greyhound",
+                        "talk",
+                        "trade"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Title": "Greyhound's Fare"
+                }
+            },
+            {
+                "ActionKey": {
                     "ActionName": "Trade",
                     "Attribute": "",
                     "AttributeMinimum": 0,
@@ -675,13 +714,17 @@
                     "AttributeModifier": 0,
                     "Duration": 8,
                     "FlavorText": "I drop a coin into his hand.",
-                    "OutcomeText": "He grants you shuttle tickets and suggests you go to Nocturne and from there to Wreckage Bay.",
+                    "OutcomeText": "He grants you shuttle tickets and suggests you go to Nocturne and from there to Wreckage Bay.  I'm currently in Deepmine in Glint. ",
                     "ReturnedCardIDs": [
-                        "trade",
+                        "deepmine",
                         "travel",
-                        "wreckage_bay"
+                        "glint",
+                        "nocturne",
+                        "trade"
                     ],
                     "ReturnedQuantities": [
+                        1,
+                        1,
                         1,
                         1,
                         1
@@ -875,8 +918,8 @@
                     ]
                 },
                 "ActionResult": {
-                    "AttributeModified": "",
-                    "AttributeModifier": 0,
+                    "AttributeModified": "Nocturne Reputation",
+                    "AttributeModifier": 1,
                     "Duration": 8,
                     "FlavorText": "I've have enough, time to continue my journey.",
                     "OutcomeText": "He unceremoniously dumps a pile of components both mundane and magical on the table in front of you.",
@@ -2709,9 +2752,11 @@
                     "OutcomeText": "Where will you go now?",
                     "ReturnedCardIDs": [
                         "travel",
-                        "nocturne"
+                        "nocturne",
+                        "wreckage_bay"
                     ],
                     "ReturnedQuantities": [
+                        1,
                         1,
                         1
                     ],
@@ -7289,5 +7334,54 @@
         "Property": "Classified",
         "System": "MacbethIV",
         "Type": "Character"
+    },
+    {
+        "Actions": [
+            {
+                "ActionKey": {
+                    "ActionName": "Dream",
+                    "Attribute": "",
+                    "AttributeMinimum": 0,
+                    "ID": "space_travel",
+                    "MaxRepetitions": 0,
+                    "MinRepetitions": 0,
+                    "ReqLocation": "",
+                    "SecondaryCardSpecifiers": [
+                    ]
+                },
+                "ActionResult": {
+                    "AttributeModified": "",
+                    "AttributeModifier": 0,
+                    "Duration": 8,
+                    "FlavorText": "I can now travel the stars...",
+                    "OutcomeText": "An older pilot hands me some cash to begin my journey.  ",
+                    "ReturnedCardIDs": [
+                        "dream",
+                        "gold",
+                        "gold",
+                        "gold",
+                        "gold"
+                    ],
+                    "ReturnedQuantities": [
+                        1,
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    "Title": "The Dream is Complete"
+                }
+            }
+        ],
+        "FlavorText": "",
+        "Habitat": "",
+        "ID": "space_travel",
+        "ImagePath": "space_travel.png",
+        "Lifespan": 0,
+        "Name": "Space Travel",
+        "Price": 0,
+        "Property": "",
+        "System": "",
+        "Type": "Ambition"
     }
 ]
